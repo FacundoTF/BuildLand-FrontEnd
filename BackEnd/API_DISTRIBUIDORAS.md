@@ -32,19 +32,24 @@ http://localhost:8080/api/distribuidoras
 **Body (JSON):**
 ```json
 {
+    "id": "12345678",
     "nombre": "Distribuidora Ejemplo",
     "direccion": "Calle Falsa 123",
-    "numeroTelefono": "+54 11 1234-5678"
+    "numeroTelefono": "+54 11 1234-5678",
+    "descripcion": "Distribuidora especializada en materiales de construcción",
+    "codigoPostal": "1425"
 }
 ```
 
 **Respuesta exitosa (201 Created):**
 ```json
 {
-    "id": 1,
+    "id": "12345678",
     "nombre": "Distribuidora Ejemplo",
     "direccion": "Calle Falsa 123",
-    "numeroTelefono": "+54 11 1234-5678"
+    "numeroTelefono": "+54 11 1234-5678",
+    "descripcion": "Distribuidora especializada en materiales de construcción",
+    "codigoPostal": "1425"
 }
 ```
 
@@ -55,26 +60,30 @@ http://localhost:8080/api/distribuidoras
 ```json
 [
     {
-        "id": 1,
+        "id": "12345678",
         "nombre": "Distribuidora Ejemplo",
         "direccion": "Calle Falsa 123",
-        "numeroTelefono": "+54 11 1234-5678"
+        "numeroTelefono": "+54 11 1234-5678",
+        "descripcion": "Distribuidora especializada en materiales de construcción",
+        "codigoPostal": "1425"
     }
 ]
 ```
 
-### 3. Obtener una distribuidora por ID
-**GET** `/api/distribuidoras/{id}`
+### 3. Obtener una distribuidora por CUIT
+**GET** `/api/distribuidoras/{cuit}`
 
-**Ejemplo**: `/api/distribuidoras/1`
+**Ejemplo**: `/api/distribuidoras/12345678`
 
 **Respuesta exitosa (200 OK):**
 ```json
 {
-    "id": 1,
+    "id": "12345678",
     "nombre": "Distribuidora Ejemplo",
     "direccion": "Calle Falsa 123",
-    "numeroTelefono": "+54 11 1234-5678"
+    "numeroTelefono": "+54 11 1234-5678",
+    "descripcion": "Distribuidora especializada en materiales de construcción",
+    "codigoPostal": "1425"
 }
 ```
 
@@ -89,42 +98,48 @@ http://localhost:8080/api/distribuidoras
 ```json
 [
     {
-        "id": 2,
+        "id": "87654321",
         "nombre": "Distribuidora Norte",
         "direccion": "Av. Libertador 1234",
-        "numeroTelefono": "+54 11 4567-8901"
+        "numeroTelefono": "+54 11 4567-8901",
+        "descripcion": "Distribuidora especializada en materiales del norte",
+        "codigoPostal": "1425"
     }
 ]
 ```
 
 ### 5. Actualizar una distribuidora
-**PUT** `/api/distribuidoras/{id}`
+**PUT** `/api/distribuidoras/{cuit}`
 
-**Ejemplo**: `/api/distribuidoras/1`
+**Ejemplo**: `/api/distribuidoras/12345678`
 
 **Body (JSON):**
 ```json
 {
     "nombre": "Distribuidora Actualizada",
     "direccion": "Nueva Direccion 456",
-    "numeroTelefono": "+54 11 9876-5432"
+    "numeroTelefono": "+54 11 9876-5432",
+    "descripcion": "Descripción actualizada de la distribuidora",
+    "codigoPostal": "1000"
 }
 ```
 
 **Respuesta exitosa (200 OK):**
 ```json
 {
-    "id": 1,
+    "id": "12345678",
     "nombre": "Distribuidora Actualizada",
     "direccion": "Nueva Direccion 456",
-    "numeroTelefono": "+54 11 9876-5432"
+    "numeroTelefono": "+54 11 9876-5432",
+    "descripcion": "Descripción actualizada de la distribuidora",
+    "codigoPostal": "1000"
 }
 ```
 
 ### 6. Eliminar una distribuidora
-**DELETE** `/api/distribuidoras/{id}`
+**DELETE** `/api/distribuidoras/{cuit}`
 
-**Ejemplo**: `/api/distribuidoras/1`
+**Ejemplo**: `/api/distribuidoras/12345678`
 
 **Respuesta exitosa (204 No Content)**
 **Respuesta si no existe (404 Not Found)**
@@ -136,9 +151,12 @@ http://localhost:8080/api/distribuidoras
 curl -X POST http://localhost:8080/api/distribuidoras \
   -H "Content-Type: application/json" \
   -d '{
+    "id": "12345678",
     "nombre": "Distribuidora Test",
     "direccion": "Av. Corrientes 1234",
-    "numeroTelefono": "+54 11 4444-5555"
+    "numeroTelefono": "+54 11 4444-5555",
+    "descripcion": "Distribuidora de prueba para testing de la API",
+    "codigoPostal": "1043"
   }'
 ```
 
@@ -149,7 +167,7 @@ curl -X GET http://localhost:8080/api/distribuidoras
 
 ### Obtener una distribuidora específica
 ```bash
-curl -X GET http://localhost:8080/api/distribuidoras/1
+curl -X GET http://localhost:8080/api/distribuidoras/12345678
 ```
 
 ### Buscar distribuidoras por nombre
@@ -159,24 +177,29 @@ curl -X GET "http://localhost:8080/api/distribuidoras/buscar?nombre=Test"
 
 ### Actualizar una distribuidora
 ```bash
-curl -X PUT http://localhost:8080/api/distribuidoras/1 \
+curl -X PUT http://localhost:8080/api/distribuidoras/12345678 \
   -H "Content-Type: application/json" \
   -d '{
     "nombre": "Nuevo Nombre",
     "direccion": "Nueva Direccion",
-    "numeroTelefono": "+54 11 9999-8888"
+    "numeroTelefono": "+54 11 9999-8888",
+    "descripcion": "Texto novedoso",
+    "codigoPostal": "1234"
   }'
 ```
 
 ### Eliminar una distribuidora
 ```bash
-curl -X DELETE http://localhost:8080/api/distribuidoras/1
+curl -X DELETE http://localhost:8080/api/distribuidoras/12345678
 ```
 
 ## Validaciones
+- El campo `id` (CUIT) es obligatorio y debe tener exactamente 8 dígitos numéricos
 - El campo `nombre` es obligatorio y no puede estar vacío
+- El campo `descripcion` es opcional pero no puede exceder 120 caracteres
+- El campo `codigoPostal` es opcional pero debe tener exactamente 4 caracteres si se proporciona
+- No se pueden crear dos distribuidoras con el mismo CUIT
 - No se pueden crear dos distribuidoras con el mismo nombre (case insensitive)
-- El ID se genera automáticamente al crear una distribuidora
 
 ## Códigos de Estado HTTP
 - **200 OK**: Operación exitosa
@@ -213,8 +236,29 @@ La aplicación se ejecutará en `http://localhost:8080`
 
 ## Características de la Base de Datos
 - ✅ **Persistencia**: Los datos se guardan permanentemente en MySQL
-- ✅ **Auto-incremento**: Los IDs se generan automáticamente
+- ✅ **CUIT como PK**: Los CUITs de 8 dígitos se usan como clave primaria
 - ✅ **Validaciones**: Nombres únicos, campos obligatorios
 - ✅ **Búsquedas**: Búsqueda por nombre con coincidencias parciales
 - ✅ **Codificación**: UTF-8 para caracteres especiales y acentos
 - ✅ **Transacciones**: Operaciones atómicas garantizadas por Spring Transaction
+- ✅ **Convención nombres**: Tabla en MAYÚSCULA (DISTRIBUIDORAS), columnas en PascalCase
+
+## 🔧 Estructura de Base de Datos
+
+La tabla `distribuidoras` se crea automáticamente con la siguiente estructura:
+
+```sql
+CREATE TABLE DISTRIBUIDORAS (
+    CuitDistribuidora VARCHAR(8) PRIMARY KEY,
+    Nombre VARCHAR(100) NOT NULL UNIQUE,
+    Direccion VARCHAR(200),
+    NumeroTelefono VARCHAR(20),
+    Descripcion VARCHAR(120),
+    CodigoPostal VARCHAR(4)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+```
+
+### Convenciones de Nombres
+- **Tabla**: `DISTRIBUIDORAS` (MAYÚSCULA)
+- **Columnas**: PascalCase (CuitDistribuidora, Nombre, Direccion, NumeroTelefono, Descripcion, CodigoPostal)
+- **Índices**: Clave primaria en CuitDistribuidora, índice único en Nombre

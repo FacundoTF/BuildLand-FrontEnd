@@ -26,23 +26,47 @@ public class DistribuidoraService {
     }
     
     /**
-     * Obtiene una distribuidora por ID
-     * @param id ID de la distribuidora
+     * Obtiene una distribuidora por ID (CUIT)
+     * @param cuit CUIT de la distribuidora
      * @return Distribuidora encontrada o Optional vacío
      */
-    public Optional<Distribuidora> obtenerPorId(Long id) {
-        return distribuidoraRepository.findById(id);
+    public Optional<Distribuidora> obtenerPorId(String cuit) {
+        return distribuidoraRepository.findById(cuit);
     }
     
     /**
      * Crea una nueva distribuidora
      * @param distribuidora Distribuidora a crear
-     * @return Distribuidora creada con ID asignado
+     * @return Distribuidora creada
      */
     public Distribuidora crear(Distribuidora distribuidora) {
+        // Validar el formato del CUIT
+        if (!validarCuit(distribuidora.getId())) {
+            throw new IllegalArgumentException("El CUIT debe tener exactamente 8 dígitos");
+        }
+        
+        // Validar que no exista una distribuidora con el mismo CUIT
+        if (distribuidoraRepository.existsById(distribuidora.getId())) {
+            throw new IllegalArgumentException("Ya existe una distribuidora con el CUIT: " + distribuidora.getId());
+        }
+        
         // Validar que no exista una distribuidora con el mismo nombre
         if (distribuidoraRepository.existsByNombreIgnoreCase(distribuidora.getNombre())) {
             throw new IllegalArgumentException("Ya existe una distribuidora con el nombre: " + distribuidora.getNombre());
+        }
+        
+        // Validar descripción (solo si no es null y no está vacía)
+        if (distribuidora.getDescripcion() != null && 
+            !distribuidora.getDescripcion().trim().isEmpty() && 
+            distribuidora.getDescripcion().length() > 120) {
+            throw new IllegalArgumentException("La descripción no puede exceder 120 caracteres");
+        }
+        
+        // Validar código postal (solo si no es null y no está vacío)
+        if (distribuidora.getCodigoPostal() != null && 
+            !distribuidora.getCodigoPostal().trim().isEmpty() && 
+            !validarCodigoPostal(distribuidora.getCodigoPostal())) {
+            throw new IllegalArgumentException("El código postal debe tener exactamente 4 dígitos");
         }
         
         return distribuidoraRepository.save(distribuidora);
@@ -50,15 +74,29 @@ public class DistribuidoraService {
     
     /**
      * Actualiza una distribuidora existente
-     * @param id ID de la distribuidora a actualizar
+     * @param cuit CUIT de la distribuidora a actualizar
      * @param distribuidoraActualizada Datos actualizados
      * @return Distribuidora actualizada o Optional vacío si no existe
      */
-    public Optional<Distribuidora> actualizar(Long id, Distribuidora distribuidoraActualizada) {
-        Optional<Distribuidora> distribuidoraExistente = distribuidoraRepository.findById(id);
+    public Optional<Distribuidora> actualizar(String cuit, Distribuidora distribuidoraActualizada) {
+        Optional<Distribuidora> distribuidoraExistente = distribuidoraRepository.findById(cuit);
         
         if (distribuidoraExistente.isPresent()) {
-            distribuidoraActualizada.setId(id);
+            // Validar descripción (solo si no es null y no está vacía)
+            if (distribuidoraActualizada.getDescripcion() != null && 
+                !distribuidoraActualizada.getDescripcion().trim().isEmpty() && 
+                distribuidoraActualizada.getDescripcion().length() > 120) {
+                throw new IllegalArgumentException("La descripción no puede exceder 120 caracteres");
+            }
+            
+            // Validar código postal (solo si no es null y no está vacío)
+            if (distribuidoraActualizada.getCodigoPostal() != null && 
+                !distribuidoraActualizada.getCodigoPostal().trim().isEmpty() && 
+                !validarCodigoPostal(distribuidoraActualizada.getCodigoPostal())) {
+                throw new IllegalArgumentException("El código postal debe tener exactamente 4 dígitos");
+            }
+            
+            distribuidoraActualizada.setId(cuit);
             return Optional.of(distribuidoraRepository.save(distribuidoraActualizada));
         }
         
@@ -66,13 +104,13 @@ public class DistribuidoraService {
     }
     
     /**
-     * Elimina una distribuidora por ID
-     * @param id ID de la distribuidora a eliminar
+     * Elimina una distribuidora por ID (CUIT)
+     * @param cuit CUIT de la distribuidora a eliminar
      * @return true si se eliminó, false si no existía
      */
-    public boolean eliminar(Long id) {
-        if (distribuidoraRepository.existsById(id)) {
-            distribuidoraRepository.deleteById(id);
+    public boolean eliminar(String cuit) {
+        if (distribuidoraRepository.existsById(cuit)) {
+            distribuidoraRepository.deleteById(cuit);
             return true;
         }
         return false;
@@ -85,5 +123,23 @@ public class DistribuidoraService {
      */
     public List<Distribuidora> buscarPorNombre(String nombre) {
         return distribuidoraRepository.findByNombreContainingIgnoreCase(nombre);
+    }
+    
+    /**
+     * Valida que el CUIT tenga exactamente 8 dígitos
+     * @param cuit CUIT a validar
+     * @return true si es válido, false en caso contrario
+     */
+    private boolean validarCuit(String cuit) {
+        return cuit != null && cuit.matches("\\d{8}");
+    }
+    
+    /**
+     * Valida que el código postal tenga exactamente 4 dígitos
+     * @param codigoPostal Código postal a validar
+     * @return true si es válido, false en caso contrario
+     */
+    private boolean validarCodigoPostal(String codigoPostal) {
+        return codigoPostal != null && codigoPostal.matches("\\d{4}");
     }
 }

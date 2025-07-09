@@ -6,40 +6,57 @@ import jakarta.persistence.*;
  * Entidad que representa una distribuidora en el sistema BuildLand
  */
 @Entity
-@Table(name = "distribuidoras")
+@Table(name = "DISTRIBUIDORAS")
 public class Distribuidora {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "CuitDistribuidora", nullable = false, length = 8)
+    private String id;
     
-    @Column(name = "nombre", nullable = false, length = 100)
+    @Column(name = "Nombre", nullable = false, length = 100)
     private String nombre;
     
-    @Column(name = "direccion", length = 200)
+    @Column(name = "Direccion", length = 200)
     private String direccion;
     
-    @Column(name = "numero_telefono", length = 20)
+    @Column(name = "NumeroTelefono", length = 20)
     private String numeroTelefono;
+    
+    @Column(name = "Descripcion", length = 120)
+    private String descripcion;
+    
+    @Column(name = "CodigoPostal", length = 4)
+    private String codigoPostal;
 
     // Constructor por defecto
     public Distribuidora() {
     }
 
     // Constructor con parámetros
-    public Distribuidora(String nombre, String direccion, String numeroTelefono) {
+    public Distribuidora(String cuit, String nombre, String direccion, String numeroTelefono, String descripcion, String codigoPostal) {
+        this.id = cuit;
         this.nombre = nombre;
         this.direccion = direccion;
         this.numeroTelefono = numeroTelefono;
+        this.descripcion = descripcion;
+        this.codigoPostal = codigoPostal;
     }
 
     // Getters y Setters
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
+    }
+
+    public String getCuit() {
+        return id;
+    }
+
+    public void setCuit(String cuit) {
+        this.id = cuit;
     }
 
     public String getNombre() {
@@ -66,13 +83,31 @@ public class Distribuidora {
         this.numeroTelefono = numeroTelefono;
     }
 
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public String getCodigoPostal() {
+        return codigoPostal;
+    }
+
+    public void setCodigoPostal(String codigoPostal) {
+        this.codigoPostal = codigoPostal;
+    }
+
     @Override
     public String toString() {
         return "Distribuidora{" +
-                "id=" + id +
+                "cuit='" + id + '\'' +
                 ", nombre='" + nombre + '\'' +
                 ", direccion='" + direccion + '\'' +
                 ", numeroTelefono='" + numeroTelefono + '\'' +
+                ", descripcion='" + descripcion + '\'' +
+                ", codigoPostal='" + codigoPostal + '\'' +
                 '}';
     }
 }

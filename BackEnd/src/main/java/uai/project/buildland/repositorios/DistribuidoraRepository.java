@@ -8,7 +8,7 @@ import uai.project.buildland.entidades.Distribuidora;
  * Repositorio para manejar las operaciones de base de datos de las distribuidoras
  */
 @Repository
-public interface DistribuidoraRepository extends JpaRepository<Distribuidora, Long> {
+public interface DistribuidoraRepository extends JpaRepository<Distribuidora, String> {
     
     /**
      * Busca distribuidoras por nombre (case insensitive)

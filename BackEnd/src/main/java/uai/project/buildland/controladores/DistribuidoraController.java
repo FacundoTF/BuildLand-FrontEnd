@@ -32,13 +32,13 @@ public class DistribuidoraController {
     }
     
     /**
-     * Obtiene una distribuidora por ID
-     * @param id ID de la distribuidora
+     * Obtiene una distribuidora por ID (CUIT)
+     * @param cuit CUIT de la distribuidora
      * @return Distribuidora encontrada o 404 si no existe
      */
-    @GetMapping("/{id}")
-    public ResponseEntity<Distribuidora> obtenerPorId(@PathVariable Long id) {
-        Optional<Distribuidora> distribuidora = distribuidoraService.obtenerPorId(id);
+    @GetMapping("/{cuit}")
+    public ResponseEntity<Distribuidora> obtenerPorId(@PathVariable String cuit) {
+        Optional<Distribuidora> distribuidora = distribuidoraService.obtenerPorId(cuit);
         
         if (distribuidora.isPresent()) {
             return ResponseEntity.ok(distribuidora.get());
@@ -60,6 +60,10 @@ public class DistribuidoraController {
                 return ResponseEntity.badRequest().build();
             }
             
+            if (distribuidora.getId() == null || distribuidora.getId().trim().isEmpty()) {
+                return ResponseEntity.badRequest().build();
+            }
+            
             Distribuidora nuevaDistribuidora = distribuidoraService.crear(distribuidora);
             return ResponseEntity.status(HttpStatus.CREATED).body(nuevaDistribuidora);
             
@@ -72,19 +76,19 @@ public class DistribuidoraController {
     
     /**
      * Actualiza una distribuidora existente
-     * @param id ID de la distribuidora a actualizar
+     * @param cuit CUIT de la distribuidora a actualizar
      * @param distribuidora Datos actualizados
      * @return Distribuidora actualizada o 404 si no existe
      */
-    @PutMapping("/{id}")
-    public ResponseEntity<Distribuidora> actualizar(@PathVariable Long id, @RequestBody Distribuidora distribuidora) {
+    @PutMapping("/{cuit}")
+    public ResponseEntity<Distribuidora> actualizar(@PathVariable String cuit, @RequestBody Distribuidora distribuidora) {
         try {
             // Validaciones básicas
             if (distribuidora.getNombre() == null || distribuidora.getNombre().trim().isEmpty()) {
                 return ResponseEntity.badRequest().build();
             }
             
-            Optional<Distribuidora> distribuidoraActualizada = distribuidoraService.actualizar(id, distribuidora);
+            Optional<Distribuidora> distribuidoraActualizada = distribuidoraService.actualizar(cuit, distribuidora);
             
             if (distribuidoraActualizada.isPresent()) {
                 return ResponseEntity.ok(distribuidoraActualizada.get());
@@ -98,13 +102,13 @@ public class DistribuidoraController {
     }
     
     /**
-     * Elimina una distribuidora por ID
-     * @param id ID de la distribuidora a eliminar
+     * Elimina una distribuidora por CUIT
+     * @param cuit CUIT de la distribuidora a eliminar
      * @return 204 si se eliminó correctamente, 404 si no existía
      */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        boolean eliminada = distribuidoraService.eliminar(id);
+    @DeleteMapping("/{cuit}")
+    public ResponseEntity<Void> eliminar(@PathVariable String cuit) {
+        boolean eliminada = distribuidoraService.eliminar(cuit);
         
         if (eliminada) {
             return ResponseEntity.noContent().build();
