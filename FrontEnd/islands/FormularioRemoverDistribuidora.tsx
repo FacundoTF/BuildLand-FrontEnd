@@ -5,7 +5,6 @@ import { Distribuidora } from "../types/distribuidora.ts";
 export default function FormularioRemoverDistribuidora() {
   const [distribuidoraEncontrada, setDistribuidoraEncontrada] = useState<Distribuidora | null>(null);
   const [busquedaCuit, setBusquedaCuit] = useState("");
-  const [busquedaNombre, setBusquedaNombre] = useState("");
   const [confirmacionTexto, setConfirmacionTexto] = useState("");
   const [confirmacionCheck, setConfirmacionCheck] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
@@ -16,7 +15,6 @@ export default function FormularioRemoverDistribuidora() {
   const limpiarFormulario = () => {
     setDistribuidoraEncontrada(null);
     setBusquedaCuit("");
-    setBusquedaNombre("");
     setConfirmacionTexto("");
     setConfirmacionCheck(false);
     setErrors([]);
@@ -40,39 +38,8 @@ export default function FormularioRemoverDistribuidora() {
     try {
       const distribuidora = await DistribuidoraService.obtenerPorCuit(busquedaCuit);
       setDistribuidoraEncontrada(distribuidora);
-      setBusquedaNombre(""); // Limpiar otra búsqueda
     } catch (error) {
       setErrors([error instanceof Error ? error.message : "Distribuidora no encontrada"]);
-      setDistribuidoraEncontrada(null);
-    } finally {
-      setIsBuscando(false);
-    }
-  };
-
-  const buscarPorNombre = async () => {
-    if (!busquedaNombre.trim()) {
-      setErrors(["Por favor ingrese un nombre para buscar"]);
-      return;
-    }
-
-    setIsBuscando(true);
-    setErrors([]);
-    
-    try {
-      const distribuidoras = await DistribuidoraService.buscarPorNombre(busquedaNombre);
-      
-      if (distribuidoras.length === 0) {
-        setErrors(["No se encontraron distribuidoras con ese nombre"]);
-        setDistribuidoraEncontrada(null);
-      } else if (distribuidoras.length === 1) {
-        setDistribuidoraEncontrada(distribuidoras[0]);
-        setBusquedaCuit(""); // Limpiar otra búsqueda
-      } else {
-        setErrors([`Se encontraron ${distribuidoras.length} distribuidoras. Por favor sea más específico o use el CUIT.`]);
-        setDistribuidoraEncontrada(null);
-      }
-    } catch (error) {
-      setErrors([error instanceof Error ? error.message : "Error al buscar distribuidoras"]);
       setDistribuidoraEncontrada(null);
     } finally {
       setIsBuscando(false);
@@ -129,7 +96,7 @@ export default function FormularioRemoverDistribuidora() {
       <div class="bg-white rounded-lg shadow-sm">
         <div class="p-6 border-b border-gray-200">
           <h1 class="text-2xl font-bold text-gray-900">Remover Distribuidora</h1>
-          <p class="text-gray-600">Busca y elimina distribuidoras del sistema</p>
+          <p class="text-gray-600">Busca por CUIT y elimina distribuidoras del sistema</p>
         </div>
         
         <div class="p-6">
@@ -168,57 +135,32 @@ export default function FormularioRemoverDistribuidora() {
 
           {/* Buscador */}
           <div class="mb-8">
-            <h2 class="text-lg font-semibold text-gray-900 mb-4">Buscar Distribuidora</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="buscarCuit" class="block text-sm font-medium text-gray-700 mb-2">
-                  Buscar por CUIT
-                </label>
-                <div class="flex">
-                  <input
-                    type="text"
-                    id="buscarCuit"
-                    maxLength={8}
-                    pattern="[0-9]{8}"
-                    placeholder="12345678"
-                    value={busquedaCuit}
-                    onInput={handleInputChange(setBusquedaCuit)}
-                    class="flex-1 px-3 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                  <button
-                    type="button"
-                    onClick={buscarPorCuit}
-                    disabled={isBuscando}
-                    class="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white rounded-r-lg transition-colors duration-200"
-                  >
-                    {isBuscando ? "..." : "Buscar"}
-                  </button>
-                </div>
+            <h2 class="text-lg font-semibold text-gray-900 mb-4">Buscar Distribuidora por CUIT</h2>
+            <div class="max-w-md">
+              <label htmlFor="buscarCuit" class="block text-sm font-medium text-gray-700 mb-2">
+                Ingrese el CUIT de la distribuidora
+              </label>
+              <div class="flex">
+                <input
+                  type="text"
+                  id="buscarCuit"
+                  maxLength={8}
+                  pattern="[0-9]{8}"
+                  placeholder="12345678"
+                  value={busquedaCuit}
+                  onInput={handleInputChange(setBusquedaCuit)}
+                  class="flex-1 px-3 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+                <button
+                  type="button"
+                  onClick={buscarPorCuit}
+                  disabled={isBuscando}
+                  class="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white rounded-r-lg transition-colors duration-200"
+                >
+                  {isBuscando ? "..." : "Buscar"}
+                </button>
               </div>
-              
-              <div>
-                <label htmlFor="buscarNombre" class="block text-sm font-medium text-gray-700 mb-2">
-                  Buscar por Nombre
-                </label>
-                <div class="flex">
-                  <input
-                    type="text"
-                    id="buscarNombre"
-                    placeholder="Distribuidora Norte"
-                    value={busquedaNombre}
-                    onInput={handleInputChange(setBusquedaNombre)}
-                    class="flex-1 px-3 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  />
-                  <button
-                    type="button"
-                    onClick={buscarPorNombre}
-                    disabled={isBuscando}
-                    class="px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white rounded-r-lg transition-colors duration-200"
-                  >
-                    {isBuscando ? "..." : "Buscar"}
-                  </button>
-                </div>
-              </div>
+              <p class="mt-1 text-sm text-gray-500">El CUIT debe contener exactamente 8 dígitos</p>
             </div>
           </div>
 
