@@ -1,0 +1,43 @@
+<div class="container">
+  <h2>Eliminar Distribuidora</h2>
+
+  <!-- Contenedor para buscar distribuidora por CUIT -->
+  <div class="search-container">
+    <h3>Buscar Distribuidora</h3>
+    <form [formGroup]="distribuidoraCuit" (ngSubmit)="handleSubmitCuit()" class="search-form">
+      <div class="form-group">
+        <label for="searchCuit">CUIT de la Distribuidora</label>
+        <input
+          type="text"
+          id="searchCuit"
+          name="searchCuit"
+          placeholder="Ingrese el CUIT para buscar (ej: 20-12345678-9)"
+          formControlName="cuit"
+          required>
+      </div>
+      <div class="search-actions">
+        <button type="submit" class="btn-search">Buscar Distribuidora</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Contenedor para mostrar datos y confirmar eliminación (inicialmente oculto) -->
+  <div class="delete-container" style="display: none;">
+    <h3>AREA PELIGROSA</h3>
+    <div class="warning-message">
+      <strong>Advertencia:</strong> Esta acción no se puede deshacer. Los datos de la distribuidora se eliminarán permanentemente.
+    </div>
+      <div class="confirmation-section">
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="confirmDelete" name="confirmDelete" required>
+            <span class="checkmark"></span>
+            Confirmo que deseo eliminar esta distribuidora permanentemente
+          </label>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn-danger" (click)="handleRemove()">Eliminar Distribuidora</button>
+      </div>
+  </div>
+</div>

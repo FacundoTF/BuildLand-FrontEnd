@@ -1,0 +1,19 @@
+#Permissions{
+    display: flex;
+    flex-direction: column;
+}
+
+.Gestion{
+    display: inherit;
+    flex-direction: column;
+    align-items: center;
+}
+
+.Gestion>button{
+    display: flex;
+    justify-content: center;
+    margin: 6px;
+    padding: 6px;
+    width: 95%;
+}
+
