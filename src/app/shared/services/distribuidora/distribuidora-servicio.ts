@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Distribuidora } from '../../core/entities/distribuidora/distribuidora';
+import { Distribuidora } from '../../../core/entities/distribuidora/distribuidora';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, catchError, of } from 'rxjs';
 
@@ -44,13 +44,13 @@ export class DistribuidoraServicio {
           console.error('Error al agregar distribuidora:', error);
           console.error('Error details:', error.error);
           return of(false);
-        })
+        }),
       );
   }
   removerDistribuidora(distribuidora: Distribuidora): Observable<boolean> {
     console.log(
       'Intentando eliminar distribuidora con CUIT:',
-      distribuidora.Cuit()
+      distribuidora.Cuit(),
     );
     return this.http
       .delete(`${this.url}/${distribuidora.Cuit()}`, { observe: 'response' })
@@ -60,7 +60,7 @@ export class DistribuidoraServicio {
           if (response.status === 204) {
             console.log(
               'Distribuidora eliminada exitosamente:',
-              distribuidora.Cuit()
+              distribuidora.Cuit(),
             );
             return true;
           }
@@ -72,12 +72,12 @@ export class DistribuidoraServicio {
             console.error('Distribuidora no encontrada');
           }
           return of(false);
-        })
+        }),
       );
   }
   modificarDistribuidora(
     cuit: string,
-    distribuidora: any
+    distribuidora: any,
   ): Observable<boolean> {
     // Mapear los datos del formulario al formato que espera el backend
     const distribuidoraBackend = {
@@ -108,12 +108,12 @@ export class DistribuidoraServicio {
             console.error('Distribuidora no encontrada');
           }
           return of(false);
-        })
+        }),
       );
   }
 
   buscarDistribuidoraCuit(
-    cuit: string | null | undefined
+    cuit: string | null | undefined,
   ): Observable<Distribuidora | null> {
     const cuitElegido = cuit?.trim();
 
@@ -131,7 +131,7 @@ export class DistribuidoraServicio {
             response.codigoPostal,
             response.descripcion,
             response.numeroTelefono,
-            response.ciudad
+            response.ciudad,
           );
           return distribuidora;
         }),
@@ -141,7 +141,7 @@ export class DistribuidoraServicio {
             console.error('Distribuidora no encontrada con CUIT:', cuitElegido);
           }
           return of(null);
-        })
+        }),
       );
     } else {
       return of(null);

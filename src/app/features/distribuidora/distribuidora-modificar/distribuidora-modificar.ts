@@ -5,7 +5,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { DistribuidoraServicio } from '../distribuidora-servicio';
+import { DistribuidoraServicio } from '../../../shared/services/distribuidora/distribuidora-servicio';
 import { Distribuidora } from '../../../core/entities/distribuidora/distribuidora';
 
 @Component({
@@ -60,7 +60,7 @@ export class DistribuidoraModificar {
               this.distribuidoraEncontrada = distribuidora;
 
               const container = document.querySelector(
-                '.edit-container'
+                '.edit-container',
               ) as HTMLElement;
               container.className = 'edit-container is-visible';
 
@@ -78,7 +78,7 @@ export class DistribuidoraModificar {
               });
             } else {
               console.error(
-                'No se encontró la distribuidora con el CUIT proporcionado'
+                'No se encontró la distribuidora con el CUIT proporcionado',
               );
               this.distribuidoraEncontrada = null;
               this.distribuidoraForm.reset();
@@ -100,29 +100,27 @@ export class DistribuidoraModificar {
     if (this.distribuidoraForm.valid) {
       const distribuidoraData = this.distribuidoraForm.value;
       const cuit = this.distribuidoraCuit.value.cuit;
-      
+
       if (!cuit) {
         console.error('CUIT no disponible');
         return;
       }
-      
-      this.service
-        .modificarDistribuidora(cuit, distribuidoraData)
-        .subscribe({
-          next: (success) => {
-            if (success) {
-              console.log('Distribuidora modificada exitosamente');
-              this.distribuidoraForm.reset();
-              this.distribuidoraCuit.reset();
-              this.distribuidoraEncontrada = null;
-            } else {
-              console.error('Error al modificar la distribuidora');
-            }
-          },
-          error: (error) => {
-            console.error('Error en la solicitud de modificación:', error);
-          },
-        });
+
+      this.service.modificarDistribuidora(cuit, distribuidoraData).subscribe({
+        next: (success) => {
+          if (success) {
+            console.log('Distribuidora modificada exitosamente');
+            this.distribuidoraForm.reset();
+            this.distribuidoraCuit.reset();
+            this.distribuidoraEncontrada = null;
+          } else {
+            console.error('Error al modificar la distribuidora');
+          }
+        },
+        error: (error) => {
+          console.error('Error en la solicitud de modificación:', error);
+        },
+      });
     } else {
       console.error('Formulario inválido');
       this.distribuidoraForm.reset();

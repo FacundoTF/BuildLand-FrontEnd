@@ -6,7 +6,7 @@ import {
   FormControl,
 } from '@angular/forms';
 import { Distribuidora } from '../../../core/entities/distribuidora/distribuidora';
-import { DistribuidoraServicio } from '../distribuidora-servicio';
+import { DistribuidoraServicio } from '../../../shared/services/distribuidora/distribuidora-servicio';
 
 @Component({
   selector: 'app-distribuidora-remover',
@@ -47,7 +47,7 @@ export class DistribuidoraRemover {
               this.mostrarFormDistribuidora();
             } else {
               console.error(
-                'No se encontró la distribuidora con el CUIT proporcionado'
+                'No se encontró la distribuidora con el CUIT proporcionado',
               );
               this.distribuidoraEncontrada = null;
             }
@@ -70,7 +70,7 @@ export class DistribuidoraRemover {
               console.log('Distribuidora removida exitosamente');
               // Ocultar el contenedor de eliminación y resetear el formulario
               var container = document.querySelector(
-                '.delete-container'
+                '.delete-container',
               ) as HTMLElement;
               container.style.display = 'none';
               this.distribuidoraCuit.reset();

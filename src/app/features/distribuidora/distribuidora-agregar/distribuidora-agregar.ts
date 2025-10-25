@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FormControl, Validators } from '@angular/forms';
 import { Distribuidora } from '../../../core/entities/distribuidora/distribuidora';
-import { DistribuidoraServicio } from '../distribuidora-servicio';
+import { DistribuidoraServicio } from '../../../shared/services/distribuidora/distribuidora-servicio';
 
 @Component({
   selector: 'app-distribuidora-agregar',
