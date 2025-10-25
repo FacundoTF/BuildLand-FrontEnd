@@ -2,13 +2,14 @@ import { inject, Injectable } from '@angular/core';
 import { Distribuidora } from '../../../core/entities/distribuidora/distribuidora';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, catchError, of } from 'rxjs';
+import { environment } from '../../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DistribuidoraServicio {
   private http = inject(HttpClient);
-  private url = 'http://localhost:8080/api/distribuidoras';
+  private url = `${environment.server.host}${environment.server.port}/api/distribuidoras`;
 
   agregarDistribuidora(distribuidora: any, usuario: any): Observable<boolean> {
     // Mapear los datos del formulario al formato que espera el backend
