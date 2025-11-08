@@ -5,9 +5,9 @@ import { BasePage } from './core/base-page/base-page';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, BasePage, /* Home */],
+  imports: [RouterOutlet, BasePage /* Home */],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.scss',
 })
 export class App {
   protected readonly title = signal('AngularFrontEnd');
