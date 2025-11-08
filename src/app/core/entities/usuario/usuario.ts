@@ -2,40 +2,46 @@ import { ConjuntoGrupoPermiso } from '../conjuntoGrupoPermiso/conjunto-grupo-per
 import { Distribuidora } from '../distribuidora/distribuidora';
 import { Empleado } from '../empleado/empleado';
 import { PersonaFisica } from '../personaFisica/persona-fisica';
-
-/**
- * Clase que representa un usuario del sistema.
- * Puede ser de tipo Distribuidora, Empleado o PersonaFisica.
- */
-// Si el usuario es una instancia de Distribuidora o PersonaFisica, tendrá un conjunto de grupos y permisos especificos. No se podrán cambiar. Caso contrario es el del empleado.
+export type UsuarioTipo = Distribuidora | PersonaFisica | Empleado;
 
 export class Usuario {
-  private tipo: Distribuidora | Empleado | PersonaFisica;
-  private conjuntoGrupoPermiso: ConjuntoGrupoPermiso[];
-  private correoElectronico: string;
-  private contraseña: string;
+  private tipo?: UsuarioTipo;
+  private grupos: [];
+  private email: string;
+  private password: string;
 
-  constructor(
-    tipo: Distribuidora | Empleado | PersonaFisica,
-    conjuntoGrupoPermiso: ConjuntoGrupoPermiso[],
-    correoElectronico?: string,
-    contraseña?: string
-  );
-  constructor(
-    tipo: Distribuidora | Empleado | PersonaFisica,
-    conjuntoGrupoPermiso?: ConjuntoGrupoPermiso[],
-    correoElectronico?: string,
-    contraseña?: string
-  );
-  constructor(
-    tipo: Distribuidora | Empleado | PersonaFisica,
-    conjuntoGrupoPermiso: ConjuntoGrupoPermiso[],
-    correoElectronico: string,
-    contraseña: string
-  ) {
+  public getGrupos() {
+    return this.grupos;
+  }
+  public setGrupos(grupos: []) {
+    this.grupos = grupos;
+  }
+
+  public getEmail() {
+    return this.email;
+  }
+  public setEmail(email: string) {
+    this.email = email;
+  }
+
+  public getPassword() {
+    return this.password;
+  }
+  public setPassword(password: string) {
+    this.password = password;
+  }
+
+  public getTipo() {
+    return this.tipo;
+  }
+  public setTipo(tipo: UsuarioTipo) {
     this.tipo = tipo;
-    this.conjuntoGrupoPermiso = conjuntoGrupoPermiso;
-    this.correoElectronico = correoElectronico;
-    this.contraseña = contraseña;
+  }
+
+  constructor(grupos: [], email: string, password: string, tipo?: UsuarioTipo) {
+    this.grupos = grupos;
+    this.email = email;
+    this.password = password;
+    this.tipo = tipo;
   }
 }
