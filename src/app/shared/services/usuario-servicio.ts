@@ -28,35 +28,35 @@ export class UsuarioServicio {
         let grupoEncontrado = false;
 
         if (objetivo instanceof Permiso) {
-          permisoEncontrado = element
-            .Permisos()
-            .some((permiso) => permiso.Nombre() === objetivo.Nombre());
+          permisoEncontrado = element.permisos.some(
+            (permiso: Permiso) => permiso.nombre === objetivo.nombre
+          );
         }
         if (objetivo instanceof Grupo) {
-          grupoEncontrado = element
-            .Grupos()
-            .some((grupo) => grupo.Nombre() === objetivo.Nombre());
+          grupoEncontrado = element.grupos.some(
+            (grupo: Grupo) => grupo.nombre === objetivo.nombre
+          );
         }
         if (permisoEncontrado || grupoEncontrado) {
-          console.log(`Permiso o grupo encontrado en: ${element.Nombre()}`);
+          console.log(`Permiso o grupo encontrado en: ${element.nombre}`);
           encontrado = true;
           break;
         } else {
           // Llamada recursiva para revisar grupos anidados
-          if (this.revisarPermisos(element.Grupos(), objetivo)) {
+          if (this.revisarPermisos(element.grupos, objetivo)) {
             console.log(
-              `Permiso o grupo encontrado en grupo anidado de: ${element.Nombre()}`
+              `Permiso o grupo encontrado en grupo anidado de: ${element.nombre}`
             );
             return true;
           }
         }
       } else if (element instanceof Permiso) {
-        if (element.Nombre() === objetivo.Nombre()) {
-          console.log(`Permiso encontrado: ${element.Nombre()}`);
+        if (element.nombre === objetivo.nombre) {
+          console.log(`Permiso encontrado: ${element.nombre}`);
           encontrado = true;
           break;
         } else {
-          console.log(`Permiso no encontrado: ${element.Nombre()}`);
+          console.log(`Permiso no encontrado: ${element.nombre}`);
         }
       }
     }
