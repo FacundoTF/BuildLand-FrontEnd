@@ -1,1 +1,47 @@
-<p>persona-fisica-remover works!</p>
+<div class="container">
+  <h2>Eliminar Persona Física</h2>
+
+  <!-- Contenedor para buscar persona física por CUIT -->
+  <div class="search-container">
+    <h3>Buscar Persona Física</h3>
+    <form [formGroup]="personaFisicaCuit" (ngSubmit)="handleSubmitCuit()" class="search-form">
+      <div class="form-group">
+        <label for="searchCuit">CUIT de la Persona Física</label>
+        <input
+          type="text"
+          id="searchCuit"
+          name="searchCuit"
+          placeholder="Ingrese el CUIT para buscar (ej: 20-12345678-9)"
+          formControlName="cuit"
+          required>
+      </div>
+      <div class="search-actions">
+        <button type="submit" class="btn-search">Buscar Persona Física</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Contenedor para mostrar datos y confirmar eliminación (inicialmente oculto) -->
+  @if (mostarFormPersonaFisica()) {
+    <div class="delete-container" style="display: block;">
+      <h3>AREA PELIGROSA</h3>
+      <div class="warning-message">
+        <strong>Advertencia:</strong> Esta acción no se puede deshacer. Los datos de la persona física se eliminarán permanentemente.
+      </div>
+      <form [formGroup]="deleteForm">
+        <div class="confirmation-section">
+          <div class="form-group checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="confirmDelete" name="confirmDelete" formControlName="confirmDelete" required>
+              <span class="checkmark"></span>
+              Confirmo que deseo eliminar esta persona física permanentemente
+            </label>
+          </div>
+        </div>
+      </form>
+      <div class="form-actions">
+        <button type="submit" class="btn-danger" (click)="handleRemove()">Eliminar Persona Física</button>
+      </div>
+    </div>
+  }
+</div>
