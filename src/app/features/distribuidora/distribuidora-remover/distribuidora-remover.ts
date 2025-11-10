@@ -40,10 +40,10 @@ export class DistribuidoraRemover {
             if (distribuidora) {
               console.log('Distribuidora encontrada:', distribuidora);
               this.distribuidoraEncontrada = distribuidora;
-              // var container = document.querySelector(
-              //   '.delete-container'
-              // ) as HTMLElement;
-              // container.style.display = 'block';
+              var container = document.querySelector(
+                '.delete-container',
+              ) as HTMLElement;
+              container.style.display = 'block';
               this.mostrarFormDistribuidora();
             } else {
               console.error(

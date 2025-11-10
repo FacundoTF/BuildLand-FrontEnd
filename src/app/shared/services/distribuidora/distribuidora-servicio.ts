@@ -51,17 +51,17 @@ export class DistribuidoraServicio {
   removerDistribuidora(distribuidora: Distribuidora): Observable<boolean> {
     console.log(
       'Intentando eliminar distribuidora con CUIT:',
-      distribuidora.Cuit(),
+      distribuidora.cuit,
     );
     return this.http
-      .delete(`${this.url}/${distribuidora.Cuit()}`, { observe: 'response' })
+      .delete(`${this.url}/${distribuidora.cuit}`, { observe: 'response' })
       .pipe(
         map((response) => {
           console.log('Status de respuesta:', response.status);
           if (response.status === 204) {
             console.log(
               'Distribuidora eliminada exitosamente:',
-              distribuidora.Cuit(),
+              distribuidora.cuit,
             );
             return true;
           }
@@ -126,13 +126,14 @@ export class DistribuidoraServicio {
           console.log('Distribuidora encontrada:', response);
           // Crear una instancia de Distribuidora a partir de la respuesta JSON
           const distribuidora = new Distribuidora(
-            response.id,
+            null as any, // The user is not sent in this request
+            response.cuit,
             response.nombre,
             response.direccion,
-            response.codigoPostal,
-            response.descripcion,
             response.numeroTelefono,
-            response.ciudad,
+            response.descripcion,
+            response.codigoPostal,
+            response.ciudad
           );
           return distribuidora;
         }),

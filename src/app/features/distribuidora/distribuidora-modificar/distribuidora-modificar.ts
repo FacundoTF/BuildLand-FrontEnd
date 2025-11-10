@@ -67,12 +67,12 @@ export class DistribuidoraModificar {
               // Poblar el formulario con los datos encontrados
               this.distribuidoraForm.patchValue({
                 cuit: this.distribuidoraCuit.value.cuit,
-                nombre: distribuidora.Nombre(),
-                direccion: distribuidora.Direccion(),
-                codigoPostal: distribuidora.CodigoPostal(),
-                numeroTelefono: distribuidora.NumeroTelefono(),
-                descripcion: distribuidora.Descripcion(),
-                ciudad: distribuidora.Ciudad(),
+                nombre: distribuidora.nombre,
+                direccion: distribuidora.direccion,
+                codigoPostal: distribuidora.codigoPostal,
+                numeroTelefono: distribuidora.numeroTelefono,
+                descripcion: distribuidora.descripcion,
+                ciudad: distribuidora.ciudad,
                 correoElectronico: '', // Campo nuevo - se dejará vacío para que el usuario lo complete
                 contraseña: '', // Campo nuevo - se dejará vacío para que el usuario lo complete
               });
