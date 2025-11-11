@@ -5,6 +5,7 @@ import { DistribuidoraModificar } from './features/distribuidora/distribuidora-m
 import { PersonaFisicaAgregar } from './features/persona-fisica/persona-fisica-agregar/persona-fisica-agregar';
 import { PersonaFisicaModificar } from './features/persona-fisica/persona-fisica-modificar/persona-fisica-modificar';
 import { PersonaFisicaRemover } from './features/persona-fisica/persona-fisica-remover/persona-fisica-remover';
+import { RecibirPresupuesto } from './features/presupuesto/recibir-presupuesto/recibir-presupuesto';
 
 export const routes: Routes = [
   { path: 'distribuidora/agregar', component: DistribuidoraAgregar },
@@ -13,12 +14,5 @@ export const routes: Routes = [
   { path: 'persona-fisica/agregar', component: PersonaFisicaAgregar },
   { path: 'persona-fisica/remover', component: PersonaFisicaRemover },
   { path: 'persona-fisica/modificar', component: PersonaFisicaModificar },
+  { path: 'presupuesto/recibir', component: RecibirPresupuesto },
 ];
-
-// const routes_distribuidora: Routes = [
-//     {path: '/distribuidora/agregar', component:DistribuidoraAgregar},
-//     {path: '/distribuidora/remover', component:DistribuidoraRemover},
-//     {path: '/distribuidora/modificar', component:DistribuidoraModificar}
-// ]
-
-// routes.push(...routes_distribuidora)
