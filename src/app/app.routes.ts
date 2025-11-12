@@ -14,5 +14,5 @@ export const routes: Routes = [
   { path: 'persona-fisica/agregar', component: PersonaFisicaAgregar },
   { path: 'persona-fisica/remover', component: PersonaFisicaRemover },
   { path: 'persona-fisica/modificar', component: PersonaFisicaModificar },
-  { path: 'presupuesto/recibir', component: RealizarPresupuesto },
+  { path: 'presupuesto/realizar', component: RealizarPresupuesto },
 ];
