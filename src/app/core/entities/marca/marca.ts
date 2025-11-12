@@ -1,8 +1,13 @@
-export enum TipoMarca {
-  GENERICA = 'GENERICA',
-  NO_GENERICA = 'NO_GENERICA',
-}
+import { Categoria } from '../categoria/categoria';
 
 export class Marca {
-  constructor(public tipoMarca: TipoMarca) {}
+  id: number;
+  nombre: string;
+  categoria: Categoria;
+
+  constructor(id: number, nombre: string, categoria: Categoria) {
+    this.id = id;
+    this.nombre = nombre;
+    this.categoria = categoria;
+  }
 }
