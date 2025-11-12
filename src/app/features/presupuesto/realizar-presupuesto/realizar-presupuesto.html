@@ -1,0 +1,54 @@
+<h2>Recibir presupuesto</h2>
+
+<div id="categoria-container">
+  <h3>Elegi categoría para tu presupuesto</h3>
+  <form>
+    <mat-form-field appearance="fill">
+      <mat-label>Categorías</mat-label>
+      <mat-select [formControl]="selectedCategory">
+        @for (categoria of categorias; track categoria.nombre) {
+          <mat-option [value]="categoria">{{ categoria.nombre }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <button mat-raised-button color="primary" type="submit" (click)="habilitarPresupuesto(selectedCategory.value!)">Confirmar categoría</button>
+  </form>
+</div>
+<div id="presupuesto-container">
+  <h3>Realiza tu presupuesto</h3>
+  <form>
+    <mat-form-field appearance="fill">
+      <mat-label>Producto</mat-label>
+      <mat-select>
+        <mat-option value="">Seleccione un producto</mat-option>
+        <!-- Opciones de producto se cargarán dinámicamente -->
+        @defer (when presupuestoHabilitado()){
+          @for (producto of productos; track producto){
+            <mat-option value="{{producto}}">{{ producto }}</mat-option>
+          }
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Marca</mat-label>
+      <mat-select>
+        <mat-option value="">Seleccione una marca</mat-option>
+        <!-- Opciones de marca se cargarán dinámicamente -->
+        @defer (when presupuestoHabilitado()){
+          @for (marca of marcas; track marca){
+            <mat-option value="{{marca}}">{{ marca }}</mat-option>
+          }
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Cantidad</mat-label>
+      <input matInput type="number" min="1" value="1">
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit">Agregar al presupuesto</button>
+  </form>
+</div>
+
