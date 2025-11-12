@@ -12,6 +12,10 @@ import { Producto } from '../../../core/entities/producto/producto';
 import { MarcaService } from '../../../shared/services/marca/marca-service';
 import { ProductoService } from '../../../shared/services/producto/producto-service';
 import { Observable } from 'rxjs';
+import {
+  MatGridList,
+  MatGridTileHeaderCssMatStyler,
+} from '@angular/material/grid-list';
 
 @Component({
   selector: 'app-realizar-presupuesto',
@@ -21,6 +25,8 @@ import { Observable } from 'rxjs';
     MatInputModule,
     MatButtonModule,
     ReactiveFormsModule,
+    MatGridList,
+    MatGridTileHeaderCssMatStyler,
   ],
   templateUrl: './realizar-presupuesto.html',
   styleUrl: './realizar-presupuesto.scss',
@@ -60,9 +66,7 @@ export class RealizarPresupuesto {
     this.buscarProductos(categoria);
   }
   buscarProductos(categoria: Categoria) {
-    let p: Observable<Producto[]> =
-      this.productoService.traerProductos(categoria);
-    p.subscribe({
+    this.productoService.traerProductos(categoria).subscribe({
       next: (productos) => {
         this.productos = productos;
       },
@@ -70,12 +74,6 @@ export class RealizarPresupuesto {
     });
   }
   buscarMarcas(categoria: Categoria) {
-    let m = this.marcaService.traerMarcas(categoria);
-    m.subscribe({
-      next: (marcas) => {
-        this.marcas = marcas;
-      },
-      error: (error) => console.error('Error al obtener marcas:', error),
-    });
+    this.marcas = this.marcaService.traerMarcas(categoria);
   }
 }

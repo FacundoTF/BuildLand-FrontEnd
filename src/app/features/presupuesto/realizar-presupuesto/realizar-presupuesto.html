@@ -11,7 +11,7 @@
         }
       </mat-select>
     </mat-form-field>
-    <button mat-raised-button color="primary" type="submit" (click)="habilitarPresupuesto(selectedCategory.value!)">Confirmar categoría</button>
+    <button mat-raised-button color="primary" type="button" (click)="habilitarPresupuesto(selectedCategory.value!)">Confirmar categoría</button>
   </form>
 </div>
 <div id="presupuesto-container">
@@ -23,8 +23,8 @@
         <mat-option value="">Seleccione un producto</mat-option>
         <!-- Opciones de producto se cargarán dinámicamente -->
         @defer (when presupuestoHabilitado()){
-          @for (producto of productos; track producto){
-            <mat-option value="{{producto}}">{{ producto }}</mat-option>
+          @for (producto of productos; track producto.idProducto){
+            <mat-option value="{{producto.idProducto}}">{{ producto.nombre }}</mat-option>
           }
         }
       </mat-select>
@@ -36,8 +36,8 @@
         <mat-option value="">Seleccione una marca</mat-option>
         <!-- Opciones de marca se cargarán dinámicamente -->
         @defer (when presupuestoHabilitado()){
-          @for (marca of marcas; track marca){
-            <mat-option value="{{marca}}">{{ marca }}</mat-option>
+          @for (marca of marcas; track marca.id){
+            <mat-option value="{{marca.id}}">{{ marca.nombre }}</mat-option>
           }
         }
       </mat-select>
@@ -50,5 +50,8 @@
 
     <button mat-raised-button color="primary" type="submit">Agregar al presupuesto</button>
   </form>
+  <mat-grid-list cols="4">
+    <mat-grid-tile-header>Visualizacion de presupuesto</mat-grid-tile-header>
+  </mat-grid-list>
 </div>
 
