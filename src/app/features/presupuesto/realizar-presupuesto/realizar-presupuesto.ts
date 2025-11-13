@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { PresupuestoServicio } from '../../../shared/services/presupuesto/presupuesto-servicio';
 import { CategoriaService } from '../../../shared/services/categoria/categoria-service';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,11 +11,14 @@ import { Categoria } from '../../../core/entities/categoria/categoria';
 import { Producto } from '../../../core/entities/producto/producto';
 import { MarcaService } from '../../../shared/services/marca/marca-service';
 import { ProductoService } from '../../../shared/services/producto/producto-service';
-import { Observable } from 'rxjs';
-import {
-  MatGridList,
-  MatGridTileHeaderCssMatStyler,
-} from '@angular/material/grid-list';
+import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
+
+interface PresupuestoItem {
+  producto: string;
+  marca: string;
+  cantidad: number;
+}
 
 @Component({
   selector: 'app-realizar-presupuesto',
@@ -25,8 +28,8 @@ import {
     MatInputModule,
     MatButtonModule,
     ReactiveFormsModule,
-    MatGridList,
-    MatGridTileHeaderCssMatStyler,
+    MatTableModule,
+    MatIconModule,
   ],
   templateUrl: './realizar-presupuesto.html',
   styleUrl: './realizar-presupuesto.scss',
@@ -44,6 +47,13 @@ export class RealizarPresupuesto {
   productos: Producto[] = [];
 
   selectedCategory = new FormControl<Categoria | null>(null);
+  selectedProduct = new FormControl<string | null>(null);
+  selectedMarca = new FormControl<string | null>(null);
+  cantidad = new FormControl<number>(1);
+
+  presupuestoItems = signal<PresupuestoItem[]>([]);
+  mostrarTabla = computed(() => this.presupuestoItems().length > 0);
+  displayedColumns: string[] = ['producto', 'marca', 'cantidad', 'acciones'];
 
   constructor() {
     this.categoriaService.traerCategorias().subscribe({
@@ -71,5 +81,33 @@ export class RealizarPresupuesto {
   }
   async buscarMarcas(categoria: Categoria) {
     this.marcas = await this.marcaService.traerMarcas(categoria);
+  }
+
+  agregarAlPresupuesto() {
+    const producto = this.selectedProduct.value;
+    const marca = this.selectedMarca.value;
+    const cantidadValue = this.cantidad.value;
+
+    if (!producto || !marca || !cantidadValue) {
+      return;
+    }
+
+    const item: PresupuestoItem = {
+      producto: producto,
+      marca: marca,
+      cantidad: cantidadValue,
+    };
+
+    this.presupuestoItems.update((items) => [...items, item]);
+
+    this.selectedProduct.reset();
+    this.selectedMarca.reset();
+    this.cantidad.setValue(1);
+  }
+
+  removerItem(index: number) {
+    this.presupuestoItems.update((items) =>
+      items.filter((_, i) => i !== index),
+    );
   }
 }
