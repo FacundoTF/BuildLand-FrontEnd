@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Distribuidora } from '../../../core/entities/distribuidora/distribuidora';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map, catchError, of } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment.development';
 
 @Injectable({
@@ -11,7 +11,10 @@ export class DistribuidoraServicio {
   private http = inject(HttpClient);
   private url = `${environment.server.host}${environment.server.port}/api/distribuidoras`;
 
-  agregarDistribuidora(distribuidora: any, usuario: any): Observable<boolean> {
+  async agregarDistribuidora(
+    distribuidora: any,
+    usuario: any,
+  ): Promise<boolean> {
     // Mapear los datos del formulario al formato que espera el backend
     const distribuidoraBackend = {
       id: distribuidora.cuit,
@@ -31,55 +34,53 @@ export class DistribuidoraServicio {
     console.log('Datos que se envían al backend:', distribuidoraBackend);
     console.log('Datos de usuario que se envían al backend:', usuarioBackend);
 
-    return this.http
-      .post<Distribuidora>(this.url, {
-        distribuidora: distribuidoraBackend,
-        usuario: usuarioBackend,
-      })
-      .pipe(
-        map((response) => {
-          console.log('Distribuidora agregada exitosamente:', response);
-          return true;
-        }),
-        catchError((error) => {
-          console.error('Error al agregar distribuidora:', error);
-          console.error('Error details:', error.error);
-          return of(false);
-        }),
-      );
+    const observable = this.http.post<Distribuidora>(this.url, {
+      distribuidora: distribuidoraBackend,
+      usuario: usuarioBackend,
+    });
+
+    try {
+      const response = await lastValueFrom(observable);
+      console.log('Distribuidora agregada exitosamente:', response);
+      return true;
+    } catch (error: any) {
+      console.error('Error al agregar distribuidora:', error);
+      console.error('Error details:', error.error);
+      return false;
+    }
   }
-  removerDistribuidora(distribuidora: Distribuidora): Observable<boolean> {
+  async removerDistribuidora(distribuidora: Distribuidora): Promise<boolean> {
     console.log(
       'Intentando eliminar distribuidora con CUIT:',
       distribuidora.cuit,
     );
-    return this.http
-      .delete(`${this.url}/${distribuidora.cuit}`, { observe: 'response' })
-      .pipe(
-        map((response) => {
-          console.log('Status de respuesta:', response.status);
-          if (response.status === 204) {
-            console.log(
-              'Distribuidora eliminada exitosamente:',
-              distribuidora.cuit,
-            );
-            return true;
-          }
-          return false;
-        }),
-        catchError((error) => {
-          console.error('Error al eliminar distribuidora:', error);
-          if (error.status === 404) {
-            console.error('Distribuidora no encontrada');
-          }
-          return of(false);
-        }),
-      );
+    const observable = this.http.delete(`${this.url}/${distribuidora.cuit}`, {
+      observe: 'response',
+    });
+
+    try {
+      const response = await lastValueFrom(observable);
+      console.log('Status de respuesta:', response.status);
+      if (response.status === 204) {
+        console.log(
+          'Distribuidora eliminada exitosamente:',
+          distribuidora.cuit,
+        );
+        return true;
+      }
+      return false;
+    } catch (error: any) {
+      console.error('Error al eliminar distribuidora:', error);
+      if (error.status === 404) {
+        console.error('Distribuidora no encontrada');
+      }
+      return false;
+    }
   }
-  modificarDistribuidora(
+  async modificarDistribuidora(
     cuit: string,
     distribuidora: any,
-  ): Observable<boolean> {
+  ): Promise<boolean> {
     // Mapear los datos del formulario al formato que espera el backend
     const distribuidoraBackend = {
       id: cuit, // Mantener el CUIT original
@@ -95,58 +96,59 @@ export class DistribuidoraServicio {
 
     console.log('Datos que se envían para modificar:', distribuidoraBackend);
 
-    return this.http
-      .put<Distribuidora>(`${this.url}/${cuit}`, distribuidoraBackend)
-      .pipe(
-        map((response) => {
-          console.log('Distribuidora modificada exitosamente:', response);
-          return true;
-        }),
-        catchError((error) => {
-          console.error('Error al modificar distribuidora:', error);
-          console.error('Error details:', error.error);
-          if (error.status === 404) {
-            console.error('Distribuidora no encontrada');
-          }
-          return of(false);
-        }),
-      );
+    const observable = this.http.put<Distribuidora>(
+      `${this.url}/${cuit}`,
+      distribuidoraBackend,
+    );
+
+    try {
+      const response = await lastValueFrom(observable);
+      console.log('Distribuidora modificada exitosamente:', response);
+      return true;
+    } catch (error: any) {
+      console.error('Error al modificar distribuidora:', error);
+      console.error('Error details:', error.error);
+      if (error.status === 404) {
+        console.error('Distribuidora no encontrada');
+      }
+      return false;
+    }
   }
 
-  buscarDistribuidoraCuit(
+  async buscarDistribuidoraCuit(
     cuit: string | null | undefined,
-  ): Observable<Distribuidora | null> {
+  ): Promise<Distribuidora | null> {
     const cuitElegido = cuit?.trim();
 
     if (cuitElegido) {
       console.log('Buscando distribuidora con CUIT:', cuitElegido);
 
-      return this.http.get<any>(`${this.url}/${cuitElegido}`).pipe(
-        map((response) => {
-          console.log('Distribuidora encontrada:', response);
-          // Crear una instancia de Distribuidora a partir de la respuesta JSON
-          const distribuidora = new Distribuidora(
-            null as any, // The user is not sent in this request
-            response.cuit,
-            response.nombre,
-            response.direccion,
-            response.numeroTelefono,
-            response.descripcion,
-            response.codigoPostal,
-            response.ciudad
-          );
-          return distribuidora;
-        }),
-        catchError((error) => {
-          console.error('Error al buscar distribuidora:', error);
-          if (error.status === 404) {
-            console.error('Distribuidora no encontrada con CUIT:', cuitElegido);
-          }
-          return of(null);
-        }),
-      );
+      const observable = this.http.get<any>(`${this.url}/${cuitElegido}`);
+      try {
+        const response = await lastValueFrom(observable);
+        console.log('Distribuidora encontrada:', response);
+        // Crear una instancia de Distribuidora a partir de la respuesta JSON
+        const distribuidora = new Distribuidora(
+          null as any, // The user is not sent in this request
+          response.cuit,
+          response.nombre,
+          response.direccion,
+          response.numeroTelefono,
+          response.descripcion,
+          response.codigoPostal,
+          response.ciudad,
+        );
+        return distribuidora;
+      } catch (error: any) {
+        console.error('Error al buscar distribuidora:', error);
+        if (error.status === 404) {
+          console.error('Distribuidora no encontrada con CUIT:', cuitElegido);
+        }
+        return null;
+      }
     } else {
-      return of(null);
+      return null;
     }
   }
 }
+

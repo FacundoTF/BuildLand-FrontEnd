@@ -40,7 +40,7 @@ export class DistribuidoraAgregar {
     ]),
   });
 
-  handleSubmit() {
+  async handleSubmit() {
     if (this.distribuidoraForm.valid) {
       const distribuidoraData = {
         cuit: this.distribuidoraForm.value.cuit,
@@ -56,21 +56,20 @@ export class DistribuidoraAgregar {
         contraseña: this.distribuidoraForm.value.contraseña,
         rol: 'DISTRIBUIDORA',
       };
-      this.service
-        .agregarDistribuidora(distribuidoraData, usuarioData)
-        .subscribe({
-          next: (result) => {
-            if (result) {
-              console.log('Distribuidora agregada exitosamente');
-              this.distribuidoraForm.reset();
-            } else {
-              console.error('Error al agregar la distribuidora');
-            }
-          },
-          error: (error) => {
-            console.error('Error en la solicitud:', error);
-          },
-        });
+      try {
+        const result = await this.service.agregarDistribuidora(
+          distribuidoraData,
+          usuarioData,
+        );
+        if (result) {
+          console.log('Distribuidora agregada exitosamente');
+          this.distribuidoraForm.reset();
+        } else {
+          console.error('Error al agregar la distribuidora');
+        }
+      } catch (error) {
+        console.error('Error en la solicitud:', error);
+      }
     }
   }
 }

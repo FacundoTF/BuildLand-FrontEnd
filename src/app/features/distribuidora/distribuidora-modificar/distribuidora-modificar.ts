@@ -49,46 +49,44 @@ export class DistribuidoraModificar {
     ]),
   });
 
-  handleSubmitCuit() {
+  async handleSubmitCuit() {
     if (this.distribuidoraCuit.valid) {
-      this.service
-        .buscarDistribuidoraCuit(this.distribuidoraCuit.value.cuit)
-        .subscribe({
-          next: (distribuidora) => {
-            if (distribuidora) {
-              console.log('Distribuidora encontrada:', distribuidora);
-              this.distribuidoraEncontrada = distribuidora;
+      try {
+        const distribuidora = await this.service.buscarDistribuidoraCuit(
+          this.distribuidoraCuit.value.cuit,
+        );
+        if (distribuidora) {
+          console.log('Distribuidora encontrada:', distribuidora);
+          this.distribuidoraEncontrada = distribuidora;
 
-              const container = document.querySelector(
-                '.edit-container',
-              ) as HTMLElement;
-              container.className = 'edit-container is-visible';
+          const container = document.querySelector(
+            '.edit-container',
+          ) as HTMLElement;
+          container.className = 'edit-container is-visible';
 
-              // Poblar el formulario con los datos encontrados
-              this.distribuidoraForm.patchValue({
-                cuit: this.distribuidoraCuit.value.cuit,
-                nombre: distribuidora.nombre,
-                direccion: distribuidora.direccion,
-                codigoPostal: distribuidora.codigoPostal,
-                numeroTelefono: distribuidora.numeroTelefono,
-                descripcion: distribuidora.descripcion,
-                ciudad: distribuidora.ciudad,
-                correoElectronico: '', // Campo nuevo - se dejará vacío para que el usuario lo complete
-                contraseña: '', // Campo nuevo - se dejará vacío para que el usuario lo complete
-              });
-            } else {
-              console.error(
-                'No se encontró la distribuidora con el CUIT proporcionado',
-              );
-              this.distribuidoraEncontrada = null;
-              this.distribuidoraForm.reset();
-            }
-          },
-          error: (error) => {
-            console.error('Error al buscar la distribuidora:', error);
-            this.distribuidoraEncontrada = null;
-          },
-        });
+          // Poblar el formulario con los datos encontrados
+          this.distribuidoraForm.patchValue({
+            cuit: this.distribuidoraCuit.value.cuit,
+            nombre: distribuidora.nombre,
+            direccion: distribuidora.direccion,
+            codigoPostal: distribuidora.codigoPostal,
+            numeroTelefono: distribuidora.numeroTelefono,
+            descripcion: distribuidora.descripcion,
+            ciudad: distribuidora.ciudad,
+            correoElectronico: '', // Campo nuevo - se dejará vacío para que el usuario lo complete
+            contraseña: '', // Campo nuevo - se dejará vacío para que el usuario lo complete
+          });
+        } else {
+          console.error(
+            'No se encontró la distribuidora con el CUIT proporcionado',
+          );
+          this.distribuidoraEncontrada = null;
+          this.distribuidoraForm.reset();
+        }
+      } catch (error) {
+        console.error('Error al buscar la distribuidora:', error);
+        this.distribuidoraEncontrada = null;
+      }
     } else {
       console.error('CUIT inválido o vacío');
       this.distribuidoraEncontrada = null;
@@ -96,7 +94,7 @@ export class DistribuidoraModificar {
     }
   }
 
-  handleModify() {
+  async handleModify() {
     if (this.distribuidoraForm.valid) {
       const distribuidoraData = this.distribuidoraForm.value;
       const cuit = this.distribuidoraCuit.value.cuit;
@@ -106,21 +104,22 @@ export class DistribuidoraModificar {
         return;
       }
 
-      this.service.modificarDistribuidora(cuit, distribuidoraData).subscribe({
-        next: (success) => {
-          if (success) {
-            console.log('Distribuidora modificada exitosamente');
-            this.distribuidoraForm.reset();
-            this.distribuidoraCuit.reset();
-            this.distribuidoraEncontrada = null;
-          } else {
-            console.error('Error al modificar la distribuidora');
-          }
-        },
-        error: (error) => {
-          console.error('Error en la solicitud de modificación:', error);
-        },
-      });
+      try {
+        const success = await this.service.modificarDistribuidora(
+          cuit,
+          distribuidoraData,
+        );
+        if (success) {
+          console.log('Distribuidora modificada exitosamente');
+          this.distribuidoraForm.reset();
+          this.distribuidoraCuit.reset();
+          this.distribuidoraEncontrada = null;
+        } else {
+          console.error('Error al modificar la distribuidora');
+        }
+      } catch (error) {
+        console.error('Error en la solicitud de modificación:', error);
+      }
     } else {
       console.error('Formulario inválido');
       this.distribuidoraForm.reset();

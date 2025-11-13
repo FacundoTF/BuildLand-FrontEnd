@@ -31,58 +31,47 @@ export class DistribuidoraRemover {
     ]),
   });
 
-  handleSubmitCuit() {
+  async handleSubmitCuit() {
     if (this.distribuidoraCuit.valid) {
-      this.service
-        .buscarDistribuidoraCuit(this.distribuidoraCuit.value.cuit)
-        .subscribe({
-          next: (distribuidora) => {
-            if (distribuidora) {
-              console.log('Distribuidora encontrada:', distribuidora);
-              this.distribuidoraEncontrada = distribuidora;
-              var container = document.querySelector(
-                '.delete-container',
-              ) as HTMLElement;
-              container.style.display = 'block';
-              this.mostrarFormDistribuidora();
-            } else {
-              console.error(
-                'No se encontró la distribuidora con el CUIT proporcionado',
-              );
-              this.distribuidoraEncontrada = null;
-            }
-          },
-          error: (error) => {
-            console.error('Error al buscar la distribuidora:', error);
-            this.distribuidoraEncontrada = null;
-          },
-        });
+      try {
+        const distribuidora = await this.service.buscarDistribuidoraCuit(
+          this.distribuidoraCuit.value.cuit,
+        );
+        if (distribuidora) {
+          console.log('Distribuidora encontrada:', distribuidora);
+          this.distribuidoraEncontrada = distribuidora;
+        } else {
+          console.error(
+            'No se encontró la distribuidora con el CUIT proporcionado',
+          );
+          this.distribuidoraEncontrada = null;
+        }
+      } catch (error) {
+        console.error('Error al buscar la distribuidora:', error);
+        this.distribuidoraEncontrada = null;
+      }
+    } else {
+      console.error('CUIT inválido o vacío');
+      this.distribuidoraEncontrada = null;
     }
   }
 
-  handleRemove() {
-    if (this.distribuidoraEncontrada && this.distribuidoraCuit.valid) {
-      this.service
-        .removerDistribuidora(this.distribuidoraEncontrada)
-        .subscribe({
-          next: (success) => {
-            if (success) {
-              console.log('Distribuidora removida exitosamente');
-              // Ocultar el contenedor de eliminación y resetear el formulario
-              var container = document.querySelector(
-                '.delete-container',
-              ) as HTMLElement;
-              container.style.display = 'none';
-              this.distribuidoraCuit.reset();
-              this.distribuidoraEncontrada = null;
-            } else {
-              console.error('Error al remover la distribuidora');
-            }
-          },
-          error: (error) => {
-            console.error('Error en la solicitud de eliminación:', error);
-          },
-        });
+  async handleRemove() {
+    if (this.distribuidoraEncontrada) {
+      try {
+        const success = await this.service.removerDistribuidora(
+          this.distribuidoraEncontrada,
+        );
+        if (success) {
+          console.log('Distribuidora eliminada exitosamente');
+          this.distribuidoraCuit.reset();
+          this.distribuidoraEncontrada = null;
+        } else {
+          console.error('Error al eliminar la distribuidora');
+        }
+      } catch (error) {
+        console.error('Error en la solicitud de eliminación:', error);
+      }
     }
   }
 }
