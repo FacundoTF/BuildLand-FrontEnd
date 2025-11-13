@@ -52,7 +52,7 @@ export class RealizarPresupuesto {
       },
     });
   }
-  habilitarPresupuesto(categoria: Categoria) {
+  async habilitarPresupuesto(categoria: Categoria) {
     let contenedorPresupuesto = document.getElementById(
       'presupuesto-container',
     );
@@ -62,18 +62,9 @@ export class RealizarPresupuesto {
     this.presupuestoHabilitado.set(true);
     contenedorPresupuesto.style.display = 'block';
 
-    this.buscarMarcas(categoria);
-    this.buscarProductos(categoria);
     await this.buscarMarcas(categoria);
     await this.buscarProductos(categoria);
   }
-  buscarProductos(categoria: Categoria) {
-    this.productoService.traerProductos(categoria).subscribe({
-      next: (productos) => {
-        this.productos = productos;
-      },
-      error: (error) => console.error('Error al obtener productos:', error),
-    });
   async buscarProductos(categoria: Categoria) {
     this.productos =
       await this.productoService.traerProductosPorCategoria(categoria);
