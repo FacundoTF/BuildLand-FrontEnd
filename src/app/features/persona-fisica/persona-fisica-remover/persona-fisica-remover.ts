@@ -35,33 +35,31 @@ export class PersonaFisicaRemover {
     confirmDelete: new FormControl(false, Validators.requiredTrue),
   });
 
-  handleSubmitCuit() {
+  async handleSubmitCuit() {
     if (this.personaFisicaCuit.valid) {
       const cuit = this.personaFisicaCuit.value.cuit;
       if (cuit === null || cuit === undefined) {
         this.handleCuitError();
         return;
       }
-      this.service
-        .buscarPersonaFisica(this.personaFisicaCuit.value.cuit!)
-        .subscribe({
-          next: (personaFisica) => {
-            if (personaFisica) {
-              console.log('Persona física encontrada:', personaFisica);
-              this.personaFisicaEncontrada = personaFisica;
-              this.mostarComponenteBorrado();
-            } else {
-              console.error(
-                'No se encontró la persona física con el CUIT proporcionado',
-              );
-              this.personaFisicaEncontrada = null;
-            }
-          },
-          error: (error) => {
-            console.error('Error al buscar la persona física:', error);
-            this.personaFisicaEncontrada = null;
-          },
-        });
+      try {
+        const personaFisica = await this.service.buscarPersonaFisica(
+          this.personaFisicaCuit.value.cuit!,
+        );
+        if (personaFisica) {
+          console.log('Persona física encontrada:', personaFisica);
+          this.personaFisicaEncontrada = personaFisica;
+          this.mostarComponenteBorrado();
+        } else {
+          console.error(
+            'No se encontró la persona física con el CUIT proporcionado',
+          );
+          this.personaFisicaEncontrada = null;
+        }
+      } catch (error) {
+        console.error('Error al buscar la persona física:', error);
+        this.personaFisicaEncontrada = null;
+      }
     } else {
       this.handleCuitError();
     }
@@ -72,7 +70,7 @@ export class PersonaFisicaRemover {
     this.personaFisicaEncontrada = null;
   }
 
-  handleRemove() {
+  async handleRemove() {
     if (!this.deleteForm.valid) {
       alert(
         'Debe confirmar que desea eliminar la persona física marcando la casilla de confirmación.',
@@ -80,23 +78,21 @@ export class PersonaFisicaRemover {
       return;
     }
     if (this.personaFisicaEncontrada && this.personaFisicaCuit.valid) {
-      this.service
-        .removerPersonaFisica(this.personaFisicaEncontrada)
-        .subscribe({
-          next: (success) => {
-            console.log('Persona física removida exitosamente');
-            var container = document.querySelector(
-              '.delete-container',
-            ) as HTMLElement;
-            container.style.display = 'none';
-            this.personaFisicaCuit.reset();
-            this.personaFisicaEncontrada = null;
-            this.deleteForm.reset();
-          },
-          error: (error) => {
-            console.error('Error en la solicitud de eliminación:', error);
-          },
-        });
+      try {
+        const success = await this.service.removerPersonaFisica(
+          this.personaFisicaEncontrada,
+        );
+        console.log('Persona física removida exitosamente');
+        var container = document.querySelector(
+          '.delete-container',
+        ) as HTMLElement;
+        container.style.display = 'none';
+        this.personaFisicaCuit.reset();
+        this.personaFisicaEncontrada = null;
+        this.deleteForm.reset();
+      } catch (error) {
+        console.error('Error en la solicitud de eliminación:', error);
+      }
     }
   }
 }

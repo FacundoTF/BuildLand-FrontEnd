@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { environment } from '../../../../environments/environment.development';
 import { PersonaFisica } from '../../../core/entities/personaFisica/persona-fisica';
 import { Usuario } from '../../../core/entities/usuario/usuario';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -12,24 +13,38 @@ export class PersonaFisicaService {
 
   private API_URL = `${environment.server.host}${environment.server.port}/api/personas-fisicas`;
 
-  agregarPersonaFisica(persona: PersonaFisica, usuario: Usuario) {
+  async agregarPersonaFisica(
+    persona: PersonaFisica,
+    usuario: Usuario,
+  ): Promise<boolean> {
     const body = {
       personaFisica: persona,
       usuario: usuario,
     };
 
-    return this.http.post<boolean>(this.API_URL, body);
+    const observable = this.http.post<boolean>(this.API_URL, body);
+    try {
+      return await lastValueFrom(observable);
+    } catch (error) {
+      console.error('Error adding persona fisica:', error);
+      return false;
+    }
   }
 
-  buscarPersonaFisica(cuit: string) {
-    const body = {
-      personaFisica: cuit,
-    };
-
-    return this.http.get<PersonaFisica>(`${this.API_URL}/${cuit}`);
+  async buscarPersonaFisica(cuit: string): Promise<PersonaFisica | null> {
+    const observable = this.http.get<PersonaFisica>(`${this.API_URL}/${cuit}`);
+    try {
+      return await lastValueFrom(observable);
+    } catch (error) {
+      console.error('Error fetching persona fisica:', error);
+      return null;
+    }
   }
 
-  modificarPersonaFisica(usuario: Usuario, persona: PersonaFisica) {
+  async modificarPersonaFisica(
+    usuario: Usuario,
+    persona: PersonaFisica,
+  ): Promise<any> {
     const body = {
       usuario: {
         email: usuario.email,
@@ -43,12 +58,26 @@ export class PersonaFisicaService {
       ciudad: persona.ciudad,
     };
 
-    return this.http.patch(`${this.API_URL}/`, body);
+    const observable = this.http.patch(`${this.API_URL}/`, body);
+    try {
+      return await lastValueFrom(observable);
+    } catch (error) {
+      console.error('Error modifying persona fisica:', error);
+      return null;
+    }
   }
 
-  removerPersonaFisica(personaFisicaEncontrada: PersonaFisica) {
-    return this.http.delete(
+  async removerPersonaFisica(
+    personaFisicaEncontrada: PersonaFisica,
+  ): Promise<any> {
+    const observable = this.http.delete(
       `${this.API_URL}/${personaFisicaEncontrada.cuit}`,
     );
+    try {
+      return await lastValueFrom(observable);
+    } catch (error) {
+      console.error('Error removing persona fisica:', error);
+      return null;
+    }
   }
 }

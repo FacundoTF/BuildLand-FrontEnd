@@ -36,48 +36,47 @@ export class PersonaFisicaModificar {
     contraseña: new FormControl('', [Validators.minLength(6)]),
   });
 
-  handleSubmitCuit() {
+  async handleSubmitCuit() {
     if (this.personaFisicaCuit.valid) {
       const cuit = this.personaFisicaCuit.value.cuit;
       if (cuit === null || cuit === undefined) {
         this.handleCuitError();
         return;
       }
-      this.service
-        .buscarPersonaFisica(this.personaFisicaCuit.value.cuit!)
-        .subscribe({
-          next: (personaFisica: any) => {
-            if (personaFisica) {
-              console.log('Persona física encontrada:', personaFisica);
-              console.log(typeof personaFisica);
+      try {
+        const personaFisica: PersonaFisica | null =
+          await this.service.buscarPersonaFisica(
+            this.personaFisicaCuit.value.cuit!,
+          );
+        if (personaFisica) {
+          console.log('Persona física encontrada:', personaFisica);
+          console.log(typeof personaFisica);
 
-              const container = document.querySelector(
-                '.edit-container',
-              ) as HTMLElement;
-              container.className = 'edit-container is-visible';
+          const container = document.querySelector(
+            '.edit-container',
+          ) as HTMLElement;
+          container.className = 'edit-container is-visible';
 
-              this.personaFisicaForm.patchValue({
-                cuit: personaFisica.cuit,
-                nombre: personaFisica.nombre,
-                codigoPostal: personaFisica.codigoPostal,
-                numeroTelefono: personaFisica.numeroTelefono,
-                ciudad: personaFisica.ciudad,
-                correoElectronico: '',
-                contraseña: '',
-              });
-            } else {
-              console.error(
-                'No se encontró la persona física con el CUIT proporcionado',
-              );
-              this.personaFisicaEncontrada = null;
-              this.personaFisicaForm.reset();
-            }
-          },
-          error: (error) => {
-            console.error('Error al buscar la persona física:', error);
-            this.personaFisicaEncontrada = null;
-          },
-        });
+          this.personaFisicaForm.patchValue({
+            cuit: personaFisica.cuit,
+            nombre: personaFisica.nombre,
+            codigoPostal: personaFisica.codigoPostal,
+            numeroTelefono: personaFisica.numeroTelefono,
+            ciudad: personaFisica.ciudad,
+            correoElectronico: '',
+            contraseña: '',
+          });
+        } else {
+          console.error(
+            'No se encontró la persona física con el CUIT proporcionado',
+          );
+          this.personaFisicaEncontrada = null;
+          this.personaFisicaForm.reset();
+        }
+      } catch (error) {
+        console.error('Error al buscar la persona física:', error);
+        this.personaFisicaEncontrada = null;
+      }
     } else {
       this.handleCuitError();
     }
@@ -89,7 +88,7 @@ export class PersonaFisicaModificar {
     this.personaFisicaForm.reset();
   }
 
-  handleModify() {
+  async handleModify() {
     if (this.personaFisicaForm.valid) {
       const personaFisicaData = this.personaFisicaForm.value;
       const cuit = this.personaFisicaCuit.value.cuit;
@@ -117,23 +116,22 @@ export class PersonaFisicaModificar {
         personaFisicaData.ciudad!,
       );
 
-      this.service
-        .modificarPersonaFisica(usuarioModificar, personaModificar)
-        .subscribe({
-          next: (success: any) => {
-            if (success) {
-              console.log('Persona física modificada exitosamente');
-              this.personaFisicaForm.reset();
-              this.personaFisicaCuit.reset();
-              this.personaFisicaEncontrada = null;
-            } else {
-              console.error('Error al modificar la persona física');
-            }
-          },
-          error: (error: any) => {
-            console.error('Error en la solicitud de modificación:', error);
-          },
-        });
+      try {
+        const success: any = await this.service.modificarPersonaFisica(
+          usuarioModificar,
+          personaModificar,
+        );
+        if (success) {
+          console.log('Persona física modificada exitosamente');
+          this.personaFisicaForm.reset();
+          this.personaFisicaCuit.reset();
+          this.personaFisicaEncontrada = null;
+        } else {
+          console.error('Error al modificar la persona física');
+        }
+      } catch (error) {
+        console.error('Error en la solicitud de modificación:', error);
+      }
     } else {
       console.error('Formulario inválido');
       this.personaFisicaForm.reset();

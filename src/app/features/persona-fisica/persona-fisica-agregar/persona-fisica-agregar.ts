@@ -50,7 +50,7 @@ export class PersonaFisicaAgregar {
     }),
   });
 
-  handleSubmit() {
+  async handleSubmit() {
     if (this.personaFisicaForm.valid) {
       const {
         cuit,
@@ -79,19 +79,17 @@ export class PersonaFisicaAgregar {
         ciudad,
       );
 
-      this.service.agregarPersonaFisica(persona, usuario).subscribe({
-        next: (result) => {
-          if (result) {
-            console.log('Persona física agregada exitosamente');
-            this.personaFisicaForm.reset();
-          } else {
-            console.error('Error al agregar la persona física');
-          }
-        },
-        error: (error) => {
-          console.error('Error en la solicitud:', error);
-        },
-      });
+      try {
+        const result = await this.service.agregarPersonaFisica(persona, usuario);
+        if (result) {
+          console.log('Persona física agregada exitosamente');
+          this.personaFisicaForm.reset();
+        } else {
+          console.error('Error al agregar la persona física');
+        }
+      } catch (error) {
+        console.error('Error en la solicitud:', error);
+      }
     }
   }
 }
