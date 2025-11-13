@@ -91,6 +91,14 @@ export class RealizarPresupuesto {
     let itemRepetido = false;
 
     if (!producto || !marca || !cantidadValue) {
+      alert(
+        'Debe completar todos los campos para agregar un producto al presupuesto.',
+      );
+      return;
+    }
+
+    if (cantidadValue <= 0) {
+      alert('La cantidad debe ser mayor que cero.');
       return;
     }
 
