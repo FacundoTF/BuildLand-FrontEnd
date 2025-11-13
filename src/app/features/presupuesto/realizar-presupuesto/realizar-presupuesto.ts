@@ -87,6 +87,8 @@ export class RealizarPresupuesto {
     const producto = this.selectedProduct.value;
     const marca = this.selectedMarca.value;
     const cantidadValue = this.cantidad.value;
+    const presupuestoItems = this.presupuestoItems();
+    let itemRepetido = false;
 
     if (!producto || !marca || !cantidadValue) {
       return;
@@ -97,6 +99,17 @@ export class RealizarPresupuesto {
       marca: marca,
       cantidad: cantidadValue,
     };
+
+    for (const presupuestoItem of presupuestoItems) {
+      if (presupuestoItem.producto === item.producto) {
+        itemRepetido = true;
+      }
+    }
+
+    if (itemRepetido) {
+      alert('No se puede colocar el mismo producto en el presupuesto');
+      return;
+    }
 
     this.presupuestoItems.update((items) => [...items, item]);
 
