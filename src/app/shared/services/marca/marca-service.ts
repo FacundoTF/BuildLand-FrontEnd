@@ -1,9 +1,9 @@
-import { inject, Injectable, Optional } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment.development';
 import { Categoria } from '../../../core/entities/categoria/categoria';
 import { Marca } from '../../../core/entities/marca/marca';
-import { Observable } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -13,21 +13,15 @@ export class MarcaService {
 
   private API_URL = `${environment.server.host}${environment.server.port}/api/marcas`;
 
-  traerMarcas(categoria: Categoria): Marca[] {
-    let marcasRelevada: Marca[] = new Array<Marca>();
-
-    const observable: Observable<Marca[]> = this.http.get<Marca[]>(
+  async traerMarcas(categoria: Categoria): Promise<Marca[]> {
+    const observable = this.http.get<Marca[]>(
       `${this.API_URL}/categorias/${categoria.nombre}`,
     );
-    observable.subscribe({
-      next: (marcas) => {
-        marcasRelevada.push(...marcas);
-      },
-      error: (error) => {
-        return marcasRelevada;
-      },
-    });
-
-    return marcasRelevada;
+    try {
+      return await lastValueFrom(observable);
+    } catch (error) {
+      console.error('Error fetching marcas:', error);
+      return [];
+    }
   }
 }

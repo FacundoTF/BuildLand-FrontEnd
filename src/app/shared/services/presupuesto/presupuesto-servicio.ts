@@ -1,9 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { environment } from '../../../../environments/environment.development';
-import { PersonaFisica } from '../../../core/entities/personaFisica/persona-fisica';
-import { Usuario } from '../../../core/entities/usuario/usuario';
 import { Presupuesto } from '../../../core/entities/presupuesto/presupuesto';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -13,11 +12,17 @@ export class PresupuestoServicio {
 
   private API_URL = `${environment.server.host}${environment.server.port}/api/presupuestos`;
 
-  agregarPresupuesto(presupuesto: Presupuesto) {
+  async agregarPresupuesto(presupuesto: Presupuesto): Promise<boolean> {
     const body = {
       presupuesto: presupuesto,
     };
 
-    return this.http.post<boolean>(this.API_URL, body);
+    const observable = this.http.post<boolean>(this.API_URL, body);
+    try {
+      return await lastValueFrom(observable);
+    } catch (error) {
+      console.error('Error adding presupuesto:', error);
+      return false;
+    }
   }
 }
