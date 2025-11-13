@@ -64,6 +64,8 @@ export class RealizarPresupuesto {
 
     this.buscarMarcas(categoria);
     this.buscarProductos(categoria);
+    await this.buscarMarcas(categoria);
+    await this.buscarProductos(categoria);
   }
   buscarProductos(categoria: Categoria) {
     this.productoService.traerProductos(categoria).subscribe({
@@ -72,8 +74,11 @@ export class RealizarPresupuesto {
       },
       error: (error) => console.error('Error al obtener productos:', error),
     });
+  async buscarProductos(categoria: Categoria) {
+    this.productos =
+      await this.productoService.traerProductosPorCategoria(categoria);
   }
-  buscarMarcas(categoria: Categoria) {
-    this.marcas = this.marcaService.traerMarcas(categoria);
+  async buscarMarcas(categoria: Categoria) {
+    this.marcas = await this.marcaService.traerMarcas(categoria);
   }
 }
