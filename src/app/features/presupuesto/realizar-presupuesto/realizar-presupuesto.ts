@@ -41,6 +41,7 @@ export class RealizarPresupuesto {
   private productoService = inject(ProductoService);
 
   presupuestoHabilitado = signal(false);
+  categoriaConfirmada = signal(false);
 
   categorias: Categoria[] = [];
   marcas: Marca[] = [];
@@ -70,6 +71,7 @@ export class RealizarPresupuesto {
       return;
     }
     this.presupuestoHabilitado.set(true);
+    this.categoriaConfirmada.set(true);
     contenedorPresupuesto.style.display = 'block';
 
     await this.buscarMarcas(categoria);
@@ -130,5 +132,21 @@ export class RealizarPresupuesto {
     this.presupuestoItems.update((items) =>
       items.filter((_, i) => i !== index),
     );
+  }
+
+  resetearPresupuesto() {
+    this.categoriaConfirmada.set(false);
+    this.presupuestoHabilitado.set(false);
+    this.selectedCategory.reset();
+    this.selectedProduct.reset();
+    this.selectedMarca.reset();
+    this.cantidad.setValue(1);
+    this.presupuestoItems.set([]);
+    const contenedorPresupuesto = document.getElementById(
+      'presupuesto-container',
+    );
+    if (contenedorPresupuesto) {
+      contenedorPresupuesto.style.display = 'none';
+    }
   }
 }
