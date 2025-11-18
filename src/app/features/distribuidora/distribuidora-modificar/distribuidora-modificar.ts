@@ -69,7 +69,7 @@ export class DistribuidoraModificar implements OnInit {
         throw 'Las categorias resultaron ser undefined';
       }
     } catch (error) {
-      console.error('Error al cargar categorías:', error);
+      alert('Error al cargar categorías');
     }
   }
 
@@ -93,7 +93,6 @@ export class DistribuidoraModificar implements OnInit {
           this.distribuidoraCuit.value.cuit,
         );
         if (distribuidora) {
-          console.log('Distribuidora encontrada:', distribuidora);
           this.distribuidoraEncontrada = distribuidora;
 
           const container = document.querySelector(
@@ -125,18 +124,16 @@ export class DistribuidoraModificar implements OnInit {
             );
           }
         } else {
-          console.error(
-            'No se encontró la distribuidora con el CUIT proporcionado',
-          );
+          alert('No se encontró la distribuidora con el CUIT proporcionado');
           this.distribuidoraEncontrada = null;
           this.distribuidoraForm.reset();
         }
       } catch (error) {
-        console.error('Error al buscar la distribuidora:', error);
+        alert('Error al buscar la distribuidora');
         this.distribuidoraEncontrada = null;
       }
     } else {
-      console.error('CUIT inválido o vacío');
+      alert('CUIT inválido o vacío');
       this.distribuidoraEncontrada = null;
       this.distribuidoraForm.reset();
     }
@@ -170,22 +167,22 @@ export class DistribuidoraModificar implements OnInit {
         const success =
           await this.service.modificarDistribuidora(distribuidora);
         if (success) {
-          console.log('Distribuidora modificada exitosamente');
+          alert('Distribuidora modificada exitosamente');
           this.distribuidoraForm.reset();
           this.distribuidoraCuit.reset();
           this.distribuidoraEncontrada = null;
           this.categoriasSeleccionadas = [];
         } else {
-          console.error('Error al modificar la distribuidora');
+          alert('Error al modificar la distribuidora');
         }
       } catch (error) {
-        console.error('Error en la solicitud de modificación:', error);
+        alert('Error en la solicitud de modificación');
       }
     } else {
       if (this.categoriasSeleccionadas.length === 0) {
-        console.error('Debe seleccionar al menos una categoría');
+        alert('Debe seleccionar al menos una categoría');
       } else {
-        console.error('Formulario inválido');
+        alert('Formulario inválido');
       }
       this.distribuidoraForm.reset();
       this.distribuidoraCuit.reset();

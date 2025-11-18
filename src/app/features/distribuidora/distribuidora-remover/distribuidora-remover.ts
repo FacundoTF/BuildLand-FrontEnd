@@ -38,20 +38,17 @@ export class DistribuidoraRemover {
           this.distribuidoraCuit.value.cuit,
         );
         if (distribuidora) {
-          console.log('Distribuidora encontrada:', distribuidora);
           this.distribuidoraEncontrada = distribuidora;
         } else {
-          console.error(
-            'No se encontró la distribuidora con el CUIT proporcionado',
-          );
+          alert('No se encontró la distribuidora con el CUIT proporcionado');
           this.distribuidoraEncontrada = null;
         }
       } catch (error) {
-        console.error('Error al buscar la distribuidora:', error);
+        alert('Error al buscar la distribuidora:');
         this.distribuidoraEncontrada = null;
       }
     } else {
-      console.error('CUIT inválido o vacío');
+      alert('CUIT inválido o vacío');
       this.distribuidoraEncontrada = null;
     }
   }
@@ -63,14 +60,14 @@ export class DistribuidoraRemover {
           this.distribuidoraEncontrada,
         );
         if (success) {
-          console.log('Distribuidora eliminada exitosamente');
+          alert('Distribuidora eliminada exitosamente');
           this.distribuidoraCuit.reset();
           this.distribuidoraEncontrada = null;
         } else {
-          console.error('Error al eliminar la distribuidora');
+          alert('Error al eliminar la distribuidora');
         }
       } catch (error) {
-        console.error('Error en la solicitud de eliminación:', error);
+        alert('Error en la solicitud de eliminación');
       }
     }
   }

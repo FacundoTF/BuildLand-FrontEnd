@@ -60,7 +60,7 @@ export class DistribuidoraAgregar implements OnInit {
         throw 'Las categorias resultaron ser undefined';
       }
     } catch (error) {
-      console.error('Error al cargar categorías:', error);
+      alert('Error al cargar categorías');
     }
   }
 
@@ -104,17 +104,17 @@ export class DistribuidoraAgregar implements OnInit {
       try {
         const result = await this.service.agregarDistribuidora(distribuidora);
         if (result) {
-          console.log('Distribuidora agregada exitosamente');
+          alert('Distribuidora agregada exitosamente');
           this.distribuidoraForm.reset();
           this.categoriasSeleccionadas = [];
         } else {
-          console.error('Error al agregar la distribuidora');
+          alert('Error al agregar la distribuidora');
         }
       } catch (error) {
-        console.error('Error en la solicitud:', error);
+        alert('Error en la solicitud al agregar distribuidora');
       }
     } else if (this.categoriasSeleccionadas.length === 0) {
-      console.error('Debe seleccionar al menos una categoría');
+      alert('Debe seleccionar al menos una categoría');
     }
   }
 }
