@@ -1,17 +1,24 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FormControl, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { Distribuidora } from '../../../core/entities/distribuidora/distribuidora';
 import { DistribuidoraServicio } from '../../../shared/services/distribuidora/distribuidora-servicio';
+import { CategoriaService } from '../../../shared/services/categoria/categoria-service';
+import { Categoria } from '../../../core/entities/categoria/categoria';
+import { TipoUsuario, Usuario } from '../../../core/entities/usuario/usuario';
 
 @Component({
   selector: 'app-distribuidora-agregar',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './distribuidora-agregar.html',
   styleUrl: './distribuidora-agregar.scss',
 })
-export class DistribuidoraAgregar {
+export class DistribuidoraAgregar implements OnInit {
   service = inject(DistribuidoraServicio);
+  categoriaService = inject(CategoriaService);
+  categorias: Categoria[] = [];
+  categoriasSeleccionadas: string[] = [];
 
   distribuidoraForm = new FormGroup({
     cuit: new FormControl('', [
@@ -40,36 +47,74 @@ export class DistribuidoraAgregar {
     ]),
   });
 
+  async ngOnInit() {
+    await this.cargarCategorias();
+  }
+
+  async cargarCategorias() {
+    try {
+      let result = await this.categoriaService.traerCategorias().toPromise();
+      if (result) {
+        this.categorias = result;
+      } else {
+        throw 'Las categorias resultaron ser undefined';
+      }
+    } catch (error) {
+      console.error('Error al cargar categorías:', error);
+    }
+  }
+
+  toggleCategoria(nombreCategoria: string) {
+    const index = this.categoriasSeleccionadas.indexOf(nombreCategoria);
+    if (index > -1) {
+      this.categoriasSeleccionadas.splice(index, 1);
+    } else {
+      this.categoriasSeleccionadas.push(nombreCategoria);
+    }
+  }
+
+  isCategoriaSeleccionada(nombreCategoria: string): boolean {
+    return this.categoriasSeleccionadas.includes(nombreCategoria);
+  }
+
   async handleSubmit() {
-    if (this.distribuidoraForm.valid) {
-      const distribuidoraData = {
-        cuit: this.distribuidoraForm.value.cuit,
-        nombre: this.distribuidoraForm.value.nombre,
-        direccion: this.distribuidoraForm.value.direccion,
-        codigoPostal: this.distribuidoraForm.value.codigoPostal,
-        numeroTelefono: this.distribuidoraForm.value.numeroTelefono,
-        descripcion: this.distribuidoraForm.value.descripcion,
-        ciudad: this.distribuidoraForm.value.ciudad,
-      };
-      const usuarioData = {
-        correoElectronico: this.distribuidoraForm.value.correoElectronico,
-        contraseña: this.distribuidoraForm.value.contraseña,
-        rol: 'DISTRIBUIDORA',
-      };
+    if (
+      this.distribuidoraForm.valid &&
+      this.categoriasSeleccionadas.length > 0
+    ) {
+      const distribuidora = new Distribuidora(
+        new Usuario(
+          null,
+          TipoUsuario.DISTRIBUIDORA,
+          '',
+          null,
+          this.distribuidoraForm.value.correoElectronico!,
+          this.distribuidoraForm.value.contraseña!,
+        ),
+        this.distribuidoraForm.value.cuit!,
+        this.distribuidoraForm.value.nombre!,
+        this.distribuidoraForm.value.direccion!,
+        this.distribuidoraForm.value.numeroTelefono!,
+        this.distribuidoraForm.value.descripcion!,
+        this.distribuidoraForm.value.codigoPostal!,
+        this.distribuidoraForm.value.ciudad!,
+        this.categoriasSeleccionadas.map((nombre) => new Categoria(nombre)),
+      );
+
       try {
-        const result = await this.service.agregarDistribuidora(
-          distribuidoraData,
-          usuarioData,
-        );
+        const result = await this.service.agregarDistribuidora(distribuidora);
         if (result) {
           console.log('Distribuidora agregada exitosamente');
           this.distribuidoraForm.reset();
+          this.categoriasSeleccionadas = [];
         } else {
           console.error('Error al agregar la distribuidora');
         }
       } catch (error) {
         console.error('Error en la solicitud:', error);
       }
+    } else if (this.categoriasSeleccionadas.length === 0) {
+      console.error('Debe seleccionar al menos una categoría');
     }
   }
 }

@@ -11,32 +11,17 @@ export class DistribuidoraServicio {
   private http = inject(HttpClient);
   private url = `${environment.server.host}${environment.server.port}/api/distribuidoras`;
 
-  async agregarDistribuidora(
-    distribuidora: any,
-    usuario: any,
-  ): Promise<boolean> {
-    // Mapear los datos del formulario al formato que espera el backend
-    const distribuidoraBackend = {
-      id: distribuidora.cuit,
+  async agregarDistribuidora(distribuidora: Distribuidora): Promise<boolean> {
+    const observable = this.http.post<Distribuidora>(this.url, {
+      usuario: distribuidora.usuario,
+      cuit: distribuidora.cuit,
       nombre: distribuidora.nombre,
       direccion: distribuidora.direccion,
       numeroTelefono: distribuidora.numeroTelefono,
       descripcion: distribuidora.descripcion,
       codigoPostal: distribuidora.codigoPostal,
       ciudad: distribuidora.ciudad,
-    };
-    const usuarioBackend = {
-      correoElectronico: usuario.correoElectronico,
-      contraseña: usuario.contraseña,
-      rol: usuario.rol,
-    };
-
-    console.log('Datos que se envían al backend:', distribuidoraBackend);
-    console.log('Datos de usuario que se envían al backend:', usuarioBackend);
-
-    const observable = this.http.post<Distribuidora>(this.url, {
-      distribuidora: distribuidoraBackend,
-      usuario: usuarioBackend,
+      categorias: distribuidora.categorias,
     });
 
     try {
@@ -83,15 +68,15 @@ export class DistribuidoraServicio {
   ): Promise<boolean> {
     // Mapear los datos del formulario al formato que espera el backend
     const distribuidoraBackend = {
-      id: cuit, // Mantener el CUIT original
+      usuario: distribuidora.usuario,
+      cuit: cuit, // Mantener el CUIT original
       nombre: distribuidora.nombre,
       direccion: distribuidora.direccion,
       numeroTelefono: distribuidora.numeroTelefono,
       descripcion: distribuidora.descripcion,
       codigoPostal: distribuidora.codigoPostal,
       ciudad: distribuidora.ciudad,
-      correoElectronico: distribuidora.correoElectronico,
-      contraseña: distribuidora.contraseña,
+      categorias: distribuidora.categorias,
     };
 
     console.log('Datos que se envían para modificar:', distribuidoraBackend);
@@ -137,6 +122,7 @@ export class DistribuidoraServicio {
           response.descripcion,
           response.codigoPostal,
           response.ciudad,
+          response.categorias,
         );
         return distribuidora;
       } catch (error: any) {
@@ -151,4 +137,3 @@ export class DistribuidoraServicio {
     }
   }
 }
-

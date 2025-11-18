@@ -241,6 +241,59 @@ $error-color: #ba1a1a;
   content: "";
 }
 
+// Estilos para el selector de categorías
+.categorias-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.categoria-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: white;
+
+  &:hover {
+    border-color: $secondary-green;
+    background-color: #f1f8e9;
+  }
+
+  &.selected {
+    border-color: $primary-green;
+    background-color: #e8f5e9;
+    box-shadow: 0 2px 8px rgba(46, 125, 50, 0.2);
+  }
+
+  input[type="checkbox"] {
+    margin-right: 8px;
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+    accent-color: $primary-green;
+  }
+
+  label {
+    cursor: pointer;
+    margin: 0;
+    font-weight: 400;
+    user-select: none;
+    flex: 1;
+  }
+}
+
+.error-message {
+  display: block;
+  color: $error-color;
+  font-size: 0.75rem;
+  margin-top: 8px;
+}
+
 // Animaciones suaves
 @keyframes slideIn {
   from {
