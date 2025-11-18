@@ -148,13 +148,6 @@ export class RealizarPresupuesto {
       );
     });
 
-    const resultado =
-      await this.presupuestoServicio.agregarPresupuesto(presupuesto);
-    if (resultado) {
-      alert('Presupuesto guardado exitosamente');
-      this.resetearPresupuesto();
-    } else {
-      alert('Error al guardar el presupuesto');
     try {
       const result =
         await this.presupuestoServicio.agregarPresupuesto(presupuesto);
@@ -222,6 +215,7 @@ export class RealizarPresupuesto {
     this.categoriaConfirmada.set(false);
     this.presupuestoHabilitado.set(false);
     this.selectedCategory.reset();
+    this.selectedCategory.enable();
     this.selectedProduct.reset();
     this.selectedMarca.reset();
     this.cantidad.setValue(1);
