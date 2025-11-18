@@ -77,7 +77,6 @@ export class DistribuidoraServicio {
 
     try {
       const response = await lastValueFrom(observable);
-      console.log('Distribuidora modificada exitosamente:', response);
       return true;
     } catch (error: any) {
       console.error('Error al modificar distribuidora:', error);
@@ -95,13 +94,9 @@ export class DistribuidoraServicio {
     const cuitElegido = cuit?.trim();
 
     if (cuitElegido) {
-      console.log('Buscando distribuidora con CUIT:', cuitElegido);
-
       const observable = this.http.get<any>(`${this.url}/${cuitElegido}`);
       try {
         const response = await lastValueFrom(observable);
-        console.log('Distribuidora encontrada:', response);
-        // Crear una instancia de Distribuidora a partir de la respuesta JSON
         const distribuidora = new Distribuidora(
           response.usuario,
           response.cuit,
