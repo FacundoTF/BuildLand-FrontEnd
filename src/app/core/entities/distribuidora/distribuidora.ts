@@ -1,4 +1,5 @@
 import { Usuario } from '../usuario/usuario';
+import { Categoria } from '../categoria/categoria';
 
 export class Distribuidora {
   constructor(
@@ -9,6 +10,7 @@ export class Distribuidora {
     public numeroTelefono: string,
     public descripcion: string,
     public codigoPostal: string,
-    public ciudad: string
+    public ciudad: string,
+    public categoria: Categoria
   ) {}
 }
