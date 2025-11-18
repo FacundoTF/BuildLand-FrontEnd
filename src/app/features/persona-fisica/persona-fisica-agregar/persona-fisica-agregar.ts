@@ -80,10 +80,7 @@ export class PersonaFisicaAgregar {
       );
 
       try {
-        const result = await this.service.agregarPersonaFisica(
-          persona,
-          usuario,
-        );
+        const result = await this.service.agregarPersonaFisica(persona);
         if (result) {
           console.log('Persona física agregada exitosamente');
           this.personaFisicaForm.reset();
