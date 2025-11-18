@@ -63,7 +63,7 @@ export class PersonaFisicaAgregar {
       } = this.personaFisicaForm.getRawValue();
 
       const usuario = new Usuario(
-        0,
+        null,
         TipoUsuario.PERSONA_FISICA,
         cuit,
         null as any,
@@ -80,7 +80,10 @@ export class PersonaFisicaAgregar {
       );
 
       try {
-        const result = await this.service.agregarPersonaFisica(persona, usuario);
+        const result = await this.service.agregarPersonaFisica(
+          persona,
+          usuario,
+        );
         if (result) {
           console.log('Persona física agregada exitosamente');
           this.personaFisicaForm.reset();
