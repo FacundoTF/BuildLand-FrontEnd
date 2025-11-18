@@ -9,8 +9,16 @@
     align-items: center;
 }
 
-.Gestion>button{
-    display: flex;
+.Gestion > .OpcionNoPlegable{
+  display: flex;
+  justify-content: center;
+  margin: 6px;
+  padding: 6px;
+  width: 95%;
+}
+
+.Gestion > .Opcion{
+    display: none;
     justify-content: center;
     margin: 6px;
     padding: 6px;

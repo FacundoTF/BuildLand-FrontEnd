@@ -15,8 +15,9 @@ export class SideBar {
     if (element) {
       const buttons = element.querySelectorAll('.Opcion');
       buttons.forEach((element) => {
-        (element as HTMLElement).style.display =
-          (element as HTMLElement).style.display === 'none' ? 'block' : 'none';
+        const btn = element as HTMLElement;
+        const currentDisplay = window.getComputedStyle(btn).display;
+        btn.style.display = currentDisplay === 'none' ? 'block' : 'none';
       });
     }
   }
