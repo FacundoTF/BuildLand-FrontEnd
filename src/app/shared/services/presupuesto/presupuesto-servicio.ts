@@ -26,7 +26,7 @@ export class PresupuestoServicio {
     try {
       return await lastValueFrom(observable);
     } catch (error) {
-      console.error('Error adding presupuesto:', error);
+      console.error('Error agregando presupuesto:', error);
       return false;
     }
   }

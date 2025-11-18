@@ -13,16 +13,8 @@ export class PersonaFisicaService {
 
   private API_URL = `${environment.server.host}${environment.server.port}/api/personas-fisicas`;
 
-  async agregarPersonaFisica(
-    persona: PersonaFisica,
-    usuario: Usuario,
-  ): Promise<boolean> {
-    const body = {
-      personaFisica: persona,
-      usuario: usuario,
-    };
-
-    const observable = this.http.post<boolean>(this.API_URL, body);
+  async agregarPersonaFisica(persona: PersonaFisica): Promise<boolean> {
+    const observable = this.http.post<boolean>(this.API_URL, persona);
     try {
       return await lastValueFrom(observable);
     } catch (error) {

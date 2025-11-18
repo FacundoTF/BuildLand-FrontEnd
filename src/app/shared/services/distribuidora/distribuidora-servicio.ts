@@ -12,7 +12,7 @@ export class DistribuidoraServicio {
   private url = `${environment.server.host}${environment.server.port}/api/distribuidoras`;
 
   async agregarDistribuidora(distribuidora: Distribuidora): Promise<boolean> {
-    const observable = this.http.post<Distribuidora>(this.url, {
+    const observable = this.http.post<boolean>(this.url, {
       usuario: distribuidora.usuario,
       cuit: distribuidora.cuit,
       nombre: distribuidora.nombre,
@@ -25,12 +25,8 @@ export class DistribuidoraServicio {
     });
 
     try {
-      const response = await lastValueFrom(observable);
-      console.log('Distribuidora agregada exitosamente:', response);
-      return true;
+      return await lastValueFrom(observable);
     } catch (error: any) {
-      console.error('Error al agregar distribuidora:', error);
-      console.error('Error details:', error.error);
       return false;
     }
   }
