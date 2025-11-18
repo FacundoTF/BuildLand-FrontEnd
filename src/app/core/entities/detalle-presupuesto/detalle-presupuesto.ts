@@ -4,10 +4,9 @@ import { Producto } from '../producto/producto';
 
 export class DetallePresupuesto {
   constructor(
-    public idDetallePresupuesto: number,
+    public idDetallePresupuesto: number | null,
     public producto: Producto,
     public cantidad: number,
-    public presupuesto: Presupuesto,
-    public marca: Marca
+    public presupuesto: Presupuesto | null,
   ) {}
 }
