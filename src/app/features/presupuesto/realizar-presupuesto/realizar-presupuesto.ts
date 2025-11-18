@@ -155,6 +155,17 @@ export class RealizarPresupuesto {
       this.resetearPresupuesto();
     } else {
       alert('Error al guardar el presupuesto');
+    try {
+      const result =
+        await this.presupuestoServicio.agregarPresupuesto(presupuesto);
+      if (result) {
+        alert('Presupuesto guardado exitosamente');
+        this.resetearPresupuesto();
+      } else {
+        alert('Error al guardar el presupuesto');
+      }
+    } catch (error) {
+      alert('Error al guardar el presupuesto');
     }
   }
 
