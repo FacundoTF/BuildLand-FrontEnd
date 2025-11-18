@@ -11,6 +11,6 @@ export class Distribuidora {
     public descripcion: string,
     public codigoPostal: string,
     public ciudad: string,
-    public categoria: Categoria
+    public categorias: Categoria[]
   ) {}
 }
