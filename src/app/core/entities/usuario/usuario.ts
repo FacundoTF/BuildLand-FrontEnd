@@ -8,11 +8,11 @@ export enum TipoUsuario {
 
 export class Usuario {
   constructor(
-    public id: number,
+    public id: number | null,
     public tipoUsuario: TipoUsuario,
     public idReferencia: string,
-    public grupo: Grupo,
+    public grupo: Grupo | null,
     public email: string,
-    public password: string
+    public password: string,
   ) {}
 }
