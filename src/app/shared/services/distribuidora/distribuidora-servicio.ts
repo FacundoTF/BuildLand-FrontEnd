@@ -62,14 +62,10 @@ export class DistribuidoraServicio {
       return false;
     }
   }
-  async modificarDistribuidora(
-    cuit: string,
-    distribuidora: any,
-  ): Promise<boolean> {
-    // Mapear los datos del formulario al formato que espera el backend
-    const distribuidoraBackend = {
+  async modificarDistribuidora(distribuidora: Distribuidora): Promise<boolean> {
+    const observable = this.http.patch<Distribuidora>(this.url, {
       usuario: distribuidora.usuario,
-      cuit: cuit, // Mantener el CUIT original
+      cuit: distribuidora.cuit,
       nombre: distribuidora.nombre,
       direccion: distribuidora.direccion,
       numeroTelefono: distribuidora.numeroTelefono,
@@ -77,14 +73,7 @@ export class DistribuidoraServicio {
       codigoPostal: distribuidora.codigoPostal,
       ciudad: distribuidora.ciudad,
       categorias: distribuidora.categorias,
-    };
-
-    console.log('Datos que se envían para modificar:', distribuidoraBackend);
-
-    const observable = this.http.put<Distribuidora>(
-      `${this.url}/${cuit}`,
-      distribuidoraBackend,
-    );
+    });
 
     try {
       const response = await lastValueFrom(observable);
@@ -114,7 +103,7 @@ export class DistribuidoraServicio {
         console.log('Distribuidora encontrada:', response);
         // Crear una instancia de Distribuidora a partir de la respuesta JSON
         const distribuidora = new Distribuidora(
-          null as any, // The user is not sent in this request
+          response.usuario,
           response.cuit,
           response.nombre,
           response.direccion,

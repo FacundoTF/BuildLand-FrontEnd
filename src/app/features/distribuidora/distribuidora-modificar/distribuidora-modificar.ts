@@ -1,22 +1,29 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { DistribuidoraServicio } from '../../../shared/services/distribuidora/distribuidora-servicio';
 import { Distribuidora } from '../../../core/entities/distribuidora/distribuidora';
+import { CategoriaService } from '../../../shared/services/categoria/categoria-service';
+import { Categoria } from '../../../core/entities/categoria/categoria';
+import { TipoUsuario, Usuario } from '../../../core/entities/usuario/usuario';
 
 @Component({
   selector: 'app-distribuidora-modificar',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './distribuidora-modificar.html',
   styleUrl: './distribuidora-modificar.scss',
 })
-export class DistribuidoraModificar {
+export class DistribuidoraModificar implements OnInit {
   service = inject(DistribuidoraServicio);
+  categoriaService = inject(CategoriaService);
   distribuidoraEncontrada: Distribuidora | null = null;
+  categorias: Categoria[] = [];
+  categoriasSeleccionadas: string[] = [];
 
   distribuidoraCuit = new FormGroup({
     cuit: new FormControl('', [
@@ -31,11 +38,11 @@ export class DistribuidoraModificar {
     direccion: new FormControl('', [Validators.required]),
     codigoPostal: new FormControl('', [
       Validators.required,
-      Validators.pattern('^[0-9]{4}$'),
+      // Validators.pattern('^[0-9]{4}$'),
     ]),
     numeroTelefono: new FormControl('', [
       Validators.required,
-      Validators.pattern('^[0-9]{10,15}$'),
+      // Validators.pattern('^[0-9]{10,15}$'),
     ]),
     descripcion: new FormControl('', [Validators.required]),
     ciudad: new FormControl('', [Validators.required]),
@@ -48,6 +55,36 @@ export class DistribuidoraModificar {
       Validators.minLength(6),
     ]),
   });
+
+  async ngOnInit() {
+    await this.cargarCategorias();
+  }
+
+  async cargarCategorias() {
+    try {
+      let result = await this.categoriaService.traerCategorias().toPromise();
+      if (result) {
+        this.categorias = result;
+      } else {
+        throw 'Las categorias resultaron ser undefined';
+      }
+    } catch (error) {
+      console.error('Error al cargar categorías:', error);
+    }
+  }
+
+  toggleCategoria(nombreCategoria: string) {
+    const index = this.categoriasSeleccionadas.indexOf(nombreCategoria);
+    if (index > -1) {
+      this.categoriasSeleccionadas.splice(index, 1);
+    } else {
+      this.categoriasSeleccionadas.push(nombreCategoria);
+    }
+  }
+
+  isCategoriaSeleccionada(nombreCategoria: string): boolean {
+    return this.categoriasSeleccionadas.includes(nombreCategoria);
+  }
 
   async handleSubmitCuit() {
     if (this.distribuidoraCuit.valid) {
@@ -76,6 +113,17 @@ export class DistribuidoraModificar {
             correoElectronico: '', // Campo nuevo - se dejará vacío para que el usuario lo complete
             contraseña: '', // Campo nuevo - se dejará vacío para que el usuario lo complete
           });
+
+          // Cargar las categorías seleccionadas
+          this.categoriasSeleccionadas = [];
+          if (
+            distribuidora.categorias &&
+            Array.isArray(distribuidora.categorias)
+          ) {
+            this.categoriasSeleccionadas = distribuidora.categorias.map(
+              (cat) => cat.nombre,
+            );
+          }
         } else {
           console.error(
             'No se encontró la distribuidora con el CUIT proporcionado',
@@ -95,25 +143,38 @@ export class DistribuidoraModificar {
   }
 
   async handleModify() {
-    if (this.distribuidoraForm.valid) {
-      const distribuidoraData = this.distribuidoraForm.value;
-      const cuit = this.distribuidoraCuit.value.cuit;
-
-      if (!cuit) {
-        console.error('CUIT no disponible');
-        return;
-      }
+    if (
+      this.distribuidoraForm.valid &&
+      this.categoriasSeleccionadas.length > 0
+    ) {
+      const distribuidora = new Distribuidora(
+        new Usuario(
+          null,
+          TipoUsuario.DISTRIBUIDORA,
+          '',
+          null,
+          this.distribuidoraForm.value.correoElectronico!,
+          this.distribuidoraForm.value.contraseña!,
+        ),
+        this.distribuidoraCuit.value.cuit!,
+        this.distribuidoraForm.value.nombre!,
+        this.distribuidoraForm.value.direccion!,
+        this.distribuidoraForm.value.numeroTelefono!,
+        this.distribuidoraForm.value.descripcion!,
+        this.distribuidoraForm.value.codigoPostal!,
+        this.distribuidoraForm.value.ciudad!,
+        this.categoriasSeleccionadas.map((nombre) => new Categoria(nombre)),
+      );
 
       try {
-        const success = await this.service.modificarDistribuidora(
-          cuit,
-          distribuidoraData,
-        );
+        const success =
+          await this.service.modificarDistribuidora(distribuidora);
         if (success) {
           console.log('Distribuidora modificada exitosamente');
           this.distribuidoraForm.reset();
           this.distribuidoraCuit.reset();
           this.distribuidoraEncontrada = null;
+          this.categoriasSeleccionadas = [];
         } else {
           console.error('Error al modificar la distribuidora');
         }
@@ -121,10 +182,15 @@ export class DistribuidoraModificar {
         console.error('Error en la solicitud de modificación:', error);
       }
     } else {
-      console.error('Formulario inválido');
+      if (this.categoriasSeleccionadas.length === 0) {
+        console.error('Debe seleccionar al menos una categoría');
+      } else {
+        console.error('Formulario inválido');
+      }
       this.distribuidoraForm.reset();
       this.distribuidoraCuit.reset();
       this.distribuidoraEncontrada = null;
+      this.categoriasSeleccionadas = [];
     }
   }
 }

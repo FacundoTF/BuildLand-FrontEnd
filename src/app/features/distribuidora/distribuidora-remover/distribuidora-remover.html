@@ -22,7 +22,8 @@
   </div>
 
   <!-- Contenedor para mostrar datos y confirmar eliminación (inicialmente oculto) -->
-  <div class="delete-container" style="display: none;">
+  @if (distribuidoraEncontrada) {
+  <div class="delete-container">
     <h3>AREA PELIGROSA</h3>
     <div class="warning-message">
       <strong>Advertencia:</strong> Esta acción no se puede deshacer. Los datos de la distribuidora se eliminarán permanentemente.
@@ -40,4 +41,5 @@
         <button type="submit" class="btn-danger" (click)="handleRemove()">Eliminar Distribuidora</button>
       </div>
   </div>
+  }
 </div>
