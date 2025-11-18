@@ -39,4 +39,7 @@ export class SideBar {
   ModificarPersonaFisica() {
     this.router.navigateByUrl('persona-fisica/modificar');
   }
+  RealizarPresupuesto() {
+    this.router.navigateByUrl('presupuesto/realizar');
+  }
 }
