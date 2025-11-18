@@ -82,7 +82,7 @@ export class PersonaFisicaRemover {
         const success = await this.service.removerPersonaFisica(
           this.personaFisicaEncontrada,
         );
-        console.log('Persona física removida exitosamente');
+        alert('Persona física removida exitosamente');
         var container = document.querySelector(
           '.delete-container',
         ) as HTMLElement;
@@ -91,7 +91,7 @@ export class PersonaFisicaRemover {
         this.personaFisicaEncontrada = null;
         this.deleteForm.reset();
       } catch (error) {
-        console.error('Error en la solicitud de eliminación:', error);
+        alert('Error en la solicitud de eliminación');
       }
     }
   }
