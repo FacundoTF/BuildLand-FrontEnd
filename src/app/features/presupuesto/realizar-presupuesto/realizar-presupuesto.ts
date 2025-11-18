@@ -13,6 +13,10 @@ import { MarcaService } from '../../../shared/services/marca/marca-service';
 import { ProductoService } from '../../../shared/services/producto/producto-service';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
+import { PersonaFisica } from '../../../core/entities/personaFisica/persona-fisica';
+import { Presupuesto } from '../../../core/entities/presupuesto/presupuesto';
+import { Usuario, TipoUsuario } from '../../../core/entities/usuario/usuario';
+import { DetallePresupuesto } from '../../../core/entities/detalle-presupuesto/detalle-presupuesto';
 
 interface PresupuestoItem {
   producto: string;
@@ -47,13 +51,18 @@ export class RealizarPresupuesto {
   marcas: Marca[] = [];
   productos: Producto[] = [];
 
-  selectedCategory = new FormControl<Categoria | null>(null);
+  selectedCategory = new FormControl<Categoria | null>({
+    value: null,
+    disabled: false,
+  });
   selectedProduct = new FormControl<string | null>(null);
   selectedMarca = new FormControl<string | null>(null);
   cantidad = new FormControl<number>(1);
 
   presupuestoItems = signal<PresupuestoItem[]>([]);
-  mostrarTabla = computed(() => this.presupuestoItems().length > 0);
+  hayProductosEnPresupuesto = computed(
+    () => this.presupuestoItems().length > 0,
+  );
   displayedColumns: string[] = ['producto', 'marca', 'cantidad', 'acciones'];
 
   constructor() {
@@ -72,17 +81,81 @@ export class RealizarPresupuesto {
     }
     this.presupuestoHabilitado.set(true);
     this.categoriaConfirmada.set(true);
+    this.selectedCategory.disable();
     contenedorPresupuesto.style.display = 'block';
 
     await this.buscarMarcas(categoria);
     await this.buscarProductos(categoria);
   }
+
   async buscarProductos(categoria: Categoria) {
     this.productos =
       await this.productoService.traerProductosPorCategoria(categoria);
   }
+
   async buscarMarcas(categoria: Categoria) {
     this.marcas = await this.marcaService.traerMarcas(categoria);
+  }
+
+  async confirmarPresupuesto() {
+    /*
+     * 1) Obtener los items del presupuesto -- HECHO
+     * 2) Obtener la categoria del presupuesto -- HECHO
+     * 3) Obtener el usuario actual, osea la persona fisica -- PENDIENTE (FALTA IMPLEMENTAR)
+     * 4) Crear una nueva instancia de Presupuesto con los items y la categoria
+     * 5) Hacer la peticion POST del servicio para guardar el presupuesto
+     * 6) Mostrar un mensaje de confirmacion al usuario o de error si no se pudo guardar
+     * */
+    const items = this.presupuestoItems();
+    const categoria = this.selectedCategory.value;
+    const personaFisicaPlaceHolder = new PersonaFisica(
+      new Usuario(1, TipoUsuario.PERSONA_FISICA, '', null, '', ''),
+      '20438442317',
+      'Facu',
+      '3416614462',
+      '2000',
+      'Rosario',
+    );
+
+    if (!categoria) {
+      return;
+    }
+
+    let detallesPresupuesto = new Array<DetallePresupuesto>();
+
+    const presupuesto = new Presupuesto(
+      null,
+      personaFisicaPlaceHolder,
+      categoria,
+      null,
+      detallesPresupuesto,
+      null,
+    );
+
+    items.forEach((item) => {
+      detallesPresupuesto.push(
+        new DetallePresupuesto(
+          null,
+          new Producto(
+            null,
+            item.producto,
+            null,
+            new Marca(null, item.marca, null),
+          ),
+          item.cantidad,
+          null,
+        ),
+      );
+    });
+
+    const resultado =
+      await this.presupuestoServicio.agregarPresupuesto(presupuesto);
+    if (resultado) {
+      alert('Presupuesto guardado exitosamente');
+      this.resetearPresupuesto();
+    } else {
+      alert('Error al guardar el presupuesto');
+    }
   }
 
   agregarAlPresupuesto() {

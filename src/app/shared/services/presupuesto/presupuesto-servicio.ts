@@ -14,7 +14,12 @@ export class PresupuestoServicio {
 
   async agregarPresupuesto(presupuesto: Presupuesto): Promise<boolean> {
     const body = {
-      presupuesto: presupuesto,
+      IdPresupuesto: presupuesto.idPresupuesto,
+      persona: presupuesto.persona,
+      categoria: presupuesto.categoria,
+      fecha: presupuesto.fecha,
+      detalles: presupuesto.detalles,
+      cotizaciones: presupuesto.cotizaciones,
     };
 
     const observable = this.http.post<boolean>(this.API_URL, body);
