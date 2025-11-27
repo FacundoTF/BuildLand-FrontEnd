@@ -1,22 +1,48 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { ConjuntoGrupoPermiso } from '../../core/entities/conjuntoGrupoPermiso/conjunto-grupo-permiso';
-import { Usuario } from '../../core/entities/usuario/usuario';
+import { TipoUsuario, Usuario } from '../../core/entities/usuario/usuario';
 import { Grupo } from '../../core/entities/grupo/grupo';
 import { Permiso } from '../../core/entities/permiso/permiso';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { environment } from '../../../environments/environment.development';
+import { map, catchError, Observable, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UsuarioServicio {
-  iniciarSesion(correoElectronico: string, clave: string): Usuario | null {
-    // Lógica para iniciar sesión
-    console.log(`Iniciando sesión para el usuario: ${correoElectronico}`);
-    return null; // o un objeto Usuario según la lógica
+  http = inject(HttpClient);
+
+  private API_URL = `${environment.server.host}${environment.server.port}/api/auth/token`;
+
+  iniciarSesion(correo: string, contra: string): Observable<Object | never> {
+    return this.http
+      .post(
+        `${this.API_URL}`,
+        {
+          username: correo,
+          password: contra,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        map((res: Object) => {
+          console.log('Usuario encontrado');
+          console.log(res);
+          return res;
+        }),
+        catchError((error: Error) => {
+          console.error('Error al buscar usuario:', error);
+          return throwError(() => error);
+        }),
+      );
   }
 
   revisarPermisos(
     elementos: ConjuntoGrupoPermiso[],
-    objetivo: Permiso | Grupo
+    objetivo: Permiso | Grupo,
   ): boolean {
     let encontrado = false;
     // Lógica para revisar permisos
@@ -29,12 +55,12 @@ export class UsuarioServicio {
 
         if (objetivo instanceof Permiso) {
           permisoEncontrado = element.permisos.some(
-            (permiso: Permiso) => permiso.nombre === objetivo.nombre
+            (permiso: Permiso) => permiso.nombre === objetivo.nombre,
           );
         }
         if (objetivo instanceof Grupo) {
           grupoEncontrado = element.grupos.some(
-            (grupo: Grupo) => grupo.nombre === objetivo.nombre
+            (grupo: Grupo) => grupo.nombre === objetivo.nombre,
           );
         }
         if (permisoEncontrado || grupoEncontrado) {
@@ -45,7 +71,7 @@ export class UsuarioServicio {
           // Llamada recursiva para revisar grupos anidados
           if (this.revisarPermisos(element.grupos, objetivo)) {
             console.log(
-              `Permiso o grupo encontrado en grupo anidado de: ${element.nombre}`
+              `Permiso o grupo encontrado en grupo anidado de: ${element.nombre}`,
             );
             return true;
           }
