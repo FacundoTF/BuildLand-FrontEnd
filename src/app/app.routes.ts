@@ -6,6 +6,7 @@ import { PersonaFisicaAgregar } from './features/persona-fisica/persona-fisica-a
 import { PersonaFisicaModificar } from './features/persona-fisica/persona-fisica-modificar/persona-fisica-modificar';
 import { PersonaFisicaRemover } from './features/persona-fisica/persona-fisica-remover/persona-fisica-remover';
 import { RealizarPresupuesto } from './features/presupuesto/realizar-presupuesto/realizar-presupuesto';
+import { InicioSesion } from './core/inicio-sesion/inicio-sesion';
 
 export const routes: Routes = [
   { path: 'distribuidora/agregar', component: DistribuidoraAgregar },
@@ -15,4 +16,5 @@ export const routes: Routes = [
   { path: 'persona-fisica/remover', component: PersonaFisicaRemover },
   { path: 'persona-fisica/modificar', component: PersonaFisicaModificar },
   { path: 'presupuesto/realizar', component: RealizarPresupuesto },
+  { path: 'iniciar-sesion', component: InicioSesion },
 ];
