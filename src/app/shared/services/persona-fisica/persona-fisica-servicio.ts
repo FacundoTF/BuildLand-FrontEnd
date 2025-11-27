@@ -14,7 +14,14 @@ export class PersonaFisicaService {
   private API_URL = `${environment.server.host}${environment.server.port}/api/personas-fisicas`;
 
   async agregarPersonaFisica(persona: PersonaFisica): Promise<boolean> {
-    const observable = this.http.post<boolean>(this.API_URL, persona);
+    const observable = this.http.post<boolean>(this.API_URL, {
+      usuario: persona.usuario,
+      cuit: persona.cuit,
+      nombre: persona.nombre,
+      numeroTelefono: persona.numeroTelefono,
+      codigoPostal: persona.codigoPostal,
+      ciudad: persona.ciudad,
+    });
     try {
       return await lastValueFrom(observable);
     } catch (error) {
