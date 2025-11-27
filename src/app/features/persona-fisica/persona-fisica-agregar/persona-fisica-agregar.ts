@@ -82,13 +82,13 @@ export class PersonaFisicaAgregar {
       try {
         const result = await this.service.agregarPersonaFisica(persona);
         if (result) {
-          console.log('Persona física agregada exitosamente');
+          alert('Persona física agregada exitosamente');
           this.personaFisicaForm.reset();
         } else {
-          console.error('Error al agregar la persona física');
+          alert('Error al agregar la persona física');
         }
       } catch (error) {
-        console.error('Error en la solicitud:', error);
+        alert('Error en la solicitud:');
       }
     }
   }
