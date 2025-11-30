@@ -13,6 +13,7 @@ import {
 } from '@angular/forms';
 import { UsuarioServicio } from '../../shared/services/usuario-servicio';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-inicio-sesion',
@@ -24,6 +25,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class InicioSesion {
   private readonly fb = new FormBuilder();
   private readonly destroyRef = inject(DestroyRef);
+  private router = inject(Router);
   servicioUsuario = inject(UsuarioServicio);
 
   loginForm: FormGroup;
@@ -56,14 +58,20 @@ export class InicioSesion {
       .subscribe({
         next: (data: Object) => {
           this.isSubmitting.set(false);
-          console.log('Exito: ', data);
+          const dataLogin = Object.values(data);
+          const usuario = dataLogin[0];
+          const grupos = dataLogin[1];
+          const permisos = dataLogin[2];
+          sessionStorage.setItem('usuario', JSON.stringify(usuario));
+          sessionStorage.setItem('permisos', JSON.stringify(permisos));
+          sessionStorage.setItem('grupos', JSON.stringify(grupos));
+          this.router.navigateByUrl('/base-page');
         },
         error: (error: Error) => {
           this.isSubmitting.set(false);
           this.errorMessage.set(
             'Inicio de sesión fallido. Revise sus credenciales.',
           );
-          console.error('Hubo un error:', error);
         },
       });
   }

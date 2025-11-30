@@ -7,14 +7,39 @@ import { PersonaFisicaModificar } from './features/persona-fisica/persona-fisica
 import { PersonaFisicaRemover } from './features/persona-fisica/persona-fisica-remover/persona-fisica-remover';
 import { RealizarPresupuesto } from './features/presupuesto/realizar-presupuesto/realizar-presupuesto';
 import { InicioSesion } from './core/inicio-sesion/inicio-sesion';
+import { BasePage } from './core/base-page/base-page';
+import { Home } from './core/home/home';
 
 export const routes: Routes = [
-  { path: 'distribuidora/agregar', component: DistribuidoraAgregar },
-  { path: 'distribuidora/remover', component: DistribuidoraRemover },
-  { path: 'distribuidora/modificar', component: DistribuidoraModificar },
-  { path: 'persona-fisica/agregar', component: PersonaFisicaAgregar },
-  { path: 'persona-fisica/remover', component: PersonaFisicaRemover },
-  { path: 'persona-fisica/modificar', component: PersonaFisicaModificar },
-  { path: 'presupuesto/realizar', component: RealizarPresupuesto },
+  {
+    path: 'distribuidora/agregar',
+    component: DistribuidoraAgregar,
+  },
+  {
+    path: 'distribuidora/remover',
+    component: DistribuidoraRemover,
+  },
+  {
+    path: 'distribuidora/modificar',
+    component: DistribuidoraModificar,
+  },
+  {
+    path: 'persona-fisica/agregar',
+    component: PersonaFisicaAgregar,
+  },
+  {
+    path: 'persona-fisica/remover',
+    component: PersonaFisicaRemover,
+  },
+  {
+    path: 'persona-fisica/modificar',
+    component: PersonaFisicaModificar,
+  },
+  {
+    path: 'presupuesto/realizar',
+    component: RealizarPresupuesto,
+  },
+  { path: 'base-page', component: BasePage },
   { path: 'iniciar-sesion', component: InicioSesion },
+  { path: '', component: Home, pathMatch: 'full' },
 ];

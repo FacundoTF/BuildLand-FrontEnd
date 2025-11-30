@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
-import { SideBar } from "../../shared/components/side-bar/side-bar";
+import { SideBar } from '../../shared/components/side-bar/side-bar';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-base-page',
-  imports: [SideBar],
+  imports: [SideBar, RouterOutlet],
   templateUrl: './base-page.html',
-  styleUrl: './base-page.css'
+  styleUrl: './base-page.css',
 })
-export class BasePage {
-
-}
+export class BasePage {}
