@@ -4,13 +4,13 @@
 }
 
 .Gestion{
-    display: inherit;
+  display: flex;
     flex-direction: column;
     align-items: center;
 }
 
 .Gestion > .OpcionNoPlegable{
-  display: flex;
+  display: none;
   justify-content: center;
   margin: 6px;
   padding: 6px;
@@ -18,10 +18,9 @@
 }
 
 .Gestion > .Opcion{
-    display: none;
+  display: none;
     justify-content: center;
     margin: 6px;
     padding: 6px;
     width: 95%;
 }
-
