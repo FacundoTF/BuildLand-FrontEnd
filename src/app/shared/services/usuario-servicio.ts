@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { ConjuntoGrupoPermiso } from '../../core/entities/conjuntoGrupoPermiso/conjunto-grupo-permiso';
 import { TipoUsuario, Usuario } from '../../core/entities/usuario/usuario';
 import { Grupo } from '../../core/entities/grupo/grupo';
@@ -13,20 +13,19 @@ import { map, catchError, Observable, throwError } from 'rxjs';
 export class UsuarioServicio {
   http = inject(HttpClient);
 
-  private API_URL = `${environment.server.host}${environment.server.port}/api/auth/token`;
+  emailRecuperando = signal('');
+
+  enviarCodigoRestauracion = signal(false);
+  confirmarNuevaContrasena = signal(false);
+
+  private API_URL = `${environment.server.host}${environment.server.port}/api`;
 
   iniciarSesion(correo: string, contra: string): Observable<Object | never> {
     return this.http
-      .post(
-        `${this.API_URL}`,
-        {
-          username: correo,
-          password: contra,
-        },
-        {
-          withCredentials: true,
-        }
-      )
+      .post(`${this.API_URL}/auth/token`, {
+        username: correo,
+        password: contra,
+      })
       .pipe(
         map((res: Object) => {
           console.log('Usuario encontrado');
@@ -40,52 +39,61 @@ export class UsuarioServicio {
       );
   }
 
-  revisarPermisos(
-    elementos: ConjuntoGrupoPermiso[],
-    objetivo: Permiso | Grupo,
-  ): boolean {
-    let encontrado = false;
-    // Lógica para revisar permisos
-    for (const element of elementos) {
-      // Lógica para revisar permisos en cada elemento
-      if (element instanceof Grupo) {
-        // Verificar si el grupo contiene el permiso o grupo objetivo
-        let permisoEncontrado = false;
-        let grupoEncontrado = false;
+  restorePassword(email: string): Observable<Object | never> {
+    return this.http
+      .post(`${this.API_URL}/auth/restorePassword`, { email })
+      .pipe(
+        map((res: Object) => {
+          console.log('Código de restauración enviado');
+          console.log(res);
+          return res;
+        }),
+        catchError((error: Error) => {
+          console.error('Error al enviar código de restauración:', error);
+          return throwError(() => error);
+        }),
+      );
+  }
 
-        if (objetivo instanceof Permiso) {
-          permisoEncontrado = element.permisos.some(
-            (permiso: Permiso) => permiso.nombre === objetivo.nombre,
-          );
-        }
-        if (objetivo instanceof Grupo) {
-          grupoEncontrado = element.grupos.some(
-            (grupo: Grupo) => grupo.nombre === objetivo.nombre,
-          );
-        }
-        if (permisoEncontrado || grupoEncontrado) {
-          console.log(`Permiso o grupo encontrado en: ${element.nombre}`);
-          encontrado = true;
-          break;
-        } else {
-          // Llamada recursiva para revisar grupos anidados
-          if (this.revisarPermisos(element.grupos, objetivo)) {
-            console.log(
-              `Permiso o grupo encontrado en grupo anidado de: ${element.nombre}`,
-            );
-            return true;
-          }
-        }
-      } else if (element instanceof Permiso) {
-        if (element.nombre === objetivo.nombre) {
-          console.log(`Permiso encontrado: ${element.nombre}`);
-          encontrado = true;
-          break;
-        } else {
-          console.log(`Permiso no encontrado: ${element.nombre}`);
-        }
-      }
-    }
-    return encontrado;
+  verifyPasswordCode(code: string): Observable<Object | never> {
+    return this.http
+      .post(`${this.API_URL}/auth/verifyPasswordCode`, {
+        code,
+        email: this.emailRecuperando(),
+      })
+      .pipe(
+        map((res: Object) => {
+          console.log('Código verificado exitosamente');
+          console.log(res);
+          return res;
+        }),
+        catchError((error: Error) => {
+          console.error('Error al verificar código:', error);
+          return throwError(() => error);
+        }),
+      );
+  }
+
+  changePassword(newPassword: string): Observable<Object | never> {
+    return this.http
+      .post(`${this.API_URL}/auth/changePassword`, {
+        newPassword,
+        email: this.emailRecuperando(),
+      })
+      .pipe(
+        map((res: Object) => {
+          console.log('Contraseña cambiada exitosamente');
+          console.log(res);
+          return res;
+        }),
+        catchError((error: Error) => {
+          console.error('Error al cambiar contraseña:', error);
+          return throwError(() => error);
+        }),
+      );
+  }
+
+  establecerEmailRecuperando(email: string) {
+    this.emailRecuperando.set(email);
   }
 }
