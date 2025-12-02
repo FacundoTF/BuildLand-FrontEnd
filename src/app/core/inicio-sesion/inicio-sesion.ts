@@ -77,7 +77,6 @@ export class InicioSesion {
   }
 
   onForgotPassword(): void {
-    // Aquí implementarás la lógica para recuperación de contraseña
-    console.log('Forgot password clicked');
+    this.router.navigate(['/restore-password']);
   }
 }

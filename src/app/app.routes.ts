@@ -9,8 +9,15 @@ import { RealizarPresupuesto } from './features/presupuesto/realizar-presupuesto
 import { InicioSesion } from './core/inicio-sesion/inicio-sesion';
 import { BasePage } from './core/base-page/base-page';
 import { Home } from './core/home/home';
+import { RestorePassword } from './core/restore-password/restore-password';
 
 export const routes: Routes = [
+  { path: 'base-page', component: BasePage },
+  { path: '', component: Home, pathMatch: 'full' },
+];
+
+//Distribuidoras
+routes.push(
   {
     path: 'distribuidora/agregar',
     component: DistribuidoraAgregar,
@@ -23,6 +30,9 @@ export const routes: Routes = [
     path: 'distribuidora/modificar',
     component: DistribuidoraModificar,
   },
+);
+//Personas Físicas
+routes.push(
   {
     path: 'persona-fisica/agregar',
     component: PersonaFisicaAgregar,
@@ -35,11 +45,19 @@ export const routes: Routes = [
     path: 'persona-fisica/modificar',
     component: PersonaFisicaModificar,
   },
-  {
-    path: 'presupuesto/realizar',
-    component: RealizarPresupuesto,
-  },
-  { path: 'base-page', component: BasePage },
+);
+//Presupuestos
+routes.push({
+  path: 'presupuesto/realizar',
+  component: RealizarPresupuesto,
+});
+//Inicio de sesión
+routes.push(
   { path: 'iniciar-sesion', component: InicioSesion },
   { path: '', component: Home, pathMatch: 'full' },
 ];
+  {
+    path: 'restore-password',
+    component: RestorePassword,
+  },
+);
