@@ -10,6 +10,7 @@ import { InicioSesion } from './core/inicio-sesion/inicio-sesion';
 import { BasePage } from './core/base-page/base-page';
 import { Home } from './core/home/home';
 import { RestorePassword } from './core/restore-password/restore-password';
+import { ConfirmNewPassword } from './core/restore-password/confirm-new-password/confirm-new-password';
 import { SubmitSecret } from './core/restore-password/submit-secret/submit-secret';
 
 export const routes: Routes = [
@@ -58,6 +59,10 @@ routes.push(
   {
     path: 'restore-password',
     component: RestorePassword,
+  },
+  {
+    path: 'confirm-new-password',
+    component: ConfirmNewPassword,
   },
   {
     path: 'submit-secret',
