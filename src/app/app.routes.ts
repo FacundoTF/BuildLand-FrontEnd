@@ -10,6 +10,7 @@ import { InicioSesion } from './core/inicio-sesion/inicio-sesion';
 import { BasePage } from './core/base-page/base-page';
 import { Home } from './core/home/home';
 import { RestorePassword } from './core/restore-password/restore-password';
+import { SubmitSecret } from './core/restore-password/submit-secret/submit-secret';
 
 export const routes: Routes = [
   { path: 'base-page', component: BasePage },
@@ -54,10 +55,12 @@ routes.push({
 //Inicio de sesión
 routes.push(
   { path: 'iniciar-sesion', component: InicioSesion },
-  { path: '', component: Home, pathMatch: 'full' },
-];
   {
     path: 'restore-password',
     component: RestorePassword,
+  },
+  {
+    path: 'submit-secret',
+    component: SubmitSecret,
   },
 );
