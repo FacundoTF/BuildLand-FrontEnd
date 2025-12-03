@@ -74,10 +74,10 @@ export class UsuarioServicio {
       );
   }
 
-  changePassword(newPassword: string): Observable<Object | never> {
+  changePassword(password: string): Observable<Object | never> {
     return this.http
       .post(`${this.API_URL}/auth/changePassword`, {
-        newPassword,
+        password,
         email: this.emailRecuperando(),
       })
       .pipe(

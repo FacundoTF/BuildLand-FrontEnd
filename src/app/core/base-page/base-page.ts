@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { SideBar } from '../../shared/components/side-bar/side-bar';
 import { RouterOutlet } from '@angular/router';
+import { SideBar } from '../../shared/components/side-bar/side-bar';
 
 @Component({
   selector: 'app-base-page',
-  imports: [SideBar, RouterOutlet],
+  imports: [RouterOutlet, SideBar],
   templateUrl: './base-page.html',
   styleUrl: './base-page.css',
 })

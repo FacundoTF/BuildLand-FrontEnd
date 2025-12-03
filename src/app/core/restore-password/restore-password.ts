@@ -63,7 +63,6 @@ export class RestorePassword {
           alert(
             'Se ha enviado un código de verificación a su correo electrónico. El código es válido por 5 minutos.',
           );
-          // this.showSubmitSecret.set(true);
           this.usuarioServicio.enviarCodigoRestauracion.set(true);
         },
         error: (error: Error) => {

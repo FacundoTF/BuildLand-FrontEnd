@@ -14,47 +14,45 @@ import { ConfirmNewPassword } from './core/restore-password/confirm-new-password
 import { SubmitSecret } from './core/restore-password/submit-secret/submit-secret';
 
 export const routes: Routes = [
-  { path: 'base-page', component: BasePage },
   { path: '', component: Home, pathMatch: 'full' },
-];
-
-//Distribuidoras
-routes.push(
   {
-    path: 'distribuidora/agregar',
-    component: DistribuidoraAgregar,
+    path: 'base-page',
+    component: BasePage,
+    children: [
+      // Distribuidoras
+      {
+        path: 'distribuidora/agregar',
+        component: DistribuidoraAgregar,
+      },
+      {
+        path: 'distribuidora/remover',
+        component: DistribuidoraRemover,
+      },
+      {
+        path: 'distribuidora/modificar',
+        component: DistribuidoraModificar,
+      },
+      // Personas Físicas
+      {
+        path: 'persona-fisica/agregar',
+        component: PersonaFisicaAgregar,
+      },
+      {
+        path: 'persona-fisica/remover',
+        component: PersonaFisicaRemover,
+      },
+      {
+        path: 'persona-fisica/modificar',
+        component: PersonaFisicaModificar,
+      },
+      // Presupuestos
+      {
+        path: 'presupuesto/realizar',
+        component: RealizarPresupuesto,
+      },
+    ],
   },
-  {
-    path: 'distribuidora/remover',
-    component: DistribuidoraRemover,
-  },
-  {
-    path: 'distribuidora/modificar',
-    component: DistribuidoraModificar,
-  },
-);
-//Personas Físicas
-routes.push(
-  {
-    path: 'persona-fisica/agregar',
-    component: PersonaFisicaAgregar,
-  },
-  {
-    path: 'persona-fisica/remover',
-    component: PersonaFisicaRemover,
-  },
-  {
-    path: 'persona-fisica/modificar',
-    component: PersonaFisicaModificar,
-  },
-);
-//Presupuestos
-routes.push({
-  path: 'presupuesto/realizar',
-  component: RealizarPresupuesto,
-});
-//Inicio de sesión
-routes.push(
+  // Rutas de autenticación
   { path: 'iniciar-sesion', component: InicioSesion },
   {
     path: 'restore-password',
@@ -68,4 +66,4 @@ routes.push(
     path: 'submit-secret',
     component: SubmitSecret,
   },
-);
+];

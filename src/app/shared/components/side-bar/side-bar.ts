@@ -61,24 +61,28 @@ export class SideBar implements OnInit {
   }
 
   AgregarDistribuidora() {
-    this.router.navigate(['distribuidora/agregar']);
+    this.router.navigate(['/base-page/distribuidora/agregar']);
   }
   RemoverDistribuidora() {
-    this.router.navigate(['distribuidora/remover']);
+    this.router.navigate(['/base-page/distribuidora/remover']);
   }
   ModificarDistribuidora() {
-    this.router.navigate(['distribuidora/modificar']);
+    this.router.navigate(['/base-page/distribuidora/modificar']);
   }
   AgregarPersonaFisica() {
-    this.router.navigate(['persona-fisica/agregar']);
+    this.router.navigate(['/base-page/persona-fisica/agregar']);
   }
   RemoverPersonaFisica() {
-    this.router.navigate(['persona-fisica/remover']);
+    this.router.navigate(['/base-page/persona-fisica/remover']);
   }
   ModificarPersonaFisica() {
-    this.router.navigate(['persona-fisica/modificar']);
+    this.router.navigate(['/base-page/persona-fisica/modificar']);
   }
   RealizarPresupuesto() {
-    this.router.navigate(['presupuesto/realizar']);
+    this.router.navigate(['/base-page/presupuesto/realizar']);
+  }
+  CerrarSesion() {
+    this.usuarioServicio.cerrarSesion();
+    this.router.navigate(['/iniciar-sesion']);
   }
 }
