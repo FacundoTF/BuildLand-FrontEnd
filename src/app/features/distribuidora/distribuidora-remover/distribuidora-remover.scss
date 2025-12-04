@@ -1,0 +1,423 @@
+@use '@angular/material' as mat;
+
+// Variables de colores del tema
+$primary-green: #2e7d32;
+$secondary-green: #66bb6a;
+$accent-orange: #ff9800;
+$danger-red: #d32f2f;
+$warning-amber: #f57c00;
+$surface-color: #f5f5f5;
+$on-surface: #1c1b1f;
+$error-color: #ba1a1a;
+
+// Contenedor principal - Mobile First
+.container {
+  padding: 16px;
+  max-width: 100%;
+  margin: 0 auto;
+  background-color: $surface-color;
+  min-height: 100vh;
+
+  h2 {
+    color: $danger-red;
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 24px;
+    text-align: center;
+    font-family: 'Roboto', 'Helvetica Neue', sans-serif;
+  }
+
+  h3 {
+    color: $on-surface;
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-bottom: 16px;
+    font-family: 'Roboto', 'Helvetica Neue', sans-serif;
+  }
+}
+
+// Contenedor de búsqueda
+.search-container {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+  border-left: 4px solid $accent-orange;
+
+  h3 {
+    color: $accent-orange;
+    margin-bottom: 20px;
+  }
+}
+
+// Contenedor de eliminación
+.delete-container {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+  border-left: 4px solid $danger-red;
+
+  h3 {
+    color: $danger-red;
+    margin-bottom: 20px;
+  }
+
+  // Animación de aparición
+  &.show {
+    animation: slideIn 0.5s ease-out;
+  }
+}
+
+// Mensaje de advertencia
+.warning-message {
+  background-color: #fff3e0;
+  border: 2px solid $warning-amber;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+  color: #e65100;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  strong {
+    color: $warning-amber;
+  }
+}
+
+// Grupos de campos del formulario
+.form-group {
+  margin-bottom: 20px;
+  
+  label {
+    display: block;
+    margin-bottom: 8px;
+    color: $on-surface;
+    font-weight: 500;
+    font-size: 0.875rem;
+  }
+  
+  input, textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: white;
+    
+    &:focus {
+      outline: none;
+      border-color: $primary-green;
+      box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+    }
+    
+    &:hover {
+      border-color: $secondary-green;
+    }
+    
+    &::placeholder {
+      color: #9e9e9e;
+      font-size: 0.875rem;
+    }
+    
+    &:invalid:not(:placeholder-shown) {
+      border-color: $error-color;
+    }
+
+    // Campos readonly para mostrar datos
+    &[readonly] {
+      background-color: #fafafa;
+      color: #555;
+      cursor: default;
+      border-color: #ddd;
+
+      &:hover, &:focus {
+        border-color: #ddd;
+        box-shadow: none;
+      }
+    }
+  }
+  
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+    font-family: inherit;
+  }
+}
+
+// Fila de formulario responsiva
+.form-row {
+  display: block;
+}
+
+// Sección de confirmación
+.confirmation-section {
+  background-color: #ffebee;
+  border: 2px solid $danger-red;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 24px 0;
+
+  .checkbox-group {
+    margin-bottom: 0;
+  }
+}
+
+// Checkbox personalizado
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  font-weight: 500;
+  color: $danger-red;
+  line-height: 1.4;
+
+  input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+    padding: 0;
+    transform: scale(1.2);
+    accent-color: $danger-red;
+  }
+
+  .checkmark {
+    flex: 1;
+  }
+}
+
+// Botones de búsqueda
+.search-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.btn-search {
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  min-height: 48px;
+  background-color: $accent-orange;
+  color: white;
+
+  &:hover {
+    background-color: adjust($accent-orange, 8%);
+    box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+  }
+
+  &:active {
+    background-color: adjust($accent-orange, 12%);
+    transform: translateY(1px);
+  }
+
+  &:focus {
+    outline: 2px solid $accent-orange;
+    outline-offset: 2px;
+  }
+}
+
+// Botones del formulario
+.form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 32px;
+  
+  button {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    min-height: 48px;
+    
+    &:focus {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+  }
+}
+
+.btn-danger {
+  background-color: $danger-red;
+  color: white;
+  
+  &:hover:not(:disabled) {
+    background-color: adjust($danger-red, 8%);
+    box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+  }
+  
+  &:active:not(:disabled) {
+    background-color: adjust($danger-red, 12%);
+    transform: translateY(1px);
+  }
+}
+
+.btn-secondary {
+  background-color: $secondary-green;
+  color: white;
+  
+  &:hover {
+    background-color: adjust($secondary-green, 8%);
+    box-shadow: 0 4px 12px rgba(102, 187, 106, 0.3);
+  }
+  
+  &:active {
+    background-color: adjust($secondary-green, 12%);
+    transform: translateY(1px);
+  }
+}
+
+.btn-cancel {
+  background-color: transparent;
+  color: $on-surface;
+  border: 2px solid #e0e0e0;
+  
+  &:hover {
+    background-color: #f5f5f5;
+    border-color: $accent-orange;
+    color: $accent-orange;
+  }
+  
+  &:active {
+    background-color: #eeeeee;
+    transform: translateY(1px);
+  }
+}
+
+// Responsive Design - Tablet
+@media (min-width: 768px) {
+  .container {
+    padding: 24px;
+    max-width: 600px;
+    
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 32px;
+    }
+  }
+  
+  .search-container, .delete-container {
+    padding: 32px;
+  }
+  
+  .form-actions {
+    flex-direction: row;
+    justify-content: flex-end;
+    
+    button {
+      min-width: 140px;
+      flex: none;
+    }
+  }
+
+  .search-actions {
+    justify-content: flex-end;
+  }
+}
+
+// Responsive Design - Desktop
+@media (min-width: 1024px) {
+  .container {
+    padding: 32px;
+    max-width: 800px;
+    
+    h2 {
+      font-size: 2.25rem;
+    }
+  }
+  
+  .search-container, .delete-container {
+    padding: 40px;
+  }
+  
+  // Layout de dos columnas para campos más pequeños
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+}
+
+// Indicadores de campos (sin asterisco porque son readonly)
+.form-group label::after {
+  content: "";
+}
+
+// Animaciones suaves
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Estados específicos para el formulario de eliminación
+.delete-container {
+  &[style*="display: none"] {
+    display: none !important;
+  }
+  
+  &[style*="display: block"] {
+    display: block !important;
+    animation: slideIn 0.5s ease-out;
+  }
+}
+
+// Mensaje de estado para cuando no se encuentra la distribuidora
+.no-results {
+  background-color: #fff3e0;
+  border: 1px solid $accent-orange;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 16px;
+  color: #e65100;
+  text-align: center;
+  font-weight: 500;
+}
+
+// Mensaje de éxito
+.success-message {
+  background-color: #e8f5e8;
+  border: 1px solid $primary-green;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 16px;
+  color: $primary-green;
+  text-align: center;
+  font-weight: 500;
+}
+
+// Efecto de enfoque en elementos peligrosos
+.delete-container {
+  &:hover {
+    box-shadow: 0 4px 20px rgba(211, 47, 47, 0.1);
+  }
+}

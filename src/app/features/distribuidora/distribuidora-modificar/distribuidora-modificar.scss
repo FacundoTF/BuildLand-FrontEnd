@@ -1,0 +1,445 @@
+@use "@angular/material" as mat;
+
+// Variables de colores del tema
+$primary-green: #2e7d32;
+$secondary-green: #66bb6a;
+$accent-orange: #ff9800;
+$surface-color: #f5f5f5;
+$on-surface: #1c1b1f;
+$error-color: #ba1a1a;
+$warning-color: #f57f17;
+
+// Contenedor principal - Mobile First
+.container {
+  padding: 16px;
+  max-width: 100%;
+  margin: 0 auto;
+  background-color: $surface-color;
+  min-height: 100vh;
+
+  h2 {
+    color: $primary-green;
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 24px;
+    text-align: center;
+    font-family: "Roboto", "Helvetica Neue", sans-serif;
+  }
+
+  h3 {
+    color: $on-surface;
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-bottom: 16px;
+    font-family: "Roboto", "Helvetica Neue", sans-serif;
+  }
+}
+
+// Contenedor de búsqueda
+.search-container {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+  border-left: 4px solid $accent-orange;
+
+  h3 {
+    color: $accent-orange;
+    margin-bottom: 20px;
+  }
+}
+
+// Contenedor de edición
+.edit-container {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+  border-left: 4px solid $primary-green;
+
+  h3 {
+    color: $primary-green;
+    margin-bottom: 20px;
+  }
+
+  // Animación de aparición
+  &.show {
+    animation: slideIn 0.5s ease-out;
+  }
+}
+
+// Grupos de campos del formulario
+.form-group {
+  margin-bottom: 20px;
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    color: $on-surface;
+    font-weight: 500;
+    font-size: 0.875rem;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: white;
+
+    &:focus {
+      outline: none;
+      border-color: $primary-green;
+      box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+    }
+
+    &:hover {
+      border-color: $secondary-green;
+    }
+
+    &::placeholder {
+      color: #9e9e9e;
+      font-size: 0.875rem;
+    }
+
+    &:invalid:not(:placeholder-shown) {
+      border-color: $error-color;
+    }
+
+    // Campo CUIT readonly
+    &[readonly] {
+      background-color: #f5f5f5;
+      color: #666;
+      cursor: not-allowed;
+      border-color: #ccc;
+
+      &:hover,
+      &:focus {
+        border-color: #ccc;
+        box-shadow: none;
+      }
+    }
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+    font-family: inherit;
+  }
+}
+
+// Fila de formulario responsiva
+.form-row {
+  display: block;
+}
+
+// Botones de búsqueda
+.search-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.btn-search {
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  min-height: 48px;
+  background-color: $accent-orange;
+  color: white;
+
+  &:hover {
+    background-color: adjust($accent-orange, 8%);
+    box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+  }
+
+  &:active {
+    background-color: adjust($accent-orange, 12%);
+    transform: translateY(1px);
+  }
+
+  &:focus {
+    outline: 2px solid $accent-orange;
+    outline-offset: 2px;
+  }
+}
+
+// Botones del formulario de edición
+.form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 32px;
+
+  button {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    min-height: 48px;
+
+    &:focus {
+      outline: 2px solid $primary-green;
+      outline-offset: 2px;
+    }
+  }
+}
+
+.btn-primary {
+  background-color: $primary-green;
+  color: white;
+
+  &:hover {
+    background-color: adjust($primary-green, 8%);
+    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+  }
+
+  &:active {
+    background-color: adjust($primary-green, 12%);
+    transform: translateY(1px);
+  }
+
+  &:disabled {
+    background-color: #1c1b1f79;
+
+    &:hover {
+      box-shadow: none;
+    }
+  }
+}
+
+.btn-secondary {
+  background-color: $secondary-green;
+  color: white;
+
+  &:hover {
+    background-color: adjust($secondary-green, 8%);
+    box-shadow: 0 4px 12px rgba(102, 187, 106, 0.3);
+  }
+
+  &:active {
+    background-color: adjust($secondary-green, 12%);
+    transform: translateY(1px);
+  }
+}
+
+.btn-cancel {
+  background-color: transparent;
+  color: $on-surface;
+  border: 2px solid #e0e0e0;
+
+  &:hover {
+    background-color: #f5f5f5;
+    border-color: $accent-orange;
+    color: $accent-orange;
+  }
+
+  &:active {
+    background-color: #eeeeee;
+    transform: translateY(1px);
+  }
+}
+
+// Responsive Design - Tablet
+@media (min-width: 768px) {
+  .container {
+    padding: 24px;
+    max-width: 600px;
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 32px;
+    }
+  }
+
+  .search-container,
+  .edit-container {
+    padding: 32px;
+  }
+
+  .form-actions {
+    flex-direction: row;
+    justify-content: flex-end;
+
+    button {
+      min-width: 120px;
+      flex: none;
+    }
+  }
+
+  .search-actions {
+    justify-content: flex-end;
+  }
+}
+
+// Responsive Design - Desktop
+@media (min-width: 1024px) {
+  .container {
+    padding: 32px;
+    max-width: 800px;
+
+    h2 {
+      font-size: 2.25rem;
+    }
+  }
+
+  .search-container,
+  .edit-container {
+    padding: 40px;
+  }
+
+  // Layout de dos columnas para campos más pequeños
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+}
+
+// Estados de validación mejorados
+.form-group {
+  &.invalid {
+    input,
+    textarea {
+      border-color: $error-color;
+      background-color: #fef7f7;
+    }
+  }
+
+  &.valid {
+    input,
+    textarea {
+      border-color: $primary-green;
+      background-color: #f1f8e9;
+    }
+  }
+}
+
+// Indicadores de campos requeridos
+.form-group label::after {
+  content: " *";
+  color: $error-color;
+}
+
+.form-group:has(input:not([required])) label::after,
+.form-group:has(textarea:not([required])) label::after,
+.form-group:has(input[readonly]) label::after {
+  content: "";
+}
+
+// Animaciones suaves
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Estados específicos para el formulario de modificación
+.edit-container {
+  &.is-hidden {
+    display: none;
+  }
+
+  &.is-visible {
+    display: block !important;
+    animation: slideIn 0.5s ease-out;
+  }
+}
+
+// Mensaje de estado para cuando no se encuentra la distribuidora
+.no-results {
+  background-color: #fff3e0;
+  border: 1px solid $accent-orange;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 16px;
+  color: #e65100;
+  text-align: center;
+  font-weight: 500;
+}
+
+// Mensaje de éxito
+.success-message {
+  background-color: #e8f5e8;
+  border: 1px solid $primary-green;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 16px;
+  color: $primary-green;
+  text-align: center;
+  font-weight: 500;
+}
+
+// Estilos para el selector de categorías
+.categorias-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.categoria-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: white;
+
+  &:hover {
+    border-color: $secondary-green;
+    background-color: #f1f8e9;
+  }
+
+  &.selected {
+    border-color: $primary-green;
+    background-color: #e8f5e9;
+    box-shadow: 0 2px 8px rgba(46, 125, 50, 0.2);
+  }
+
+  input[type="checkbox"] {
+    margin-right: 8px;
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+    accent-color: $primary-green;
+  }
+
+  label {
+    cursor: pointer;
+    margin: 0;
+    font-weight: 400;
+    user-select: none;
+    flex: 1;
+  }
+}
+
+.error-message {
+  display: block;
+  color: $error-color;
+  font-size: 0.75rem;
+  margin-top: 8px;
+}
