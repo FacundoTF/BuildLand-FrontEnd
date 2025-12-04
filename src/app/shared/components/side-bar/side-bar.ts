@@ -61,25 +61,39 @@ export class SideBar implements OnInit {
   }
 
   AgregarDistribuidora() {
-    this.router.navigate(['/base-page/distribuidora/agregar']);
+    this.router.navigate(['/base-page/distribuidora/agregar']).catch(() => {
+      alert('Hubo un error al entrar en esta página');
+    });
   }
   RemoverDistribuidora() {
-    this.router.navigate(['/base-page/distribuidora/remover']);
+    this.router.navigate(['/base-page/distribuidora/remover']).catch(() => {
+      alert('Hubo un error al entrar en esta página');
+    });
   }
   ModificarDistribuidora() {
-    this.router.navigate(['/base-page/distribuidora/modificar']);
+    this.router.navigate(['/base-page/distribuidora/modificar']).catch(() => {
+      alert('Hubo un error al entrar en esta página');
+    });
   }
   AgregarPersonaFisica() {
-    this.router.navigate(['/base-page/persona-fisica/agregar']);
+    this.router.navigate(['/base-page/persona-fisica/agregar']).catch(() => {
+      alert('Hubo un error al entrar en esta página');
+    });
   }
   RemoverPersonaFisica() {
-    this.router.navigate(['/base-page/persona-fisica/remover']);
+    this.router.navigate(['/base-page/persona-fisica/remover']).catch(() => {
+      alert('Hubo un error al entrar en esta página');
+    });
   }
   ModificarPersonaFisica() {
-    this.router.navigate(['/base-page/persona-fisica/modificar']);
+    this.router.navigate(['/base-page/persona-fisica/modificar']).catch(() => {
+      alert('Hubo un error al entrar en esta página');
+    });
   }
   RealizarPresupuesto() {
-    this.router.navigate(['/base-page/presupuesto/realizar']);
+    this.router.navigate(['/base-page/presupuesto/realizar']).catch(() => {
+      alert('Hubo un error al entrar en esta página');
+    });
   }
   CerrarSesion() {
     const observable = this.usuarioServicio.cerrarSesion();
