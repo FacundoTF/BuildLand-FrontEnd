@@ -93,5 +93,7 @@ export class UsuarioServicio {
     this.emailRecuperando.set(email);
   }
 
-  cerrarSesion() {}
+  cerrarSesion() {
+    return this.http.post(`${this.API_URL}/auth/logout`, {});
+  }
 }

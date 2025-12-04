@@ -82,7 +82,14 @@ export class SideBar implements OnInit {
     this.router.navigate(['/base-page/presupuesto/realizar']);
   }
   CerrarSesion() {
-    this.usuarioServicio.cerrarSesion();
-    this.router.navigate(['/iniciar-sesion']);
+    const observable = this.usuarioServicio.cerrarSesion();
+    observable.subscribe({
+      next: () => {
+        this.router.navigate(['/iniciar-sesion']);
+      },
+      error: (a) => {
+        alert('Error al cerrar sesion: ' + JSON.stringify(a));
+      },
+    });
   }
 }
