@@ -1,9 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { ConjuntoGrupoPermiso } from '../../core/entities/conjuntoGrupoPermiso/conjunto-grupo-permiso';
-import { TipoUsuario, Usuario } from '../../core/entities/usuario/usuario';
-import { Grupo } from '../../core/entities/grupo/grupo';
-import { Permiso } from '../../core/entities/permiso/permiso';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment.development';
 import { map, catchError, Observable, throwError } from 'rxjs';
 
@@ -96,4 +92,6 @@ export class UsuarioServicio {
   establecerEmailRecuperando(email: string) {
     this.emailRecuperando.set(email);
   }
+
+  cerrarSesion() {}
 }
