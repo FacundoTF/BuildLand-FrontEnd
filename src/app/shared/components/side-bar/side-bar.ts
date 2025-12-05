@@ -1,16 +1,30 @@
-import { Component, OnInit, inject } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { UsuarioServicio } from '../../services/usuario-servicio';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-side-bar',
-  imports: [],
+  imports: [MatButtonModule],
   templateUrl: './side-bar.html',
   styleUrl: './side-bar.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SideBar implements OnInit {
   private router = inject(Router);
   private usuarioServicio = inject(UsuarioServicio);
+
+  activeButton = signal<string | null>(null);
+
+  setActiveButton(buttonId: string) {
+    this.activeButton.set(buttonId);
+  }
 
   ngOnInit(): void {
     const permisos = sessionStorage.getItem('permisos');
@@ -61,36 +75,43 @@ export class SideBar implements OnInit {
   }
 
   AgregarDistribuidora() {
+    this.setActiveButton('A-DI');
     this.router.navigate(['/base-page/distribuidora/agregar']).catch(() => {
       alert('Hubo un error al entrar en esta página');
     });
   }
   RemoverDistribuidora() {
+    this.setActiveButton('R-DI');
     this.router.navigate(['/base-page/distribuidora/remover']).catch(() => {
       alert('Hubo un error al entrar en esta página');
     });
   }
   ModificarDistribuidora() {
+    this.setActiveButton('M-DI');
     this.router.navigate(['/base-page/distribuidora/modificar']).catch(() => {
       alert('Hubo un error al entrar en esta página');
     });
   }
   AgregarPersonaFisica() {
+    this.setActiveButton('A-PF');
     this.router.navigate(['/base-page/persona-fisica/agregar']).catch(() => {
       alert('Hubo un error al entrar en esta página');
     });
   }
   RemoverPersonaFisica() {
+    this.setActiveButton('R-PF');
     this.router.navigate(['/base-page/persona-fisica/remover']).catch(() => {
       alert('Hubo un error al entrar en esta página');
     });
   }
   ModificarPersonaFisica() {
+    this.setActiveButton('M-PF');
     this.router.navigate(['/base-page/persona-fisica/modificar']).catch(() => {
       alert('Hubo un error al entrar en esta página');
     });
   }
   RealizarPresupuesto() {
+    this.setActiveButton('R-Pr');
     this.router.navigate(['/base-page/presupuesto/realizar']).catch(() => {
       alert('Hubo un error al entrar en esta página');
     });

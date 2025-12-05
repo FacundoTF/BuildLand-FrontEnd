@@ -1,36 +1,36 @@
 <div id="Permissions">
   <div id="G-DI" class="Gestion">
-    <button (click)="ToogleGestion('G-DI')" class="OpcionNoPlegable">
+    <button mat-flat-button (click)="ToogleGestion('G-DI')" class="OpcionNoPlegable sidebar-btn">
       Gestionar Distribuidoras
     </button>
-    <button id="A-DI" (click)="AgregarDistribuidora()" class="Opcion">
+    <button mat-flat-button id="A-DI" (click)="AgregarDistribuidora()" class="Opcion sidebar-btn" [class.active]="activeButton() === 'A-DI'">
       Agregar distribuidora
     </button>
-    <button id="R-DI" (click)="RemoverDistribuidora()" class="Opcion">
+    <button mat-flat-button id="R-DI" (click)="RemoverDistribuidora()" class="Opcion sidebar-btn" [class.active]="activeButton() === 'R-DI'">
       Remover distribuidora
     </button>
-    <button id="M-DI" (click)="ModificarDistribuidora()" class="Opcion">
+    <button mat-flat-button id="M-DI" (click)="ModificarDistribuidora()" class="Opcion sidebar-btn" [class.active]="activeButton() === 'M-DI'">
       Modificar distribuidora
     </button>
   </div>
   <div id="G-PF" class="Gestion">
-    <button (click)="ToogleGestion('G-PF')" class="OpcionNoPlegable">
+    <button mat-flat-button (click)="ToogleGestion('G-PF')" class="OpcionNoPlegable sidebar-btn">
       Gestionar personas fisicas
     </button>
-    <button id="A-PF" (click)="AgregarPersonaFisica()" class="Opcion">
+    <button mat-flat-button id="A-PF" (click)="AgregarPersonaFisica()" class="Opcion sidebar-btn" [class.active]="activeButton() === 'A-PF'">
       Agregar persona física
     </button>
-    <button id="R-PF" (click)="RemoverPersonaFisica()" class="Opcion">
+    <button mat-flat-button id="R-PF" (click)="RemoverPersonaFisica()" class="Opcion sidebar-btn" [class.active]="activeButton() === 'R-PF'">
       Remover persona fisica
     </button>
-    <button id="M-PF" (click)="ModificarPersonaFisica()" class="Opcion">
+    <button mat-flat-button id="M-PF" (click)="ModificarPersonaFisica()" class="Opcion sidebar-btn" [class.active]="activeButton() === 'M-PF'">
       Modificar persona fisica
     </button>
   </div>
   <div id="G-Pr" class="Gestion">
-    <button id="R-Pr" (click)="RealizarPresupuesto()" class="OpcionNoPlegable">Realizar presupuesto</button>
+    <button mat-flat-button id="R-Pr" (click)="RealizarPresupuesto()" class="OpcionNoPlegable sidebar-btn" [class.active]="activeButton() === 'R-Pr'">Realizar presupuesto</button>
   </div>
   <div class="Gestion">
-    <button id="CerrarSesion" (click)="CerrarSesion()">Cerrar sesión</button>
+    <button mat-flat-button id="CerrarSesion" class="sidebar-btn" (click)="CerrarSesion()">Cerrar sesión</button>
   </div>
 </div>
