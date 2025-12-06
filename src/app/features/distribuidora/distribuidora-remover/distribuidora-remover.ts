@@ -7,6 +7,7 @@ import {
 } from '@angular/forms';
 import { Distribuidora } from '../../../core/entities/distribuidora/distribuidora';
 import { DistribuidoraServicio } from '../../../shared/services/distribuidora/distribuidora-servicio';
+import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
 
 @Component({
   selector: 'app-distribuidora-remover',
@@ -22,6 +23,7 @@ export class DistribuidoraRemover {
   }
 
   service = inject(DistribuidoraServicio);
+  usuarioService = inject(UsuarioServicio);
   distribuidoraEncontrada: Distribuidora | null = null;
 
   distribuidoraCuit = new FormGroup({
@@ -40,6 +42,9 @@ export class DistribuidoraRemover {
         this.distribuidoraEncontrada = distribuidora.payload as Distribuidora;
       } else {
         alert('Error: ' + distribuidora.message);
+        if (distribuidora.statusCode === 401) {
+          this.usuarioService.cerrarSesion();
+        }
         this.distribuidoraEncontrada = null;
       }
     } else {
@@ -60,6 +65,9 @@ export class DistribuidoraRemover {
           this.distribuidoraEncontrada = null;
         } else {
           alert(result.message);
+          if (result.statusCode === 401) {
+            this.usuarioService.cerrarSesion();
+          }
         }
       } catch (error) {
         alert('Error en la solicitud de eliminación');

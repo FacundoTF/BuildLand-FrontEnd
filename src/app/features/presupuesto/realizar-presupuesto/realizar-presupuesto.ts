@@ -17,6 +17,7 @@ import { PersonaFisica } from '../../../core/entities/personaFisica/persona-fisi
 import { Presupuesto } from '../../../core/entities/presupuesto/presupuesto';
 import { Usuario, TipoUsuario } from '../../../core/entities/usuario/usuario';
 import { DetallePresupuesto } from '../../../core/entities/detalle-presupuesto/detalle-presupuesto';
+import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
 
 interface PresupuestoItem {
   producto: string;
@@ -43,6 +44,7 @@ export class RealizarPresupuesto {
   private categoriaService = inject(CategoriaService);
   private marcaService = inject(MarcaService);
   private productoService = inject(ProductoService);
+  private usuarioService = inject(UsuarioServicio);
 
   presupuestoHabilitado = signal(false);
   categoriaConfirmada = signal(false);
@@ -155,6 +157,9 @@ export class RealizarPresupuesto {
       this.resetearPresupuesto();
     } else {
       alert(result.message);
+      if (result.statusCode === 401) {
+        this.usuarioService.cerrarSesion();
+      }
     }
   }
 

@@ -8,6 +8,7 @@ import {
 import { PersonaFisicaService } from '../../../shared/services/persona-fisica/persona-fisica-servicio';
 import { PersonaFisica } from '../../../core/entities/personaFisica/persona-fisica';
 import { Usuario, TipoUsuario } from '../../../core/entities/usuario/usuario';
+import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
 
 @Component({
   selector: 'app-persona-fisica-modificar',
@@ -17,6 +18,7 @@ import { Usuario, TipoUsuario } from '../../../core/entities/usuario/usuario';
 })
 export class PersonaFisicaModificar {
   service = inject(PersonaFisicaService);
+  usuarioService = inject(UsuarioServicio);
   personaFisicaEncontrada: PersonaFisica | null = null;
 
   personaFisicaCuit = new FormGroup({
@@ -68,6 +70,9 @@ export class PersonaFisicaModificar {
           });
         } else {
           console.error(result.message);
+          if (result.statusCode === 401) {
+            this.usuarioService.cerrarSesion();
+          }
           this.personaFisicaEncontrada = null;
           this.personaFisicaForm.reset();
         }
@@ -126,6 +131,9 @@ export class PersonaFisicaModificar {
           this.personaFisicaEncontrada = null;
         } else {
           console.error(result.message);
+          if (result.statusCode === 401) {
+            this.usuarioService.cerrarSesion();
+          }
         }
       } catch (error) {
         console.error('Error en la solicitud de modificación:', error);

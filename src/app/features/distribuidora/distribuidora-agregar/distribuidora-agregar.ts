@@ -7,6 +7,7 @@ import { DistribuidoraServicio } from '../../../shared/services/distribuidora/di
 import { CategoriaService } from '../../../shared/services/categoria/categoria-service';
 import { Categoria } from '../../../core/entities/categoria/categoria';
 import { TipoUsuario, Usuario } from '../../../core/entities/usuario/usuario';
+import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
 
 @Component({
   selector: 'app-distribuidora-agregar',
@@ -17,6 +18,7 @@ import { TipoUsuario, Usuario } from '../../../core/entities/usuario/usuario';
 export class DistribuidoraAgregar implements OnInit {
   service = inject(DistribuidoraServicio);
   categoriaService = inject(CategoriaService);
+  usuarioService = inject(UsuarioServicio);
   categorias: Categoria[] = [];
   categoriasSeleccionadas: string[] = [];
 
@@ -101,17 +103,16 @@ export class DistribuidoraAgregar implements OnInit {
         this.categoriasSeleccionadas.map((nombre) => new Categoria(nombre)),
       );
 
-      try {
-        const result = await this.service.agregarDistribuidora(distribuidora);
-        if (result.success) {
-          alert(result.message);
-          this.distribuidoraForm.reset();
-          this.categoriasSeleccionadas = [];
-        } else {
-          alert(result.message);
+      const result = await this.service.agregarDistribuidora(distribuidora);
+      if (result.success) {
+        alert(result.message);
+        this.distribuidoraForm.reset();
+        this.categoriasSeleccionadas = [];
+      } else {
+        alert(result.message);
+        if (result.statusCode === 401) {
+          this.usuarioService.cerrarSesion();
         }
-      } catch (error) {
-        alert('Error en la solicitud al agregar distribuidora');
       }
     } else if (this.categoriasSeleccionadas.length === 0) {
       alert('Debe seleccionar al menos una categoría');

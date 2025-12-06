@@ -11,6 +11,7 @@ import { Distribuidora } from '../../../core/entities/distribuidora/distribuidor
 import { CategoriaService } from '../../../shared/services/categoria/categoria-service';
 import { Categoria } from '../../../core/entities/categoria/categoria';
 import { TipoUsuario, Usuario } from '../../../core/entities/usuario/usuario';
+import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
 
 @Component({
   selector: 'app-distribuidora-modificar',
@@ -21,6 +22,7 @@ import { TipoUsuario, Usuario } from '../../../core/entities/usuario/usuario';
 export class DistribuidoraModificar implements OnInit {
   service = inject(DistribuidoraServicio);
   categoriaService = inject(CategoriaService);
+  usuarioService = inject(UsuarioServicio);
   distribuidoraEncontrada: Distribuidora | null = null;
   categorias: Categoria[] = [];
   categoriasSeleccionadas: string[] = [];
@@ -124,6 +126,9 @@ export class DistribuidoraModificar implements OnInit {
           }
         } else {
           alert(result.message);
+          if (result.statusCode === 401) {
+            this.usuarioService.cerrarSesion();
+          }
           this.distribuidoraEncontrada = null;
           this.distribuidoraForm.reset();
         }
@@ -172,6 +177,9 @@ export class DistribuidoraModificar implements OnInit {
           this.categoriasSeleccionadas = [];
         } else {
           alert(result.message);
+          if (result.statusCode === 401) {
+            this.usuarioService.cerrarSesion();
+          }
         }
       } catch (error) {
         alert('Error en la solicitud de modificación');

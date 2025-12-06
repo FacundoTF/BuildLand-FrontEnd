@@ -9,6 +9,7 @@ import { PersonaFisicaService } from '../../../shared/services/persona-fisica/pe
 import { PersonaFisica } from '../../../core/entities/personaFisica/persona-fisica';
 import { Usuario, TipoUsuario } from '../../../core/entities/usuario/usuario';
 import { Grupo } from '../../../core/entities/grupo/grupo';
+import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
 
 @Component({
   selector: 'app-persona-fisica-agregar',
@@ -18,6 +19,7 @@ import { Grupo } from '../../../core/entities/grupo/grupo';
 })
 export class PersonaFisicaAgregar {
   service = inject(PersonaFisicaService);
+  usuarioService = inject(UsuarioServicio);
 
   personaFisicaForm = new FormGroup({
     cuit: new FormControl('', {
@@ -85,6 +87,9 @@ export class PersonaFisicaAgregar {
         this.personaFisicaForm.reset();
       } else {
         alert('Error: ' + result.message);
+        if (result.statusCode === 401) {
+          this.usuarioService.cerrarSesion();
+        }
       }
     }
   }

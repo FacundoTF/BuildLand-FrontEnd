@@ -7,6 +7,7 @@ import {
 } from '@angular/forms';
 import { PersonaFisica } from '../../../core/entities/personaFisica/persona-fisica';
 import { PersonaFisicaService } from '../../../shared/services/persona-fisica/persona-fisica-servicio';
+import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
 
 @Component({
   selector: 'app-persona-fisica-remover',
@@ -22,6 +23,7 @@ export class PersonaFisicaRemover {
   }
 
   service = inject(PersonaFisicaService);
+  usuarioService = inject(UsuarioServicio);
   personaFisicaEncontrada: PersonaFisica | null = null;
 
   personaFisicaCuit = new FormGroup({
@@ -53,6 +55,9 @@ export class PersonaFisicaRemover {
           this.mostarComponenteBorrado();
         } else {
           console.error(result.message);
+          if (result.statusCode === 401) {
+            this.usuarioService.cerrarSesion();
+          }
           this.personaFisicaEncontrada = null;
         }
       } catch (error) {
@@ -85,6 +90,9 @@ export class PersonaFisicaRemover {
           alert(result.message);
         } else {
           alert(result.message);
+          if (result.statusCode === 401) {
+            this.usuarioService.cerrarSesion();
+          }
         }
         var container = document.querySelector(
           '.delete-container',
