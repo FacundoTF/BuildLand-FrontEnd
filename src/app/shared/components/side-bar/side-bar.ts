@@ -63,6 +63,8 @@ export class SideBar implements OnInit {
     }
   }
   ToogleGestion(id: string) {
+    this.setActiveButton(id);
+    console.log(id);
     const element = document.getElementById(id);
     if (element) {
       const buttons = element.querySelectorAll('.Opcion.activado');

@@ -1,6 +1,6 @@
 <div id="Permissions">
   <div id="G-DI" class="Gestion">
-    <button mat-flat-button (click)="ToogleGestion('G-DI')" class="OpcionNoPlegable sidebar-btn">
+    <button mat-flat-button (click)="ToogleGestion('G-DI')" class="OpcionNoPlegable sidebar-btn" [class.active]="activeButton() === 'G-DI'">
       Gestionar Distribuidoras
     </button>
     <button mat-flat-button id="A-DI" (click)="AgregarDistribuidora()" class="Opcion sidebar-btn" [class.active]="activeButton() === 'A-DI'">
@@ -14,7 +14,7 @@
     </button>
   </div>
   <div id="G-PF" class="Gestion">
-    <button mat-flat-button (click)="ToogleGestion('G-PF')" class="OpcionNoPlegable sidebar-btn">
+    <button mat-flat-button (click)="ToogleGestion('G-PF')" class="OpcionNoPlegable sidebar-btn" [class.active]="activeButton() === 'G-PF'">
       Gestionar personas fisicas
     </button>
     <button mat-flat-button id="A-PF" (click)="AgregarPersonaFisica()" class="Opcion sidebar-btn" [class.active]="activeButton() === 'A-PF'">
