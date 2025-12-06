@@ -44,11 +44,11 @@ export class PersonaFisicaModificar {
         return;
       }
       try {
-        const personaFisica: PersonaFisica | null =
-          await this.service.buscarPersonaFisica(
-            this.personaFisicaCuit.value.cuit!,
-          );
-        if (personaFisica) {
+        const result = await this.service.buscarPersonaFisica(
+          this.personaFisicaCuit.value.cuit!,
+        );
+        if (result.success && result.payload) {
+          const personaFisica = result.payload as PersonaFisica;
           console.log('Persona física encontrada:', personaFisica);
           console.log(typeof personaFisica);
 
@@ -67,9 +67,7 @@ export class PersonaFisicaModificar {
             contraseña: '',
           });
         } else {
-          console.error(
-            'No se encontró la persona física con el CUIT proporcionado',
-          );
+          console.error(result.message);
           this.personaFisicaEncontrada = null;
           this.personaFisicaForm.reset();
         }
@@ -117,17 +115,17 @@ export class PersonaFisicaModificar {
       );
 
       try {
-        const success: any = await this.service.modificarPersonaFisica(
+        const result = await this.service.modificarPersonaFisica(
           usuarioModificar,
           personaModificar,
         );
-        if (success) {
-          console.log('Persona física modificada exitosamente');
+        if (result.success) {
+          console.log(result.message);
           this.personaFisicaForm.reset();
           this.personaFisicaCuit.reset();
           this.personaFisicaEncontrada = null;
         } else {
-          console.error('Error al modificar la persona física');
+          console.error(result.message);
         }
       } catch (error) {
         console.error('Error en la solicitud de modificación:', error);

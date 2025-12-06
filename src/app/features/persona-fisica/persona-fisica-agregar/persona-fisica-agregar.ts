@@ -78,17 +78,13 @@ export class PersonaFisicaAgregar {
         codigoPostal,
         ciudad,
       );
+      const result = await this.service.agregarPersonaFisica(persona);
 
-      try {
-        const result = await this.service.agregarPersonaFisica(persona);
-        if (result) {
-          alert('Persona física agregada exitosamente');
-          this.personaFisicaForm.reset();
-        } else {
-          alert('Error al agregar la persona física');
-        }
-      } catch (error) {
-        alert('Error en la solicitud:');
+      if (result.success) {
+        alert(result.message);
+        this.personaFisicaForm.reset();
+      } else {
+        alert('Error: ' + result.message);
       }
     }
   }

@@ -43,17 +43,16 @@ export class PersonaFisicaRemover {
         return;
       }
       try {
-        const personaFisica = await this.service.buscarPersonaFisica(
+        const result = await this.service.buscarPersonaFisica(
           this.personaFisicaCuit.value.cuit!,
         );
-        if (personaFisica) {
+        if (result.success && result.payload) {
+          const personaFisica = result.payload as PersonaFisica;
           console.log('Persona física encontrada:', personaFisica);
           this.personaFisicaEncontrada = personaFisica;
           this.mostarComponenteBorrado();
         } else {
-          console.error(
-            'No se encontró la persona física con el CUIT proporcionado',
-          );
+          console.error(result.message);
           this.personaFisicaEncontrada = null;
         }
       } catch (error) {
@@ -79,10 +78,14 @@ export class PersonaFisicaRemover {
     }
     if (this.personaFisicaEncontrada && this.personaFisicaCuit.valid) {
       try {
-        const success = await this.service.removerPersonaFisica(
+        const result = await this.service.removerPersonaFisica(
           this.personaFisicaEncontrada,
         );
-        alert('Persona física removida exitosamente');
+        if (result.success) {
+          alert(result.message);
+        } else {
+          alert(result.message);
+        }
         var container = document.querySelector(
           '.delete-container',
         ) as HTMLElement;
