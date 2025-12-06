@@ -33,18 +33,13 @@ export class DistribuidoraRemover {
 
   async handleSubmitCuit() {
     if (this.distribuidoraCuit.valid) {
-      try {
-        const distribuidora = await this.service.buscarDistribuidoraCuit(
-          this.distribuidoraCuit.value.cuit,
-        );
-        if (distribuidora) {
-          this.distribuidoraEncontrada = distribuidora;
-        } else {
-          alert('No se encontró la distribuidora con el CUIT proporcionado');
-          this.distribuidoraEncontrada = null;
-        }
-      } catch (error) {
-        alert('Error al buscar la distribuidora:');
+      const distribuidora = await this.service.buscarDistribuidoraCuit(
+        this.distribuidoraCuit.value.cuit,
+      );
+      if (distribuidora.success) {
+        this.distribuidoraEncontrada = distribuidora.payload as Distribuidora;
+      } else {
+        alert('Error: ' + distribuidora.message);
         this.distribuidoraEncontrada = null;
       }
     } else {
@@ -56,15 +51,15 @@ export class DistribuidoraRemover {
   async handleRemove() {
     if (this.distribuidoraEncontrada) {
       try {
-        const success = await this.service.removerDistribuidora(
+        const result = await this.service.removerDistribuidora(
           this.distribuidoraEncontrada,
         );
-        if (success) {
-          alert('Distribuidora eliminada exitosamente');
+        if (result.success) {
+          alert(result.message);
           this.distribuidoraCuit.reset();
           this.distribuidoraEncontrada = null;
         } else {
-          alert('Error al eliminar la distribuidora');
+          alert(result.message);
         }
       } catch (error) {
         alert('Error en la solicitud de eliminación');

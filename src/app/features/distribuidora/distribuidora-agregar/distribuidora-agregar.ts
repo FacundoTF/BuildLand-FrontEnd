@@ -103,12 +103,12 @@ export class DistribuidoraAgregar implements OnInit {
 
       try {
         const result = await this.service.agregarDistribuidora(distribuidora);
-        if (result) {
-          alert('Distribuidora agregada exitosamente');
+        if (result.success) {
+          alert(result.message);
           this.distribuidoraForm.reset();
           this.categoriasSeleccionadas = [];
         } else {
-          alert('Error al agregar la distribuidora');
+          alert(result.message);
         }
       } catch (error) {
         alert('Error en la solicitud al agregar distribuidora');

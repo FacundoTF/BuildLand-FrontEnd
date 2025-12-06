@@ -3,6 +3,8 @@ import { Distribuidora } from '../../../core/entities/distribuidora/distribuidor
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment.development';
+import { ReturnResultResponse } from '../return-response';
+import { ReturnSearchResponse } from '../return-search-response';
 
 @Injectable({
   providedIn: 'root',
@@ -11,109 +13,184 @@ export class DistribuidoraServicio {
   private http = inject(HttpClient);
   private url = `${environment.server.host}${environment.server.port}/api/distribuidoras`;
 
-  async agregarDistribuidora(distribuidora: Distribuidora): Promise<boolean> {
-    const observable = this.http.post<boolean>(this.url, {
-      usuario: distribuidora.usuario,
-      cuit: distribuidora.cuit,
-      nombre: distribuidora.nombre,
-      direccion: distribuidora.direccion,
-      numeroTelefono: distribuidora.numeroTelefono,
-      descripcion: distribuidora.descripcion,
-      codigoPostal: distribuidora.codigoPostal,
-      ciudad: distribuidora.ciudad,
-      categorias: distribuidora.categorias,
-    });
+  async agregarDistribuidora(
+    distribuidora: Distribuidora,
+  ): Promise<ReturnResultResponse> {
+    const observable = this.http.post<boolean>(
+      this.url,
+      {
+        usuario: distribuidora.usuario,
+        cuit: distribuidora.cuit,
+        nombre: distribuidora.nombre,
+        direccion: distribuidora.direccion,
+        numeroTelefono: distribuidora.numeroTelefono,
+        descripcion: distribuidora.descripcion,
+        codigoPostal: distribuidora.codigoPostal,
+        ciudad: distribuidora.ciudad,
+        categorias: distribuidora.categorias,
+      },
+      {
+        observe: 'response',
+      },
+    );
 
     try {
-      return await lastValueFrom(observable);
+      const response = await lastValueFrom(observable);
+      return {
+        success: response.body || false,
+        message: response.body
+          ? 'Distribuidora agregada con exito.'
+          : 'Error al agregar distribuidora.',
+        statusCode: response.status,
+      };
     } catch (error: any) {
-      return false;
+      console.error('Error al agregar distribuidora:', error);
+      return {
+        success: false,
+        message: 'Error al agregar distribuidora.',
+        statusCode: error.status || 500,
+      };
     }
   }
-  async removerDistribuidora(distribuidora: Distribuidora): Promise<boolean> {
-    console.log(
-      'Intentando eliminar distribuidora con CUIT:',
-      distribuidora.cuit,
-    );
+  async removerDistribuidora(
+    distribuidora: Distribuidora,
+  ): Promise<ReturnResultResponse> {
     const observable = this.http.delete(`${this.url}/${distribuidora.cuit}`, {
       observe: 'response',
     });
 
     try {
       const response = await lastValueFrom(observable);
-      console.log('Status de respuesta:', response.status);
       if (response.status === 204) {
         console.log(
           'Distribuidora eliminada exitosamente:',
           distribuidora.cuit,
         );
-        return true;
+        return {
+          success: true,
+          message: 'Distribuidora eliminada con exito.',
+          statusCode: response.status,
+        };
       }
-      return false;
+      return {
+        success: false,
+        message: 'Error al eliminar distribuidora.',
+        statusCode: response.status,
+      };
     } catch (error: any) {
-      console.error('Error al eliminar distribuidora:', error);
+      let errorMessage = 'Error al eliminar distribuidora.';
       if (error.status === 404) {
         console.error('Distribuidora no encontrada');
+        errorMessage = 'Distribuidora no encontrada.';
+      } else if (error.status === 401) {
+        console.error(
+          'No autorizado para eliminar la distribuidora. Cierre de sesión inminente.',
+        );
+        errorMessage =
+          'No autorizado para eliminar la distribuidora. Cierre de sesión inminente.';
       }
-      return false;
+      return {
+        success: false,
+        message: errorMessage,
+        statusCode: error.status || 500,
+      };
     }
   }
-  async modificarDistribuidora(distribuidora: Distribuidora): Promise<boolean> {
-    const observable = this.http.patch<Distribuidora>(this.url, {
-      usuario: distribuidora.usuario,
-      cuit: distribuidora.cuit,
-      nombre: distribuidora.nombre,
-      direccion: distribuidora.direccion,
-      numeroTelefono: distribuidora.numeroTelefono,
-      descripcion: distribuidora.descripcion,
-      codigoPostal: distribuidora.codigoPostal,
-      ciudad: distribuidora.ciudad,
-      categorias: distribuidora.categorias,
-    });
+  async modificarDistribuidora(
+    distribuidora: Distribuidora,
+  ): Promise<ReturnResultResponse> {
+    const observable = this.http.patch<Distribuidora>(
+      this.url,
+      {
+        usuario: distribuidora.usuario,
+        cuit: distribuidora.cuit,
+        nombre: distribuidora.nombre,
+        direccion: distribuidora.direccion,
+        numeroTelefono: distribuidora.numeroTelefono,
+        descripcion: distribuidora.descripcion,
+        codigoPostal: distribuidora.codigoPostal,
+        ciudad: distribuidora.ciudad,
+        categorias: distribuidora.categorias,
+      },
+      {
+        observe: 'response',
+      },
+    );
 
     try {
       const response = await lastValueFrom(observable);
-      return true;
+      return {
+        success: true,
+        message: 'Distribuidora modificada con exito.',
+        statusCode: response.status,
+      };
     } catch (error: any) {
-      console.error('Error al modificar distribuidora:', error);
-      console.error('Error details:', error.error);
+      let errorMessage = 'Error al modificar distribuidora.';
       if (error.status === 404) {
-        console.error('Distribuidora no encontrada');
+        errorMessage = 'Distribuidora no encontrada.';
       }
-      return false;
+      return {
+        success: false,
+        message: errorMessage,
+        statusCode: error.status || 500,
+      };
     }
   }
 
   async buscarDistribuidoraCuit(
     cuit: string | null | undefined,
-  ): Promise<Distribuidora | null> {
+  ): Promise<ReturnSearchResponse> {
     const cuitElegido = cuit?.trim();
 
     if (cuitElegido) {
-      const observable = this.http.get<any>(`${this.url}/${cuitElegido}`);
+      const observable = this.http.get<Distribuidora>(
+        `${this.url}/${cuitElegido}`,
+        {
+          observe: 'response',
+        },
+      );
       try {
         const response = await lastValueFrom(observable);
+        console.info(typeof response);
         const distribuidora = new Distribuidora(
-          response.usuario,
-          response.cuit,
-          response.nombre,
-          response.direccion,
-          response.numeroTelefono,
-          response.descripcion,
-          response.codigoPostal,
-          response.ciudad,
-          response.categorias,
+          response.body!.usuario,
+          response.body!.cuit,
+          response.body!.nombre,
+          response.body!.direccion,
+          response.body!.numeroTelefono,
+          response.body!.descripcion,
+          response.body!.codigoPostal,
+          response.body!.ciudad,
+          response.body!.categorias,
         );
-        return distribuidora;
+        return {
+          success: true,
+          message: 'Distribuidora encontrada con exito.',
+          payload: distribuidora,
+          statusCode: response.status,
+        };
       } catch (error: any) {
-        console.error('Error al buscar distribuidora:', error);
+        let errorMessage: string = 'Error al buscar distribuidora.';
         if (error.status === 404) {
-          console.error('Distribuidora no encontrada con CUIT:', cuitElegido);
+          errorMessage = 'Distribuidora no encontrada con CUIT.';
+        } else if (error.status === 401) {
+          errorMessage =
+            'No autorizado para buscar la distribuidora. Cierre de sesión inminente.';
         }
-        return null;
+        return {
+          success: false,
+          message: errorMessage,
+          payload: null,
+          statusCode: error.status || 500,
+        };
       }
     } else {
-      return null;
+      return {
+        success: false,
+        message: 'CUIT inválido o vacío.',
+        payload: null,
+        statusCode: 400,
+      };
     }
   }
 }

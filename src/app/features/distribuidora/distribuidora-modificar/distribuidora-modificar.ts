@@ -89,11 +89,11 @@ export class DistribuidoraModificar implements OnInit {
   async handleSubmitCuit() {
     if (this.distribuidoraCuit.valid) {
       try {
-        const distribuidora = await this.service.buscarDistribuidoraCuit(
+        const result = await this.service.buscarDistribuidoraCuit(
           this.distribuidoraCuit.value.cuit,
         );
-        if (distribuidora) {
-          this.distribuidoraEncontrada = distribuidora;
+        if (result.success && result.payload) {
+          this.distribuidoraEncontrada = result.payload as Distribuidora;
 
           const container = document.querySelector(
             '.edit-container',
@@ -103,12 +103,12 @@ export class DistribuidoraModificar implements OnInit {
           // Poblar el formulario con los datos encontrados
           this.distribuidoraForm.patchValue({
             cuit: this.distribuidoraCuit.value.cuit,
-            nombre: distribuidora.nombre,
-            direccion: distribuidora.direccion,
-            codigoPostal: distribuidora.codigoPostal,
-            numeroTelefono: distribuidora.numeroTelefono,
-            descripcion: distribuidora.descripcion,
-            ciudad: distribuidora.ciudad,
+            nombre: this.distribuidoraEncontrada.nombre,
+            direccion: this.distribuidoraEncontrada.direccion,
+            codigoPostal: this.distribuidoraEncontrada.codigoPostal,
+            numeroTelefono: this.distribuidoraEncontrada.numeroTelefono,
+            descripcion: this.distribuidoraEncontrada.descripcion,
+            ciudad: this.distribuidoraEncontrada.ciudad,
             correoElectronico: '', // Campo nuevo - se dejará vacío para que el usuario lo complete
             contraseña: '', // Campo nuevo - se dejará vacío para que el usuario lo complete
           });
@@ -116,15 +116,14 @@ export class DistribuidoraModificar implements OnInit {
           // Cargar las categorías seleccionadas
           this.categoriasSeleccionadas = [];
           if (
-            distribuidora.categorias &&
-            Array.isArray(distribuidora.categorias)
+            this.distribuidoraEncontrada.categorias &&
+            Array.isArray(this.distribuidoraEncontrada.categorias)
           ) {
-            this.categoriasSeleccionadas = distribuidora.categorias.map(
-              (cat) => cat.nombre,
-            );
+            this.categoriasSeleccionadas =
+              this.distribuidoraEncontrada.categorias.map((cat) => cat.nombre);
           }
         } else {
-          alert('No se encontró la distribuidora con el CUIT proporcionado');
+          alert(result.message);
           this.distribuidoraEncontrada = null;
           this.distribuidoraForm.reset();
         }
@@ -164,16 +163,15 @@ export class DistribuidoraModificar implements OnInit {
       );
 
       try {
-        const success =
-          await this.service.modificarDistribuidora(distribuidora);
-        if (success) {
-          alert('Distribuidora modificada exitosamente');
+        const result = await this.service.modificarDistribuidora(distribuidora);
+        if (result.success) {
+          alert(result.message);
           this.distribuidoraForm.reset();
           this.distribuidoraCuit.reset();
           this.distribuidoraEncontrada = null;
           this.categoriasSeleccionadas = [];
         } else {
-          alert('Error al modificar la distribuidora');
+          alert(result.message);
         }
       } catch (error) {
         alert('Error en la solicitud de modificación');
