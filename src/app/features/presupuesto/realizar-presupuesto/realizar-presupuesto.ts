@@ -73,7 +73,7 @@ export class RealizarPresupuesto {
     });
   }
   async habilitarPresupuesto(categoria: Categoria) {
-    let contenedorPresupuesto = document.getElementById(
+    const contenedorPresupuesto = document.getElementById(
       'presupuesto-container',
     );
     if (!contenedorPresupuesto) {
@@ -82,7 +82,7 @@ export class RealizarPresupuesto {
     this.presupuestoHabilitado.set(true);
     this.categoriaConfirmada.set(true);
     this.selectedCategory.disable();
-    contenedorPresupuesto.style.display = 'block';
+    contenedorPresupuesto.classList.add('visible');
 
     await this.buscarMarcas(categoria);
     await this.buscarProductos(categoria);
@@ -224,7 +224,7 @@ export class RealizarPresupuesto {
       'presupuesto-container',
     );
     if (contenedorPresupuesto) {
-      contenedorPresupuesto.style.display = 'none';
+      contenedorPresupuesto.classList.remove('visible');
     }
   }
 }

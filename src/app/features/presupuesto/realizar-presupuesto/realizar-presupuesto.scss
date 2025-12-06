@@ -1,3 +1,263 @@
-#presupuesto-container{
+@use '@angular/material' as mat;
+@use 'sass:map';
+@use "sass:list";
+@use "../../../../paleta-buildland" as colors;
+
+$primary-60: map.get(colors.$primary-palette, 60);
+$primary-35: map.get(colors.$primary-palette, 35);
+$primary-100: map.get(colors.$primary-palette, 100);
+$secondary-40: map.get(colors.$secondary-pallete, 40);
+$tertiary-60: map.get(colors.$tertiary-palette, 60);
+$neutral-90: map.get(colors.$neutral-pallete, 90);
+$error-60: map.get(colors.$error-pallete, 60);
+
+#content {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 75%;
+  padding: 3rem 0 0 0;
+}
+
+// Contenedor principal - Mobile First
+.container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  background-color: $neutral-90;
+  min-height: 100vh;
+
+  h2 {
+    color: $primary-60;
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 24px;
+    text-align: center;
+    font-family: 'Roboto', 'Helvetica Neue', sans-serif;
+  }
+
+  h3 {
+    color: $primary-35;
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-bottom: 20px;
+    font-family: 'Roboto', 'Helvetica Neue', sans-serif;
+  }
+}
+
+// Formulario
+.presupuesto-form {
+  background: $primary-100;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+  animation: slideIn 0.5s ease-out;
+}
+
+.form-section {
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #e0e0e0;
+
+  &:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+}
+
+#presupuesto-container {
   display: none;
+
+  &.visible {
+    display: block;
+  }
+}
+
+// Grupos de campos del formulario
+.form-group {
+  margin-bottom: 20px;
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    color: #1c1b1f;
+    font-weight: 500;
+    font-size: 0.875rem;
+  }
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+// Row para campos en línea
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+// Botones
+.form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+
+  &.finalizar {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  button {
+    padding: 12px 24px;
+    font-weight: 500;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    min-height: 48px;
+
+    &:focus {
+      outline: 2px solid $primary-60;
+      outline-offset: 2px;
+    }
+  }
+}
+
+.btn-primary {
+  background-color: $primary-60;
+  color: $primary-100;
+
+  &:hover {
+    background-color: $primary-35;
+    box-shadow: 0 4px 12px rgba(61, 160, 141, 0.3);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  &:disabled {
+    background-color: #1c1b1f79;
+    cursor: not-allowed;
+
+    &:hover {
+      box-shadow: none;
+    }
+  }
+}
+
+.btn-secondary {
+  background-color: $secondary-40;
+  color: $primary-100;
+
+  &:hover {
+    background-color: $primary-35;
+    box-shadow: 0 4px 12px rgba(67, 101, 92, 0.3);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  &:disabled {
+    background-color: #1c1b1f50;
+    cursor: not-allowed;
+
+    &:hover {
+      box-shadow: none;
+    }
+  }
+}
+
+// Tabla de items del presupuesto
+.tabla-container {
+  margin-top: 24px;
+  overflow-x: auto;
+
+  table {
+    width: 100%;
+
+    th {
+      background-color: $primary-60;
+      color: $primary-100;
+      font-weight: 500;
+    }
+
+    td {
+      color: #1c1b1f;
+    }
+
+    tr:hover {
+      background-color: rgba(61, 160, 141, 0.05);
+    }
+  }
+}
+
+// Responsive Design - Tablet
+@media (min-width: 768px) {
+  .container {
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 32px;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+    }
+  }
+
+  .presupuesto-form {
+    padding: 32px;
+  }
+
+  .form-actions {
+    flex-direction: row;
+    justify-content: flex-start;
+
+    button {
+      min-width: 180px;
+      flex: none;
+    }
+  }
+
+  .form-row {
+    flex-direction: row;
+    gap: 20px;
+
+    .form-group {
+      flex: 1;
+    }
+  }
+}
+
+// Responsive Design - Desktop
+@media (min-width: 1024px) {
+  .container {
+    h2 {
+      font-size: 2.25rem;
+    }
+  }
+
+  .presupuesto-form {
+    padding: 40px;
+  }
+}
+
+// Animaciones suaves
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

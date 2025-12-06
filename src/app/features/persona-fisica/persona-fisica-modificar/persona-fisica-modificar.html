@@ -1,123 +1,125 @@
 <div class="container">
-  <h2>Modificar Persona Física</h2>
+  <div id="content">
+    <h2>Modificar Persona Física</h2>
 
-  <!-- Contenedor para buscar persona física por CUIT -->
-  <div class="search-container">
-    <h3>Buscar Persona Física</h3>
-    <form
-      [formGroup]="personaFisicaCuit"
-      (ngSubmit)="handleSubmitCuit()"
-      class="search-form"
-    >
-      <div class="form-group">
-        <label for="searchCuit">CUIT de la Persona Física</label>
-        <input
-          type="text"
-          id="searchCuit"
-          name="searchCuit"
-          placeholder="Ingrese el CUIT para buscar (ej: 20-12345678-9)"
-          formControlName="cuit"
-          required
-        />
-      </div>
-      <div class="search-actions">
-        <button type="submit" class="btn-search">Buscar Persona Física</button>
-      </div>
-    </form>
-  </div>
-
-  <!-- Contenedor para modificar datos (inicialmente oculto) -->
-  <div class="edit-container is-hidden">
-    <h3>Datos de la Persona Física</h3>
-    <form
-      [formGroup]="personaFisicaForm"
-      (ngSubmit)="handleModify()"
-      class="persona-fisica-form"
-    >
-      <div class="form-group">
-        <label for="cuit">CUIT</label>
-        <input
-          type="text"
-          id="cuit"
-          name="cuit"
-          placeholder="CUIT de la persona física"
-          formControlName="cuit"
-          [readonly]="true"
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="nombre">Nombre</label>
-        <input
-          type="text"
-          id="nombre"
-          name="nombre"
-          placeholder="Ingrese el nombre de la persona física"
-          formControlName="nombre"
-          required
-        />
-      </div>
-
-      <div class="form-row">
+    <!-- Contenedor para buscar persona física por CUIT -->
+    <div class="search-container">
+      <h3>Buscar Persona Física</h3>
+      <form
+        [formGroup]="personaFisicaCuit"
+        (ngSubmit)="handleSubmitCuit()"
+        class="search-form"
+      >
         <div class="form-group">
-          <label for="numeroTelefono">Número de Teléfono</label>
-          <input
-            type="tel"
-            id="numeroTelefono"
-            name="numeroTelefono"
-            placeholder="Ingrese el número de teléfono"
-            formControlName="numeroTelefono"
-            required
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="codigoPostal">Código Postal</label>
+          <label for="searchCuit">CUIT de la Persona Física</label>
           <input
             type="text"
-            id="codigoPostal"
-            name="codigoPostal"
-            placeholder="Ingrese el código postal"
-            formControlName="codigoPostal"
+            id="searchCuit"
+            name="searchCuit"
+            placeholder="Ingrese el CUIT para buscar (ej: 20-12345678-9)"
+            formControlName="cuit"
             required
+          />
+        </div>
+        <div class="search-actions">
+          <button type="submit" class="btn-search">Buscar Persona Física</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Contenedor para modificar datos (inicialmente oculto) -->
+    <div class="edit-container is-hidden">
+      <h3>Datos de la Persona Física</h3>
+      <form
+        [formGroup]="personaFisicaForm"
+        (ngSubmit)="handleModify()"
+        class="persona-fisica-form"
+      >
+        <div class="form-group">
+          <label for="cuit">CUIT</label>
+          <input
+            type="text"
+            id="cuit"
+            name="cuit"
+            placeholder="CUIT de la persona física"
+            formControlName="cuit"
+            readonly
           />
         </div>
 
         <div class="form-group">
-          <label for="ciudad">Ciudad</label>
+          <label for="nombre">Nombre</label>
           <input
             type="text"
-            id="ciudad"
-            name="ciudad"
-            placeholder="Ingrese la ciudad"
-            formControlName="ciudad"
+            id="nombre"
+            name="nombre"
+            placeholder="Ingrese el nombre de la persona física"
+            formControlName="nombre"
             required
           />
         </div>
-      </div>
 
-      <div class="form-group">
-        <label for="correoElectronico">Correo Electrónico</label>
-        <input
-          type="email"
-          id="correoElectronico"
-          name="correoElectronico"
-          placeholder="Ingrese el correo electrónico"
-          formControlName="correoElectronico"
-          required
-        />
-      </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="numeroTelefono">Número de Teléfono</label>
+            <input
+              type="tel"
+              id="numeroTelefono"
+              name="numeroTelefono"
+              placeholder="Ingrese el número de teléfono"
+              formControlName="numeroTelefono"
+              required
+            />
+          </div>
 
-      <div class="form-actions">
-        <button type="reset" class="btn-secondary">Restaurar</button>
-        <button
-          [disabled]="!personaFisicaForm.valid"
-          type="submit"
-          class="btn-primary"
-        >
-          Guardar Cambios
-        </button>
-      </div>
-    </form>
+          <div class="form-group">
+            <label for="codigoPostal">Código Postal</label>
+            <input
+              type="text"
+              id="codigoPostal"
+              name="codigoPostal"
+              placeholder="Ingrese el código postal"
+              formControlName="codigoPostal"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="ciudad">Ciudad</label>
+            <input
+              type="text"
+              id="ciudad"
+              name="ciudad"
+              placeholder="Ingrese la ciudad"
+              formControlName="ciudad"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="correoElectronico">Correo Electrónico</label>
+          <input
+            type="email"
+            id="correoElectronico"
+            name="correoElectronico"
+            placeholder="Ingrese el correo electrónico"
+            formControlName="correoElectronico"
+            required
+          />
+        </div>
+
+        <div class="form-actions">
+          <button type="reset" class="btn-secondary">Restaurar</button>
+          <button
+            [disabled]="!personaFisicaForm.valid"
+            type="submit"
+            class="btn-primary"
+          >
+            Guardar Cambios
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>

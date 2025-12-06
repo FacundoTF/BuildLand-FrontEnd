@@ -1,23 +1,38 @@
 @use '@angular/material' as mat;
+@use 'sass:map';
+@use "sass:list";
+@use "../../../../paleta-buildland" as colors;
 
-// Variables de colores del tema
-$primary-green: #2e7d32;
-$secondary-green: #66bb6a;
-$accent-orange: #ff9800;
-$surface-color: #f5f5f5;
-$on-surface: #1c1b1f;
-$error-color: #ba1a1a;
+$primary-60: map.get(colors.$primary-palette, 60);
+$primary-35: map.get(colors.$primary-palette, 35);
+$primary-100: map.get(colors.$primary-palette, 100);
+$secondary-40: map.get(colors.$secondary-pallete, 40);
+$tertiary-60: map.get(colors.$tertiary-palette, 60);
+$neutral-90: map.get(colors.$neutral-pallete, 90);
+$error-60: map.get(colors.$error-pallete, 60);
+
+#descripcion{
+  width: 85%;
+}
+
+#content{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 75%;
+  padding: 3rem 0 0 0;
+}
 
 // Contenedor principal - Mobile First
 .container {
-  padding: 16px;
-  max-width: 100%;
-  margin: 0 auto;
-  background-color: $surface-color;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  background-color: $neutral-90;
   min-height: 100vh;
 
   h2 {
-    color: $primary-green;
+    color: $primary-60;
     font-size: 1.5rem;
     font-weight: 500;
     margin-bottom: 24px;
@@ -28,8 +43,7 @@ $error-color: #ba1a1a;
 
 // Formulario
 .distribuidora-form {
-  background: white;
-  border-radius: 12px;
+  background: $primary-100;
   padding: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 16px;
@@ -38,44 +52,43 @@ $error-color: #ba1a1a;
 // Grupos de campos del formulario
 .form-group {
   margin-bottom: 20px;
-  
+
   label {
     display: block;
     margin-bottom: 8px;
-    color: $on-surface;
+    color: #1c1b1f;
     font-weight: 500;
     font-size: 0.875rem;
   }
-  
+
   input, textarea {
-    width: 95%;
+    width: 50%;
     padding: 12px 16px;
     border: 2px solid #e0e0e0;
-    border-radius: 8px;
     font-size: 1rem;
     transition: all 0.3s ease;
     background-color: white;
-    
+
     &:focus {
       outline: none;
-      border-color: $primary-green;
-      box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+      border-color: $primary-60;
+      box-shadow: 0 0 0 3px rgba(61, 160, 141, 0.1);
     }
-    
+
     &:hover {
-      border-color: $secondary-green;
+      border-color: $secondary-40;
     }
-    
+
     &::placeholder {
       color: #9e9e9e;
       font-size: 0.875rem;
     }
-    
+
     &:invalid:not(:placeholder-shown) {
-      border-color: $error-color;
+      border-color: $error-60;
     }
   }
-  
+
   textarea {
     resize: vertical;
     min-height: 100px;
@@ -89,10 +102,9 @@ $error-color: #ba1a1a;
   flex-direction: column;
   gap: 12px;
   margin-top: 32px;
-  
+
   button {
     padding: 12px 24px;
-    border-radius: 8px;
     font-weight: 500;
     font-size: 0.875rem;
     text-transform: uppercase;
@@ -101,25 +113,24 @@ $error-color: #ba1a1a;
     transition: all 0.3s ease;
     border: none;
     min-height: 48px;
-    
+
     &:focus {
-      outline: 2px solid $primary-green;
+      outline: 2px solid $primary-60;
       outline-offset: 2px;
     }
   }
 }
 
 .btn-primary {
-  background-color: $primary-green;
-  color: white;
-  
+  background-color: $primary-60;
+  color: $primary-100;
+
   &:hover {
-    background-color: adjust($primary-green, 8%);
-    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+    background-color: $primary-35;
+    box-shadow: 0 4px 12px rgba(61, 160, 141, 0.3);
   }
-  
+
   &:active {
-    background-color: adjust($primary-green, 12%);
     transform: translateY(1px);
   }
 
@@ -132,33 +143,31 @@ $error-color: #ba1a1a;
 }
 
 .btn-secondary {
-  background-color: $secondary-green;
-  color: white;
-  
+  background-color: $secondary-40;
+  color: $primary-100;
+
   &:hover {
-    background-color: adjust($secondary-green, 8%);
-    box-shadow: 0 4px 12px rgba(102, 187, 106, 0.3);
+    background-color: $primary-35;
+    box-shadow: 0 4px 12px rgba(67, 101, 92, 0.3);
   }
-  
+
   &:active {
-    background-color: adjust($secondary-green, 12%);
     transform: translateY(1px);
   }
 }
 
 .btn-cancel {
   background-color: transparent;
-  color: $on-surface;
+  color: #1c1b1f;
   border: 2px solid #e0e0e0;
-  
+
   &:hover {
-    background-color: #f5f5f5;
-    border-color: $accent-orange;
-    color: $accent-orange;
+    background-color: $neutral-90;
+    border-color: $tertiary-60;
+    color: $tertiary-60;
   }
-  
+
   &:active {
-    background-color: #eeeeee;
     transform: translateY(1px);
   }
 }
@@ -166,23 +175,20 @@ $error-color: #ba1a1a;
 // Responsive Design - Tablet
 @media (min-width: 768px) {
   .container {
-    padding: 24px;
-    max-width: 600px;
-    
     h2 {
       font-size: 2rem;
       margin-bottom: 32px;
     }
   }
-  
+
   .distribuidora-form {
     padding: 32px;
   }
-  
+
   .form-actions {
     flex-direction: row;
     justify-content: flex-end;
-    
+
     button {
       min-width: 120px;
       flex: none;
@@ -193,18 +199,15 @@ $error-color: #ba1a1a;
 // Responsive Design - Desktop
 @media (min-width: 1024px) {
   .container {
-    padding: 32px;
-    max-width: 800px;
-    
     h2 {
       font-size: 2.25rem;
     }
   }
-  
+
   .distribuidora-form {
     padding: 40px;
   }
-  
+
   // Layout de dos columnas para campos más pequeños
   .form-row {
     display: grid;
@@ -217,14 +220,14 @@ $error-color: #ba1a1a;
 .form-group {
   &.invalid {
     input, textarea {
-      border-color: $error-color;
+      border-color: $error-60;
       background-color: #fef7f7;
     }
   }
-  
+
   &.valid {
     input, textarea {
-      border-color: $primary-green;
+      border-color: $primary-60;
       background-color: #f1f8e9;
     }
   }
@@ -233,7 +236,7 @@ $error-color: #ba1a1a;
 // Indicadores de campos requeridos
 .form-group label::after {
   content: " *";
-  color: $error-color;
+  color: $error-60;
 }
 
 .form-group:has(input:not([required])) label::after,
@@ -254,20 +257,19 @@ $error-color: #ba1a1a;
   align-items: center;
   padding: 12px;
   border: 2px solid #e0e0e0;
-  border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
   background-color: white;
 
   &:hover {
-    border-color: $secondary-green;
+    border-color: $secondary-40;
     background-color: #f1f8e9;
   }
 
   &.selected {
-    border-color: $primary-green;
+    border-color: $primary-60;
     background-color: #e8f5e9;
-    box-shadow: 0 2px 8px rgba(46, 125, 50, 0.2);
+    box-shadow: 0 2px 8px rgba(61, 160, 141, 0.2);
   }
 
   input[type="checkbox"] {
@@ -275,7 +277,7 @@ $error-color: #ba1a1a;
     cursor: pointer;
     width: 18px;
     height: 18px;
-    accent-color: $primary-green;
+    accent-color: $primary-60;
   }
 
   label {
@@ -289,7 +291,7 @@ $error-color: #ba1a1a;
 
 .error-message {
   display: block;
-  color: $error-color;
+  color: $error-60;
   font-size: 0.75rem;
   margin-top: 8px;
 }
