@@ -1,9 +1,10 @@
 import { ReturnResultResponse } from './return-response';
 import { Distribuidora } from '../../core/entities/distribuidora/distribuidora';
 import { PersonaFisica } from '../../core/entities/personaFisica/persona-fisica';
+import { Presupuesto } from '../../core/entities/presupuesto/presupuesto';
 
 type NullOrUndefined = null | undefined;
 
 export interface ReturnSearchResponse extends ReturnResultResponse {
-  payload: Distribuidora | PersonaFisica | NullOrUndefined;
+  payload: Distribuidora | PersonaFisica | Presupuesto | NullOrUndefined;
 }
