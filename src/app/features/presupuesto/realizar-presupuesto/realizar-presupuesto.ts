@@ -148,17 +148,13 @@ export class RealizarPresupuesto {
       );
     });
 
-    try {
-      const result =
-        await this.presupuestoServicio.agregarPresupuesto(presupuesto);
-      if (result) {
-        alert('Presupuesto guardado exitosamente');
-        this.resetearPresupuesto();
-      } else {
-        alert('Error al guardar el presupuesto');
-      }
-    } catch (error) {
-      alert('Error al guardar el presupuesto');
+    const result =
+      await this.presupuestoServicio.agregarPresupuesto(presupuesto);
+    if (result.success) {
+      alert(result.message);
+      this.resetearPresupuesto();
+    } else {
+      alert(result.message);
     }
   }
 
