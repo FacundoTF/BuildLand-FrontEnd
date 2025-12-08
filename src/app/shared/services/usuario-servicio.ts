@@ -12,6 +12,7 @@ export class UsuarioServicio {
   router = inject(Router);
 
   emailRecuperando = signal('');
+  estaAutenticado = signal(false);
 
   enviarCodigoRestauracion = signal(false);
   confirmarNuevaContrasena = signal(false);
@@ -28,6 +29,7 @@ export class UsuarioServicio {
         map((res: Object) => {
           console.log('Usuario encontrado');
           console.log(res);
+          this.estaAutenticado.set(true);
           return res;
         }),
         catchError((error: Error) => {
@@ -96,13 +98,21 @@ export class UsuarioServicio {
   }
 
   cerrarSesion() {
+    // Establecer inmediatamente el estado de autenticación en false
+    this.estaAutenticado.set(false);
+
+    sessionStorage.removeItem('permisos');
+    sessionStorage.removeItem('grupos');
+
     const observable = this.http.post(`${this.API_URL}/auth/logout`, {});
     observable.subscribe({
       next: () => {
         this.router.navigate(['/iniciar-sesion']);
       },
       error: (a) => {
-        alert('Error al cerrar sesion: ' + JSON.stringify(a));
+        console.error('Error al cerrar sesión:', a);
+        // Aún así redirigir al login
+        this.router.navigate(['/iniciar-sesion']);
       },
     });
   }
