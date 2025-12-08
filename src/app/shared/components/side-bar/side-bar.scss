@@ -14,20 +14,6 @@ $secondary-40: map.get(colors.$secondary-pallete,40);
   flex-direction: column;
 }
 
-// Estilos base para los botones del sidebar
-.sidebar-btn {
-  background-color: $primary-60;
-  color: $primary-100;
-
-  &:hover {
-    background-color: $primary-35;
-  }
-
-  &.active {
-    background-color: $secondary-40;
-  }
-}
-
 #CerrarSesion {
   display: block;
   justify-content: center;
