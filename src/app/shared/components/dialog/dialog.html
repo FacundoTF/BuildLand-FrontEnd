@@ -1,0 +1,15 @@
+<div class="dialog-container">
+  <h2 mat-dialog-title>{{ title() }}</h2>
+  <mat-dialog-content>
+    <p>{{ message() }}</p>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    @if (showCancel()) {
+      <button mat-button (click)="onCancel()">{{ cancelText() }}</button>
+    }
+    <button mat-raised-button color="primary" (click)="onConfirm()">
+      {{ confirmText() }}
+    </button>
+  </mat-dialog-actions>
+</div>
+
