@@ -10,6 +10,7 @@ import { PersonaFisica } from '../../../core/entities/personaFisica/persona-fisi
 import { Usuario, TipoUsuario } from '../../../core/entities/usuario/usuario';
 import { Grupo } from '../../../core/entities/grupo/grupo';
 import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
+import { DialogService } from '../../../shared/services/dialog.service';
 
 @Component({
   selector: 'app-persona-fisica-agregar',
@@ -20,6 +21,7 @@ import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
 export class PersonaFisicaAgregar {
   service = inject(PersonaFisicaService);
   usuarioService = inject(UsuarioServicio);
+  dialogService = inject(DialogService);
 
   personaFisicaForm = new FormGroup({
     cuit: new FormControl('', {
@@ -83,10 +85,13 @@ export class PersonaFisicaAgregar {
       const result = await this.service.agregarPersonaFisica(persona);
 
       if (result.success) {
-        alert(result.message);
-        this.personaFisicaForm.reset();
+        this.dialogService
+          .showMessage('Éxito', result.message)
+          .subscribe(() => {
+            this.personaFisicaForm.reset();
+          });
       } else {
-        alert('Error: ' + result.message);
+        this.dialogService.showMessage('Error', result.message).subscribe();
         if (result.statusCode === 401) {
           this.usuarioService.cerrarSesion();
         }

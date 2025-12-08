@@ -8,6 +8,7 @@ import {
 import { PersonaFisica } from '../../../core/entities/personaFisica/persona-fisica';
 import { PersonaFisicaService } from '../../../shared/services/persona-fisica/persona-fisica-servicio';
 import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
+import { DialogService } from '../../../shared/services/dialog.service';
 
 @Component({
   selector: 'app-persona-fisica-remover',
@@ -24,6 +25,7 @@ export class PersonaFisicaRemover {
 
   service = inject(PersonaFisicaService);
   usuarioService = inject(UsuarioServicio);
+  dialogService = inject(DialogService);
   personaFisicaEncontrada: PersonaFisica | null = null;
 
   personaFisicaCuit = new FormGroup({
@@ -76,9 +78,12 @@ export class PersonaFisicaRemover {
 
   async handleRemove() {
     if (!this.deleteForm.valid) {
-      alert(
-        'Debe confirmar que desea eliminar la persona física marcando la casilla de confirmación.',
-      );
+      this.dialogService
+        .showMessage(
+          'Error',
+          'Debe confirmar que desea eliminar la persona física marcando la casilla de confirmación.',
+        )
+        .subscribe();
       return;
     }
     if (this.personaFisicaEncontrada && this.personaFisicaCuit.valid) {
@@ -87,9 +92,9 @@ export class PersonaFisicaRemover {
           this.personaFisicaEncontrada,
         );
         if (result.success) {
-          alert(result.message);
+          this.dialogService.showMessage('Éxito', result.message).subscribe();
         } else {
-          alert(result.message);
+          this.dialogService.showMessage('Error', result.message).subscribe();
           if (result.statusCode === 401) {
             this.usuarioService.cerrarSesion();
           }
@@ -102,7 +107,9 @@ export class PersonaFisicaRemover {
         this.personaFisicaEncontrada = null;
         this.deleteForm.reset();
       } catch (error) {
-        alert('Error en la solicitud de eliminación');
+        this.dialogService
+          .showMessage('Error', 'Error en la solicitud de eliminación')
+          .subscribe();
       }
     }
   }

@@ -8,6 +8,7 @@ import {
 import { Router } from '@angular/router';
 import { UsuarioServicio } from '../../services/usuario-servicio';
 import { MatButtonModule } from '@angular/material/button';
+import { DialogService } from '../../services/dialog.service';
 
 @Component({
   selector: 'app-side-bar',
@@ -19,6 +20,7 @@ import { MatButtonModule } from '@angular/material/button';
 export class SideBar implements OnInit {
   private router = inject(Router);
   private usuarioServicio = inject(UsuarioServicio);
+  private dialogService = inject(DialogService);
 
   activeButton = signal<string | null>(null);
 
@@ -79,43 +81,57 @@ export class SideBar implements OnInit {
   AgregarDistribuidora() {
     this.setActiveButton('A-DI');
     this.router.navigate(['/base-page/distribuidora/agregar']).catch(() => {
-      alert('Hubo un error al entrar en esta página');
+      this.dialogService
+        .showMessage('Error', 'Hubo un error al entrar en esta página')
+        .subscribe();
     });
   }
   RemoverDistribuidora() {
     this.setActiveButton('R-DI');
     this.router.navigate(['/base-page/distribuidora/remover']).catch(() => {
-      alert('Hubo un error al entrar en esta página');
+      this.dialogService
+        .showMessage('Error', 'Hubo un error al entrar en esta página')
+        .subscribe();
     });
   }
   ModificarDistribuidora() {
     this.setActiveButton('M-DI');
     this.router.navigate(['/base-page/distribuidora/modificar']).catch(() => {
-      alert('Hubo un error al entrar en esta página');
+      this.dialogService
+        .showMessage('Error', 'Hubo un error al entrar en esta página')
+        .subscribe();
     });
   }
   AgregarPersonaFisica() {
     this.setActiveButton('A-PF');
     this.router.navigate(['/base-page/persona-fisica/agregar']).catch(() => {
-      alert('Hubo un error al entrar en esta página');
+      this.dialogService
+        .showMessage('Error', 'Hubo un error al entrar en esta página')
+        .subscribe();
     });
   }
   RemoverPersonaFisica() {
     this.setActiveButton('R-PF');
     this.router.navigate(['/base-page/persona-fisica/remover']).catch(() => {
-      alert('Hubo un error al entrar en esta página');
+      this.dialogService
+        .showMessage('Error', 'Hubo un error al entrar en esta página')
+        .subscribe();
     });
   }
   ModificarPersonaFisica() {
     this.setActiveButton('M-PF');
     this.router.navigate(['/base-page/persona-fisica/modificar']).catch(() => {
-      alert('Hubo un error al entrar en esta página');
+      this.dialogService
+        .showMessage('Error', 'Hubo un error al entrar en esta página')
+        .subscribe();
     });
   }
   RealizarPresupuesto() {
     this.setActiveButton('R-Pr');
     this.router.navigate(['/base-page/presupuesto/realizar']).catch(() => {
-      alert('Hubo un error al entrar en esta página');
+      this.dialogService
+        .showMessage('Error', 'Hubo un error al entrar en esta página')
+        .subscribe();
     });
   }
   CerrarSesion() {

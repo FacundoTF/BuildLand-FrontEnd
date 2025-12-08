@@ -8,6 +8,7 @@ import {
 import { Distribuidora } from '../../../core/entities/distribuidora/distribuidora';
 import { DistribuidoraServicio } from '../../../shared/services/distribuidora/distribuidora-servicio';
 import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
+import { DialogService } from '../../../shared/services/dialog.service';
 
 @Component({
   selector: 'app-distribuidora-remover',
@@ -24,6 +25,7 @@ export class DistribuidoraRemover {
 
   service = inject(DistribuidoraServicio);
   usuarioService = inject(UsuarioServicio);
+  dialogService = inject(DialogService);
   distribuidoraEncontrada: Distribuidora | null = null;
 
   distribuidoraCuit = new FormGroup({
@@ -41,14 +43,18 @@ export class DistribuidoraRemover {
       if (distribuidora.success) {
         this.distribuidoraEncontrada = distribuidora.payload as Distribuidora;
       } else {
-        alert('Error: ' + distribuidora.message);
+        this.dialogService
+          .showMessage('Error', distribuidora.message)
+          .subscribe();
         if (distribuidora.statusCode === 401) {
           this.usuarioService.cerrarSesion();
         }
         this.distribuidoraEncontrada = null;
       }
     } else {
-      alert('CUIT inválido o vacío');
+      this.dialogService
+        .showMessage('Error', 'CUIT inválido o vacío')
+        .subscribe();
       this.distribuidoraEncontrada = null;
     }
   }
@@ -60,17 +66,22 @@ export class DistribuidoraRemover {
           this.distribuidoraEncontrada,
         );
         if (result.success) {
-          alert(result.message);
-          this.distribuidoraCuit.reset();
-          this.distribuidoraEncontrada = null;
+          this.dialogService
+            .showMessage('Éxito', result.message)
+            .subscribe(() => {
+              this.distribuidoraCuit.reset();
+              this.distribuidoraEncontrada = null;
+            });
         } else {
-          alert(result.message);
+          this.dialogService.showMessage('Error', result.message).subscribe();
           if (result.statusCode === 401) {
             this.usuarioService.cerrarSesion();
           }
         }
       } catch (error) {
-        alert('Error en la solicitud de eliminación');
+        this.dialogService
+          .showMessage('Error', 'Error en la solicitud de eliminación')
+          .subscribe();
       }
     }
   }

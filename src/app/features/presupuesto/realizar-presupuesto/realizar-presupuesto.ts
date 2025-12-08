@@ -18,6 +18,7 @@ import { Presupuesto } from '../../../core/entities/presupuesto/presupuesto';
 import { Usuario, TipoUsuario } from '../../../core/entities/usuario/usuario';
 import { DetallePresupuesto } from '../../../core/entities/detalle-presupuesto/detalle-presupuesto';
 import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
+import { DialogService } from '../../../shared/services/dialog.service';
 
 interface PresupuestoItem {
   producto: string;
@@ -45,6 +46,7 @@ export class RealizarPresupuesto {
   private marcaService = inject(MarcaService);
   private productoService = inject(ProductoService);
   private usuarioService = inject(UsuarioServicio);
+  private dialogService = inject(DialogService);
 
   presupuestoHabilitado = signal(false);
   categoriaConfirmada = signal(false);
@@ -153,10 +155,11 @@ export class RealizarPresupuesto {
     const result =
       await this.presupuestoServicio.agregarPresupuesto(presupuesto);
     if (result.success) {
-      alert(result.message);
-      this.resetearPresupuesto();
+      this.dialogService.showMessage('Éxito', result.message).subscribe(() => {
+        this.resetearPresupuesto();
+      });
     } else {
-      alert(result.message);
+      this.dialogService.showMessage('Error', result.message).subscribe();
       if (result.statusCode === 401) {
         this.usuarioService.cerrarSesion();
       }
@@ -171,14 +174,19 @@ export class RealizarPresupuesto {
     let itemRepetido = false;
 
     if (!producto || !marca || !cantidadValue) {
-      alert(
-        'Debe completar todos los campos para agregar un producto al presupuesto.',
-      );
+      this.dialogService
+        .showMessage(
+          'Error',
+          'Debe completar todos los campos para agregar un producto al presupuesto.',
+        )
+        .subscribe();
       return;
     }
 
     if (cantidadValue <= 0) {
-      alert('La cantidad debe ser mayor que cero.');
+      this.dialogService
+        .showMessage('Error', 'La cantidad debe ser mayor que cero.')
+        .subscribe();
       return;
     }
 
@@ -195,7 +203,12 @@ export class RealizarPresupuesto {
     }
 
     if (itemRepetido) {
-      alert('No se puede colocar el mismo producto en el presupuesto');
+      this.dialogService
+        .showMessage(
+          'Error',
+          'No se puede colocar el mismo producto en el presupuesto',
+        )
+        .subscribe();
       return;
     }
 
