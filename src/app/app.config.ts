@@ -6,7 +6,6 @@ import {
 import { provideRouter } from '@angular/router';
 import {
   provideHttpClient,
-  withXsrfConfiguration,
   withInterceptorsFromDi,
 } from '@angular/common/http';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
