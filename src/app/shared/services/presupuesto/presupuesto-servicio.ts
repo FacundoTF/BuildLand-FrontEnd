@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { environment } from '../../../../environments/environment.development';
 import { Presupuesto } from '../../../core/entities/presupuesto/presupuesto';
 import { lastValueFrom } from 'rxjs';
 import { ReturnResultResponse } from '../return-response';
+import { ReturnSearchResponse } from '../return-search-response';
 
 @Injectable({
   providedIn: 'root',
@@ -13,11 +14,13 @@ export class PresupuestoServicio {
 
   private API_URL = `${environment.server.host}${environment.server.port}/api/presupuestos`;
 
+  paginaActual = signal(1);
+
   async agregarPresupuesto(
     presupuesto: Presupuesto,
   ): Promise<ReturnResultResponse> {
     const body = {
-      IdPresupuesto: presupuesto.idPresupuesto,
+      IdPresupuesto: presupuesto.id,
       persona: presupuesto.persona,
       categoria: presupuesto.categoria,
       fecha: presupuesto.fecha,
@@ -58,5 +61,42 @@ export class PresupuestoServicio {
         statusCode: error.status || 500,
       };
     }
+  }
+
+  async obtenerPresupuestos(): Promise<ReturnSearchResponse> {
+    const observable = this.http.get<Presupuesto[]>(
+      `${this.API_URL}/enlistar?page=${this.paginaActual()}&size=2&cuit=20438995671`,
+      {
+        observe: 'response',
+      },
+    );
+    try {
+      const response = await lastValueFrom(observable);
+      const presupuestos: Presupuesto[] = response.body || [];
+      return {
+        success: true,
+        message: 'Presupuestos obtenidos con éxito.',
+        statusCode: response.status,
+        payload: presupuestos,
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        message: 'Error al obtener presupuestos.',
+        statusCode: error.status || 500,
+        payload: null,
+      };
+    }
+  }
+  incrementarPagina() {
+    this.paginaActual.update((pagina) => pagina + 1);
+  }
+
+  decrementarPagina() {
+    this.paginaActual.update((pagina) => (pagina > 1 ? pagina - 1 : pagina));
+  }
+
+  resetearPagina() {
+    this.paginaActual.set(1);
   }
 }

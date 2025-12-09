@@ -12,6 +12,8 @@ import { Home } from './core/home/home';
 import { RestorePassword } from './core/restore-password/restore-password';
 import { ConfirmNewPassword } from './core/restore-password/confirm-new-password/confirm-new-password';
 import { SubmitSecret } from './core/restore-password/submit-secret/submit-secret';
+import { RealizarCotizacion } from './features/cotizacion/realizar-cotizacion/realizar-cotizacion';
+import { presupuestoResolver, categoriasResolver } from './data-resolvers';
 
 export const routes: Routes = [
   { path: '', component: Home, pathMatch: 'full' },
@@ -23,6 +25,9 @@ export const routes: Routes = [
       {
         path: 'distribuidora/agregar',
         component: DistribuidoraAgregar,
+        resolve: {
+          categoriasData: categoriasResolver,
+        },
       },
       {
         path: 'distribuidora/remover',
@@ -50,6 +55,14 @@ export const routes: Routes = [
         path: 'presupuesto/realizar',
         component: RealizarPresupuesto,
       },
+      // Cotizaciones
+      {
+        path: 'cotizacion/realizar',
+        component: RealizarCotizacion,
+        resolve: {
+          presupuestosData: presupuestoResolver,
+        },
+      },
     ],
   },
   // Rutas de autenticación
@@ -65,5 +78,10 @@ export const routes: Routes = [
   {
     path: 'submit-secret',
     component: SubmitSecret,
+  },
+  {
+    path: '**',
+    redirectTo: '',
+    pathMatch: 'full',
   },
 ];

@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { UsuarioServicio } from '../../services/usuario-servicio';
 import { MatButtonModule } from '@angular/material/button';
 import { DialogService } from '../../services/dialog.service';
+import { RealizarCotizacion } from '../../../features/cotizacion/realizar-cotizacion/realizar-cotizacion';
 
 @Component({
   selector: 'app-side-bar',
@@ -129,6 +130,14 @@ export class SideBar implements OnInit {
   RealizarPresupuesto() {
     this.setActiveButton('R-Pr');
     this.router.navigate(['/base-page/presupuesto/realizar']).catch(() => {
+      this.dialogService
+        .showMessage('Error', 'Hubo un error al entrar en esta página')
+        .subscribe();
+    });
+  }
+  RealizarCotizacion() {
+    this.setActiveButton('Z-Co');
+    this.router.navigate(['/base-page/cotizacion/realizar']).catch(() => {
       this.dialogService
         .showMessage('Error', 'Hubo un error al entrar en esta página')
         .subscribe();
