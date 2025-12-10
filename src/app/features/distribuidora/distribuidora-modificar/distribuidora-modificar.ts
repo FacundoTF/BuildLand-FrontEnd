@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, input, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -8,10 +8,10 @@ import {
 import { CommonModule } from '@angular/common';
 import { DistribuidoraServicio } from '../../../shared/services/distribuidora/distribuidora-servicio';
 import { Distribuidora } from '../../../core/entities/distribuidora/distribuidora';
-import { CategoriaService } from '../../../shared/services/categoria/categoria-service';
 import { Categoria } from '../../../core/entities/categoria/categoria';
 import { TipoUsuario, Usuario } from '../../../core/entities/usuario/usuario';
 import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
+import { ReturnSearchResponse } from '../../../shared/services/return-search-response';
 
 @Component({
   selector: 'app-distribuidora-modificar',
@@ -21,8 +21,8 @@ import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
 })
 export class DistribuidoraModificar implements OnInit {
   service = inject(DistribuidoraServicio);
-  categoriaService = inject(CategoriaService);
   usuarioService = inject(UsuarioServicio);
+  categoriasData = input.required<ReturnSearchResponse>();
   distribuidoraEncontrada: Distribuidora | null = null;
   categorias: Categoria[] = [];
   categoriasSeleccionadas: string[] = [];
@@ -58,21 +58,8 @@ export class DistribuidoraModificar implements OnInit {
     ]),
   });
 
-  async ngOnInit() {
-    await this.cargarCategorias();
-  }
-
-  async cargarCategorias() {
-    try {
-      let result = await this.categoriaService.traerCategorias().toPromise();
-      if (result) {
-        this.categorias = result;
-      } else {
-        throw 'Las categorias resultaron ser undefined';
-      }
-    } catch (error) {
-      alert('Error al cargar categorías');
-    }
+  ngOnInit() {
+    this.categorias = this.categoriasData().payload as Categoria[];
   }
 
   toggleCategoria(nombreCategoria: string) {

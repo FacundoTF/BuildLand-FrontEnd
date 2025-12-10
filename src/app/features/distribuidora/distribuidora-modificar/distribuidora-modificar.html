@@ -124,22 +124,23 @@
         <div class="form-group">
           <label>Categorías</label>
           <div class="categorias-container">
-            <div
-              *ngFor="let categoria of categorias"
-              class="categoria-item"
-              (click)="toggleCategoria(categoria.nombre)"
-              [class.selected]="isCategoriaSeleccionada(categoria.nombre)"
-            >
-              <input
-                type="checkbox"
-                [checked]="isCategoriaSeleccionada(categoria.nombre)"
-                [id]="'categoria-' + categoria.nombre"
-                readonly
-              />
-              <label [for]="'categoria-' + categoria.nombre">{{
-                  categoria.nombre
-                }}</label>
-            </div>
+            @for (categoria of categorias; track categoria.nombre){
+              <div
+                class="categoria-item"
+                (click)="toggleCategoria(categoria.nombre)"
+                [class.selected]="isCategoriaSeleccionada(categoria.nombre)"
+              >
+                <input
+                  type="checkbox"
+                  [checked]="isCategoriaSeleccionada(categoria.nombre)"
+                  [id]="'categoria-' + categoria.nombre"
+                  readonly
+                />
+                <label [for]="'categoria-' + categoria.nombre">{{
+                    categoria.nombre
+                  }}</label>
+              </div>
+            }
           </div>
           <small
             *ngIf="categoriasSeleccionadas.length === 0"

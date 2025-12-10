@@ -1,6 +1,12 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import {
+  Component,
+  inject,
+  signal,
+  computed,
+  input,
+  OnInit,
+} from '@angular/core';
 import { PresupuestoServicio } from '../../../shared/services/presupuesto/presupuesto-servicio';
-import { CategoriaService } from '../../../shared/services/categoria/categoria-service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
@@ -19,6 +25,7 @@ import { Usuario, TipoUsuario } from '../../../core/entities/usuario/usuario';
 import { DetallePresupuesto } from '../../../core/entities/detalle-presupuesto/detalle-presupuesto';
 import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
 import { DialogService } from '../../../shared/services/dialog.service';
+import { ReturnSearchResponse } from '../../../shared/services/return-search-response';
 
 interface PresupuestoItem {
   producto: string;
@@ -40,13 +47,14 @@ interface PresupuestoItem {
   templateUrl: './realizar-presupuesto.html',
   styleUrl: './realizar-presupuesto.scss',
 })
-export class RealizarPresupuesto {
+export class RealizarPresupuesto implements OnInit {
   private presupuestoServicio = inject(PresupuestoServicio);
-  private categoriaService = inject(CategoriaService);
   private marcaService = inject(MarcaService);
   private productoService = inject(ProductoService);
   private usuarioService = inject(UsuarioServicio);
   private dialogService = inject(DialogService);
+
+  categoriasData = input.required<ReturnSearchResponse>();
 
   presupuestoHabilitado = signal(false);
   categoriaConfirmada = signal(false);
@@ -69,12 +77,8 @@ export class RealizarPresupuesto {
   );
   displayedColumns: string[] = ['producto', 'marca', 'cantidad', 'acciones'];
 
-  constructor() {
-    this.categoriaService.traerCategorias().subscribe({
-      next: (categorias) => {
-        this.categorias = categorias;
-      },
-    });
+  ngOnInit() {
+    this.categorias = this.categoriasData().payload as Categoria[];
   }
   async habilitarPresupuesto(categoria: Categoria) {
     const contenedorPresupuesto = document.getElementById(

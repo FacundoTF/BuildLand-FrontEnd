@@ -1,13 +1,17 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { FormControl, Validators } from '@angular/forms';
+import { Component, inject, input, OnInit } from '@angular/core';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Distribuidora } from '../../../core/entities/distribuidora/distribuidora';
 import { DistribuidoraServicio } from '../../../shared/services/distribuidora/distribuidora-servicio';
-import { CategoriaService } from '../../../shared/services/categoria/categoria-service';
 import { Categoria } from '../../../core/entities/categoria/categoria';
 import { TipoUsuario, Usuario } from '../../../core/entities/usuario/usuario';
 import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
+import { ReturnSearchResponse } from '../../../shared/services/return-search-response';
 
 @Component({
   selector: 'app-distribuidora-agregar',
@@ -17,10 +21,14 @@ import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
 })
 export class DistribuidoraAgregar implements OnInit {
   service = inject(DistribuidoraServicio);
-  categoriaService = inject(CategoriaService);
   usuarioService = inject(UsuarioServicio);
+  categoriasData = input.required<ReturnSearchResponse>();
   categorias: Categoria[] = [];
   categoriasSeleccionadas: string[] = [];
+
+  ngOnInit() {
+    this.categorias = this.categoriasData().payload as Categoria[];
+  }
 
   distribuidoraForm = new FormGroup({
     cuit: new FormControl('', [
@@ -48,23 +56,6 @@ export class DistribuidoraAgregar implements OnInit {
       Validators.minLength(6),
     ]),
   });
-
-  async ngOnInit() {
-    await this.cargarCategorias();
-  }
-
-  async cargarCategorias() {
-    try {
-      let result = await this.categoriaService.traerCategorias().toPromise();
-      if (result) {
-        this.categorias = result;
-      } else {
-        throw 'Las categorias resultaron ser undefined';
-      }
-    } catch (error) {
-      alert('Error al cargar categorías');
-    }
-  }
 
   toggleCategoria(nombreCategoria: string) {
     const index = this.categoriasSeleccionadas.indexOf(nombreCategoria);
