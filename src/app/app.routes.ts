@@ -36,6 +36,9 @@ export const routes: Routes = [
       {
         path: 'distribuidora/modificar',
         component: DistribuidoraModificar,
+        resolve: {
+          categoriasData: categoriasResolver,
+        },
       },
       // Personas Físicas
       {
@@ -54,6 +57,9 @@ export const routes: Routes = [
       {
         path: 'presupuesto/realizar',
         component: RealizarPresupuesto,
+        resolve: {
+          categoriasData: categoriasResolver,
+        },
       },
       // Cotizaciones
       {
