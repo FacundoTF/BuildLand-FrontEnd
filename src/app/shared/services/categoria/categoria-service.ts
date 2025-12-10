@@ -1,8 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment.development';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Categoria } from '../../../core/entities/categoria/categoria';
-import { Observable } from 'rxjs';
+import { lastValueFrom, Observable } from 'rxjs';
+import { ReturnSearchResponse } from '../return-search-response';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,25 @@ export class CategoriaService {
 
   private API_URL = `${environment.server.host}${environment.server.port}/api/categorias`;
 
-  traerCategorias(): Observable<Categoria[]> {
-    return this.http.get<Categoria[]>(this.API_URL);
+  async traerCategorias(): Promise<ReturnSearchResponse> {
+    const observable = this.http.get<Categoria[]>(this.API_URL, {
+      observe: 'response',
+    });
+    try {
+      const resultado = await lastValueFrom(observable);
+      return {
+        success: true,
+        payload: resultado.body || [],
+        message: 'Categorías obtenidas con éxito.',
+        statusCode: resultado.status,
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        payload: [],
+        message: 'Error al obtener categorías.',
+        statusCode: error.status || 500,
+      };
+    }
   }
 }
