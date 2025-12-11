@@ -102,7 +102,7 @@ export class PersonaFisicaModificar {
       }
 
       const usuarioModificar = new Usuario(
-        0, // id can be 0 as it's not used in the backend for modification
+        '20438442317',
         TipoUsuario.PERSONA_FISICA,
         cuit,
         null as any, // grupo is not needed for modification
