@@ -9,6 +9,7 @@ export class Presupuesto {
     public persona: PersonaFisica,
     public categoria: Categoria,
     public fecha: Date | null,
+    public fechaLimite: Date | null,
     public detalles: DetallePresupuesto[],
     public cotizaciones: Cotizacion[] | null,
   ) {}
