@@ -3,7 +3,7 @@
     @for (p of presupuestos; track p.id){
       <mat-card>
         <mat-card-header>
-          <mat-card-title>Presupuesto: {{contadorPresupuestos()}}</mat-card-title>
+          <mat-card-title>Presupuesto: {{sumarContador()}}</mat-card-title>
         </mat-card-header>
         <mat-card-content>
           <p>Fecha de creación: {{p.fecha}}</p>
@@ -15,7 +15,6 @@
           <!--          <button mat-button color="warn" (click)="rechazarPresupuesto(p.id)" *ngIf="p.estado === 'Pendiente'">Rechazar</button>-->
         </mat-card-actions>
       </mat-card>
-      {{sumarContador}}
     }
   </div>
 </div>

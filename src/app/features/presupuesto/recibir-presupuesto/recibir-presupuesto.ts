@@ -36,5 +36,6 @@ export class RecibirPresupuesto {
   }
   sumarContador() {
     this.contadorPresupuestos.update((value) => value + 1);
+    return this.contadorPresupuestos();
   }
 }
