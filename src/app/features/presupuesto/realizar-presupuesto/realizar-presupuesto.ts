@@ -117,7 +117,7 @@ export class RealizarPresupuesto implements OnInit {
     const items = this.presupuestoItems();
     const categoria = this.selectedCategory.value;
     const personaFisicaPlaceHolder = new PersonaFisica(
-      new Usuario(1, TipoUsuario.PERSONA_FISICA, '', null, '', ''),
+      new Usuario('20438442317', TipoUsuario.PERSONA_FISICA, '', null, '', ''),
       '20438442317',
       'Facu',
       '3416614462',
@@ -135,6 +135,7 @@ export class RealizarPresupuesto implements OnInit {
       null,
       personaFisicaPlaceHolder,
       categoria,
+      null,
       null,
       detallesPresupuesto,
       null,
