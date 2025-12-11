@@ -77,14 +77,14 @@ export class DistribuidoraAgregar implements OnInit {
     ) {
       const distribuidora = new Distribuidora(
         new Usuario(
-          null,
+          this.distribuidoraForm.value.cuit!,
           TipoUsuario.DISTRIBUIDORA,
           '',
           null,
           this.distribuidoraForm.value.correoElectronico!,
           this.distribuidoraForm.value.contraseña!,
         ),
-        this.distribuidoraForm.value.cuit!,
+        null,
         this.distribuidoraForm.value.nombre!,
         this.distribuidoraForm.value.direccion!,
         this.distribuidoraForm.value.numeroTelefono!,
