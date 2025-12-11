@@ -8,7 +8,7 @@ export enum TipoUsuario {
 
 export class Usuario {
   constructor(
-    public id: number | null,
+    public cuit: string | null,
     public tipoUsuario: TipoUsuario,
     public idReferencia: string,
     public grupo: Grupo | null,
