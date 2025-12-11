@@ -1,39 +1,95 @@
 <div id="Permissions">
   <div id="G-Di" class="Gestion">
-    <button mat-flat-button (click)="ToogleGestion('G-Di')" class="OpcionNoPlegable sidebar-btn" [class.active]="activeButton() === 'G-Di'">
+    <button
+      mat-flat-button
+      (click)="ToogleGestion('G-Di')"
+      class="OpcionNoPlegable sidebar-btn"
+      [class.active]="activeButton() === 'G-Di'">
       Gestionar Distribuidoras
     </button>
-    <button mat-flat-button id="A-Di" (click)="AgregarDistribuidora()" class="Opcion sidebar-btn" [class.active]="activeButton() === 'A-Di'">
+    <button
+      mat-flat-button
+      id="A-Di"
+      (click)="AgregarDistribuidora()"
+      class="Opcion sidebar-btn"
+      [class.active]="activeButton() === 'A-Di'">
       Agregar distribuidora
     </button>
-    <button mat-flat-button id="R-Di" (click)="RemoverDistribuidora()" class="Opcion sidebar-btn" [class.active]="activeButton() === 'R-Di'">
+    <button
+      mat-flat-button
+      id="R-Di"
+      (click)="RemoverDistribuidora()"
+      class="Opcion sidebar-btn"
+      [class.active]="activeButton() === 'R-Di'">
       Remover distribuidora
     </button>
-    <button mat-flat-button id="M-Di" (click)="ModificarDistribuidora()" class="Opcion sidebar-btn" [class.active]="activeButton() === 'M-Di'">
+    <button
+      mat-flat-button
+      id="M-Di"
+      (click)="ModificarDistribuidora()"
+      class="Opcion sidebar-btn"
+      [class.active]="activeButton() === 'M-Di'">
       Modificar distribuidora
     </button>
   </div>
   <div id="G-Pf" class="Gestion">
-    <button mat-flat-button (click)="ToogleGestion('G-Pf')" class="OpcionNoPlegable sidebar-btn" [class.active]="activeButton() === 'G-Pf'">
+    <button
+      mat-flat-button
+      (click)="ToogleGestion('G-Pf')"
+      class="OpcionNoPlegable sidebar-btn"
+      [class.active]="activeButton() === 'G-Pf'">
       Gestionar personas fisicas
     </button>
-    <button mat-flat-button id="A-Pf" (click)="AgregarPersonaFisica()" class="Opcion sidebar-btn" [class.active]="activeButton() === 'A-Pf'">
+    <button
+      mat-flat-button
+      id="A-Pf"
+      (click)="AgregarPersonaFisica()"
+      class="Opcion sidebar-btn"
+      [class.active]="activeButton() === 'A-Pf'">
       Agregar persona física
     </button>
-    <button mat-flat-button id="R-Pf" (click)="RemoverPersonaFisica()" class="Opcion sidebar-btn" [class.active]="activeButton() === 'R-Pf'">
+    <button
+      mat-flat-button
+      id="R-Pf"
+      (click)="RemoverPersonaFisica()"
+      class="Opcion sidebar-btn"
+      [class.active]="activeButton() === 'R-Pf'">
       Remover persona fisica
     </button>
-    <button mat-flat-button id="M-Pf" (click)="ModificarPersonaFisica()" class="Opcion sidebar-btn" [class.active]="activeButton() === 'M-Pf'">
+    <button
+      mat-flat-button
+      id="M-Pf"
+      (click)="ModificarPersonaFisica()"
+      class="Opcion sidebar-btn"
+      [class.active]="activeButton() === 'M-Pf'">
       Modificar persona fisica
     </button>
   </div>
   <div id="G-Pr" class="Gestion">
-    <button mat-flat-button id="Z-Pr" (click)="RealizarPresupuesto()" class="OpcionNoPlegable sidebar-btn" [class.active]="activeButton() === 'Z-Pr'">Realizar presupuesto</button>
-  </div>
-  <div id="G-Co" class="Gestion">
-    <button mat-flat-button id="Z-Co" class="OpcionNoPlegable sidebar-btn" [class.active]="activeButton() === 'Z-Co'" (click)="RealizarCotizacion()">Presupuestos pendientes</button>
+    <button
+      mat-flat-button
+      id="Z-Pr"
+      (click)="RealizarPresupuesto()"
+      class="OpcionNoPlegable sidebar-btn"
+      [class.active]="activeButton() === 'Z-Pr'">
+      Realizar presupuesto
+    </button>
+    <button
+      mat-flat-button
+      id="Y-Pr"
+      class="OpcionNoPlegable sidebar-btn"
+      [class.active]="activeButton() === 'Y-Pr'"
+      (click)="RecibirPresupuesto()">
+      Presupuestos pendientes
+    </button>
   </div>
   <div class="Gestion">
-    <button mat-flat-button id="CerrarSesion" class="sidebar-btn" (click)="CerrarSesion()">Cerrar sesión</button>
+    <button
+      mat-flat-button
+      id="CerrarSesion"
+      class="sidebar-btn"
+      (click)="CerrarSesion()">
+      Cerrar sesión
+    </button>
   </div>
 </div>
