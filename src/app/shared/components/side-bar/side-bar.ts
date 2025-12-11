@@ -80,7 +80,7 @@ export class SideBar implements OnInit {
   }
 
   AgregarDistribuidora() {
-    this.setActiveButton('A-DI');
+    this.setActiveButton('A-Di');
     this.router.navigate(['/base-page/distribuidora/agregar']).catch(() => {
       this.dialogService
         .showMessage('Error', 'Hubo un error al entrar en esta página')
@@ -88,7 +88,7 @@ export class SideBar implements OnInit {
     });
   }
   RemoverDistribuidora() {
-    this.setActiveButton('R-DI');
+    this.setActiveButton('R-Di');
     this.router.navigate(['/base-page/distribuidora/remover']).catch(() => {
       this.dialogService
         .showMessage('Error', 'Hubo un error al entrar en esta página')
@@ -96,7 +96,7 @@ export class SideBar implements OnInit {
     });
   }
   ModificarDistribuidora() {
-    this.setActiveButton('M-DI');
+    this.setActiveButton('M-Di');
     this.router.navigate(['/base-page/distribuidora/modificar']).catch(() => {
       this.dialogService
         .showMessage('Error', 'Hubo un error al entrar en esta página')
@@ -104,7 +104,7 @@ export class SideBar implements OnInit {
     });
   }
   AgregarPersonaFisica() {
-    this.setActiveButton('A-PF');
+    this.setActiveButton('A-Pf');
     this.router.navigate(['/base-page/persona-fisica/agregar']).catch(() => {
       this.dialogService
         .showMessage('Error', 'Hubo un error al entrar en esta página')
@@ -112,7 +112,7 @@ export class SideBar implements OnInit {
     });
   }
   RemoverPersonaFisica() {
-    this.setActiveButton('R-PF');
+    this.setActiveButton('R-Pf');
     this.router.navigate(['/base-page/persona-fisica/remover']).catch(() => {
       this.dialogService
         .showMessage('Error', 'Hubo un error al entrar en esta página')
@@ -120,7 +120,7 @@ export class SideBar implements OnInit {
     });
   }
   ModificarPersonaFisica() {
-    this.setActiveButton('M-PF');
+    this.setActiveButton('M-Pf');
     this.router.navigate(['/base-page/persona-fisica/modificar']).catch(() => {
       this.dialogService
         .showMessage('Error', 'Hubo un error al entrar en esta página')
