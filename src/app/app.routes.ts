@@ -12,8 +12,8 @@ import { Home } from './core/home/home';
 import { RestorePassword } from './core/restore-password/restore-password';
 import { ConfirmNewPassword } from './core/restore-password/confirm-new-password/confirm-new-password';
 import { SubmitSecret } from './core/restore-password/submit-secret/submit-secret';
-import { RealizarCotizacion } from './features/cotizacion/realizar-cotizacion/realizar-cotizacion';
 import { presupuestoResolver, categoriasResolver } from './data-resolvers';
+import { RecibirPresupuesto } from './features/presupuesto/recibir-presupuesto/recibir-presupuesto';
 
 export const routes: Routes = [
   { path: '', component: Home, pathMatch: 'full' },
@@ -61,10 +61,9 @@ export const routes: Routes = [
           categoriasData: categoriasResolver,
         },
       },
-      // Cotizaciones
       {
-        path: 'cotizacion/realizar',
-        component: RealizarCotizacion,
+        path: 'presupuesto/recibir',
+        component: RecibirPresupuesto,
         resolve: {
           presupuestosData: presupuestoResolver,
         },
