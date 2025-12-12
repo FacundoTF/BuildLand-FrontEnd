@@ -3,6 +3,7 @@ import { Distribuidora } from '../../core/entities/distribuidora/distribuidora';
 import { PersonaFisica } from '../../core/entities/personaFisica/persona-fisica';
 import { Presupuesto } from '../../core/entities/presupuesto/presupuesto';
 import { Categoria } from '../../core/entities/categoria/categoria';
+import { Producto } from '../../core/entities/producto/producto';
 
 type NullOrUndefined = null | undefined;
 
@@ -16,5 +17,7 @@ export interface ReturnSearchResponse extends ReturnResultResponse {
     | Presupuesto[]
     | Categoria
     | Categoria[]
+    | Producto
+    | Producto[]
     | NullOrUndefined;
 }

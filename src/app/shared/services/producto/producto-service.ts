@@ -4,6 +4,7 @@ import { environment } from '../../../../environments/environment.development';
 import { Producto } from '../../../core/entities/producto/producto';
 import { Categoria } from '../../../core/entities/categoria/categoria';
 import { lastValueFrom } from 'rxjs';
+import { ReturnSearchResponse } from '../return-search-response';
 
 @Injectable({
   providedIn: 'root',
@@ -13,15 +14,40 @@ export class ProductoService {
 
   private API_URL = `${environment.server.host}${environment.server.port}/api/productos`;
 
-  async traerProductosPorCategoria(categoria: Categoria): Promise<Producto[]> {
+  async traerProductosPorCategoria(
+    categoria: Categoria,
+  ): Promise<ReturnSearchResponse> {
     const observable = this.http.get<Producto[]>(
       `${this.API_URL}/categorias/${categoria.nombre}`,
+      {
+        observe: 'response',
+      },
     );
     try {
-      return await lastValueFrom(observable);
-    } catch (error) {
-      console.error('Error fetching productos:', error);
-      return [];
+      const resultado = await lastValueFrom(observable);
+      if (resultado.status === 200) {
+        console.log(resultado.body);
+        return {
+          success: true,
+          payload: resultado.body || [],
+          message: 'Productos obtenidos con éxito.',
+          statusCode: resultado.status,
+        };
+      } else {
+        return {
+          success: false,
+          payload: [],
+          message: 'Error al obtener productos.',
+          statusCode: resultado.status,
+        };
+      }
+    } catch (error: any) {
+      return {
+        success: false,
+        payload: [],
+        message: 'Error al obtener productos.',
+        statusCode: error.status || 500,
+      };
     }
   }
 }

@@ -97,8 +97,20 @@ export class RealizarPresupuesto implements OnInit {
   }
 
   async buscarProductos(categoria: Categoria) {
-    this.productos =
+    const resultado =
       await this.productoService.traerProductosPorCategoria(categoria);
+    if (resultado.success) {
+      this.productos = resultado.payload as Producto[];
+      this.productos.forEach((producto: Producto) => {
+        console.info(producto.id);
+        console.info(producto.nombre);
+      });
+    } else {
+      this.dialogService.showMessage('Error', resultado.message).subscribe();
+      if (resultado.statusCode === 401) {
+        this.usuarioService.cerrarSesion();
+      }
+    }
   }
 
   async buscarMarcas(categoria: Categoria) {
