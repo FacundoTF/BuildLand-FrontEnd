@@ -101,10 +101,7 @@ export class RealizarPresupuesto implements OnInit {
       await this.productoService.traerProductosPorCategoria(categoria);
     if (resultado.success) {
       this.productos = resultado.payload as Producto[];
-      this.productos.forEach((producto: Producto) => {
-        console.info(producto.id);
-        console.info(producto.nombre);
-      });
+      this.productos.forEach((producto: Producto) => {});
     } else {
       this.dialogService.showMessage('Error', resultado.message).subscribe();
       if (resultado.statusCode === 401) {
