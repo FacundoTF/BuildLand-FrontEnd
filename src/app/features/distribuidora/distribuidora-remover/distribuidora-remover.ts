@@ -9,10 +9,11 @@ import { Distribuidora } from '../../../core/entities/distribuidora/distribuidor
 import { DistribuidoraServicio } from '../../../shared/services/distribuidora/distribuidora-servicio';
 import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
 import { DialogService } from '../../../shared/services/dialog.service';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-distribuidora-remover',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, MatButton],
   templateUrl: './distribuidora-remover.html',
   styleUrl: './distribuidora-remover.scss',
 })

@@ -12,10 +12,11 @@ import { Categoria } from '../../../core/entities/categoria/categoria';
 import { TipoUsuario, Usuario } from '../../../core/entities/usuario/usuario';
 import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
 import { ReturnSearchResponse } from '../../../shared/services/return-search-response';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-distribuidora-agregar',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, MatButton],
   templateUrl: './distribuidora-agregar.html',
   styleUrl: './distribuidora-agregar.scss',
 })

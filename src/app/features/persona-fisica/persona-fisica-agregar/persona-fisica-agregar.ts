@@ -11,10 +11,11 @@ import { Usuario, TipoUsuario } from '../../../core/entities/usuario/usuario';
 import { Grupo } from '../../../core/entities/grupo/grupo';
 import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
 import { DialogService } from '../../../shared/services/dialog.service';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-persona-fisica-agregar',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, MatButton],
   templateUrl: './persona-fisica-agregar.html',
   styleUrl: './persona-fisica-agregar.scss',
 })

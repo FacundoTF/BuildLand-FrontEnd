@@ -1,4 +1,4 @@
-import { Component, inject, input, OnInit } from '@angular/core';
+import { Component, inject, input, OnInit, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -12,10 +12,13 @@ import { Categoria } from '../../../core/entities/categoria/categoria';
 import { TipoUsuario, Usuario } from '../../../core/entities/usuario/usuario';
 import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
 import { ReturnSearchResponse } from '../../../shared/services/return-search-response';
+import { Permiso } from '../../../core/entities/permiso/permiso';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-distribuidora-modificar',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, MatCheckboxModule, MatButton],
   templateUrl: './distribuidora-modificar.html',
   styleUrl: './distribuidora-modificar.scss',
 })
@@ -26,6 +29,14 @@ export class DistribuidoraModificar implements OnInit {
   distribuidoraEncontrada: Distribuidora | null = null;
   categorias: Categoria[] = [];
   categoriasSeleccionadas: string[] = [];
+
+  // Control de permisos y estado del checkbox
+  tienePermisoAdmin = signal(false);
+  mostrarCamposUsuario = signal(false);
+
+  // Datos originales del usuario
+  correoOriginal = '';
+  contraseñaOriginal = '';
 
   distribuidoraCuit = new FormGroup({
     cuit: new FormControl('', [
@@ -48,18 +59,62 @@ export class DistribuidoraModificar implements OnInit {
     ]),
     descripcion: new FormControl('', [Validators.required]),
     ciudad: new FormControl('', [Validators.required]),
-    correoElectronico: new FormControl('', [
-      Validators.required,
-      Validators.email,
-    ]),
-    contraseña: new FormControl('', [
-      Validators.required,
-      Validators.minLength(6),
-    ]),
+    correoElectronico: new FormControl('', [Validators.email]),
+    contraseña: new FormControl('', []),
   });
 
   ngOnInit() {
     this.categorias = this.categoriasData().payload as Categoria[];
+    this.verificarPermisos();
+  }
+
+  verificarPermisos() {
+    const permisosString = sessionStorage.getItem('permisos');
+    if (permisosString) {
+      try {
+        const permisos = JSON.parse(permisosString);
+        console.log(permisos);
+        const tieneAdmin = permisos.some((permiso: any) => {
+          return permiso === 'ADMIN';
+        });
+        this.tienePermisoAdmin.set(tieneAdmin);
+      } catch (error) {
+        console.error('Error al parsear permisos:', error);
+        this.tienePermisoAdmin.set(false);
+      }
+    }
+  }
+
+  toggleCamposUsuario() {
+    const nuevoEstado = !this.mostrarCamposUsuario();
+    this.mostrarCamposUsuario.set(nuevoEstado);
+
+    const correoControl = this.distribuidoraForm.get('correoElectronico');
+    const contraseñaControl = this.distribuidoraForm.get('contraseña');
+
+    if (nuevoEstado) {
+      // Limpiar campos para permitir nueva entrada y agregar validaciones
+      this.distribuidoraForm.patchValue({
+        correoElectronico: '',
+        contraseña: '',
+      });
+      correoControl?.setValidators([Validators.required, Validators.email]);
+      contraseñaControl?.setValidators([
+        Validators.required,
+        Validators.minLength(6),
+      ]);
+    } else {
+      // Restaurar datos originales y quitar validación requerida
+      this.distribuidoraForm.patchValue({
+        correoElectronico: this.correoOriginal,
+        contraseña: this.contraseñaOriginal,
+      });
+      correoControl?.setValidators([Validators.email]);
+      contraseñaControl?.clearValidators();
+    }
+
+    correoControl?.updateValueAndValidity();
+    contraseñaControl?.updateValueAndValidity();
   }
 
   toggleCategoria(nombreCategoria: string) {
@@ -84,6 +139,12 @@ export class DistribuidoraModificar implements OnInit {
         if (result.success && result.payload) {
           this.distribuidoraEncontrada = result.payload as Distribuidora;
 
+          // Almacenar datos originales del usuario
+          this.correoOriginal =
+            this.distribuidoraEncontrada.usuario?.email || '';
+          this.contraseñaOriginal =
+            this.distribuidoraEncontrada.usuario?.password || '';
+
           const container = document.querySelector(
             '.edit-container',
           ) as HTMLElement;
@@ -98,8 +159,8 @@ export class DistribuidoraModificar implements OnInit {
             numeroTelefono: this.distribuidoraEncontrada.numeroTelefono,
             descripcion: this.distribuidoraEncontrada.descripcion,
             ciudad: this.distribuidoraEncontrada.ciudad,
-            correoElectronico: '', // Campo nuevo - se dejará vacío para que el usuario lo complete
-            contraseña: '', // Campo nuevo - se dejará vacío para que el usuario lo complete
+            correoElectronico: this.correoOriginal,
+            contraseña: this.contraseñaOriginal,
           });
 
           // Cargar las categorías seleccionadas
@@ -111,6 +172,9 @@ export class DistribuidoraModificar implements OnInit {
             this.categoriasSeleccionadas =
               this.distribuidoraEncontrada.categorias.map((cat) => cat.nombre);
           }
+
+          // Resetear el estado del checkbox
+          this.mostrarCamposUsuario.set(false);
         } else {
           alert(result.message);
           if (result.statusCode === 401) {
@@ -137,7 +201,7 @@ export class DistribuidoraModificar implements OnInit {
     ) {
       const distribuidora = new Distribuidora(
         new Usuario(
-          null,
+          this.distribuidoraCuit.value.cuit!,
           TipoUsuario.DISTRIBUIDORA,
           '',
           null,
@@ -182,5 +246,19 @@ export class DistribuidoraModificar implements OnInit {
       this.distribuidoraEncontrada = null;
       this.categoriasSeleccionadas = [];
     }
+  }
+
+  resetModifyForm() {
+    this.distribuidoraForm.patchValue({
+      cuit: this.distribuidoraCuit.value.cuit,
+      nombre: this.distribuidoraEncontrada!.nombre,
+      direccion: this.distribuidoraEncontrada!.direccion,
+      codigoPostal: this.distribuidoraEncontrada!.codigoPostal,
+      numeroTelefono: this.distribuidoraEncontrada!.numeroTelefono,
+      descripcion: this.distribuidoraEncontrada!.descripcion,
+      ciudad: this.distribuidoraEncontrada!.ciudad,
+      correoElectronico: this.correoOriginal,
+      contraseña: this.contraseñaOriginal,
+    });
   }
 }

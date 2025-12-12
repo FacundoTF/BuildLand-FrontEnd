@@ -20,7 +20,7 @@
           <div class="form-actions">
             <button
               type="button"
-              class="btn-primary"
+              matButton="filled"
               (click)="habilitarPresupuesto(selectedCategory.value!)"
               [disabled]="categoriaConfirmada() || !selectedCategory.value"
             >
@@ -28,6 +28,7 @@
             </button>
             <button
               type="button"
+              matButton="outlined"
               class="btn-secondary"
               (click)="resetearPresupuesto()"
               [disabled]="!categoriaConfirmada()"
@@ -79,7 +80,7 @@
             <div class="form-actions">
               <button
                 type="button"
-                class="btn-primary"
+                matButton="filled"
                 (click)="agregarAlPresupuesto()"
               >
                 Agregar al presupuesto
@@ -123,7 +124,7 @@
           <div class="form-actions finalizar">
             <button
               type="button"
-              class="btn-primary"
+              matButton="filled"
               (click)="confirmarPresupuesto()"
               [disabled]="!hayProductosEnPresupuesto()"
             >

@@ -1,14 +1,14 @@
 <div id="Permissions">
   <div id="G-Di" class="Gestion">
     <button
-      mat-flat-button
+      matButton="filled"
       (click)="ToogleGestion('G-Di')"
       class="OpcionNoPlegable sidebar-btn"
       [class.active]="activeButton() === 'G-Di'">
       Gestionar Distribuidoras
     </button>
     <button
-      mat-flat-button
+      matButton="filled"
       id="A-Di"
       (click)="AgregarDistribuidora()"
       class="Opcion sidebar-btn"
@@ -16,7 +16,7 @@
       Agregar distribuidora
     </button>
     <button
-      mat-flat-button
+      matButton="filled"
       id="R-Di"
       (click)="RemoverDistribuidora()"
       class="Opcion sidebar-btn"
@@ -24,7 +24,7 @@
       Remover distribuidora
     </button>
     <button
-      mat-flat-button
+      matButton="filled"
       id="M-Di"
       (click)="ModificarDistribuidora()"
       class="Opcion sidebar-btn"
@@ -41,15 +41,14 @@
       Gestionar personas fisicas
     </button>
     <button
-      mat-flat-button
-      id="A-Pf"
+      matButton="filled"
       (click)="AgregarPersonaFisica()"
       class="Opcion sidebar-btn"
       [class.active]="activeButton() === 'A-Pf'">
       Agregar persona física
     </button>
     <button
-      mat-flat-button
+      matButton="filled"
       id="R-Pf"
       (click)="RemoverPersonaFisica()"
       class="Opcion sidebar-btn"
@@ -57,7 +56,7 @@
       Remover persona fisica
     </button>
     <button
-      mat-flat-button
+      matButton="filled"
       id="M-Pf"
       (click)="ModificarPersonaFisica()"
       class="Opcion sidebar-btn"
@@ -67,7 +66,7 @@
   </div>
   <div id="G-Pr" class="Gestion">
     <button
-      mat-flat-button
+      matButton="filled"
       id="Z-Pr"
       (click)="RealizarPresupuesto()"
       class="OpcionNoPlegable sidebar-btn"
@@ -75,7 +74,7 @@
       Realizar presupuesto
     </button>
     <button
-      mat-flat-button
+      matButton="filled"
       id="Y-Pr"
       class="OpcionNoPlegable sidebar-btn"
       [class.active]="activeButton() === 'Y-Pr'"
@@ -85,7 +84,7 @@
   </div>
   <div class="Gestion">
     <button
-      mat-flat-button
+      matButton="filled"
       id="CerrarSesion"
       class="sidebar-btn"
       (click)="CerrarSesion()">

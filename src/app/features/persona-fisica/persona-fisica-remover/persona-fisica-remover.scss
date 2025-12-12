@@ -201,32 +201,9 @@ $error-60: map.get(colors.$error-pallete, 60);
   display: flex;
   justify-content: center;
   margin-top: 20px;
-}
 
-.btn-search {
-  padding: 12px 32px;
-  font-weight: 500;
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: none;
-  min-height: 48px;
-  background-color: $tertiary-60;
-  color: white;
-
-  &:hover {
-    box-shadow: 0 4px 12px rgba(249, 89, 91, 0.3);
-  }
-
-  &:active {
-    transform: translateY(1px);
-  }
-
-  &:focus {
-    outline: 2px solid $tertiary-60;
-    outline-offset: 2px;
+  button {
+    min-height: 48px;
   }
 }
 
@@ -238,70 +215,7 @@ $error-60: map.get(colors.$error-pallete, 60);
   margin-top: 32px;
 
   button {
-    padding: 12px 24px;
-    font-weight: 500;
-    font-size: 0.875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: none;
     min-height: 48px;
-
-    &:focus {
-      outline: 2px solid currentColor;
-      outline-offset: 2px;
-    }
-
-    &:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none !important;
-      box-shadow: none !important;
-    }
-  }
-}
-
-.btn-danger {
-  background-color: $error-60;
-  color: white;
-
-  &:hover:not(:disabled) {
-    box-shadow: 0 4px 12px rgba(249, 89, 91, 0.3);
-  }
-
-  &:active:not(:disabled) {
-    transform: translateY(1px);
-  }
-}
-
-.btn-secondary {
-  background-color: $secondary-40;
-  color: $primary-100;
-
-  &:hover {
-    background-color: $primary-35;
-    box-shadow: 0 4px 12px rgba(67, 101, 92, 0.3);
-  }
-
-  &:active {
-    transform: translateY(1px);
-  }
-}
-
-.btn-cancel {
-  background-color: transparent;
-  color: #1c1b1f;
-  border: 2px solid #e0e0e0;
-
-  &:hover {
-    background-color: $neutral-90;
-    border-color: $tertiary-60;
-    color: $tertiary-60;
-  }
-
-  &:active {
-    transform: translateY(1px);
   }
 }
 

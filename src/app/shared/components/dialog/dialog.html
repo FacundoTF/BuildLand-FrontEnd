@@ -5,9 +5,9 @@
   </mat-dialog-content>
   <mat-dialog-actions align="end">
     @if (showCancel()) {
-      <button mat-button (click)="onCancel()">{{ cancelText() }}</button>
+      <button matButton="outlined" class="btn-secondary" (click)="onCancel()">{{ cancelText() }}</button>
     }
-    <button mat-raised-button color="primary" (click)="onConfirm()">
+    <button matButton="filled" (click)="onConfirm()">
       {{ confirmText() }}
     </button>
   </mat-dialog-actions>
