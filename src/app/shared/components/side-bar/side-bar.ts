@@ -39,28 +39,32 @@ export class SideBar implements OnInit {
         const permiso = element.toString();
         let entidadPermiso = permiso.substring(2, 4);
         const entidadContenedorGestion = document.querySelector(
-          `#Permissions #G-${entidadPermiso}`,
+          `#Permissions > #G-${entidadPermiso}`,
         ) as HTMLElement;
         if (entidadContenedorGestion) {
-          const computedDisplay = window.getComputedStyle(
-            entidadContenedorGestion,
-          ).display;
-          if (computedDisplay === 'block' || computedDisplay === 'none') {
-            entidadContenedorGestion.style.display = 'flex';
-          }
-          const entidadBtnGestion = document.querySelector(
-            `#Permissions #G-${entidadPermiso} > .OpcionNoPlegable`,
+          // entidadContenedorGestion.style.display = 'flex';
+
+          const btnGestion = entidadContenedorGestion.querySelector(
+            `#Permissions > #G-${entidadPermiso} > .OpcionGestion`,
           ) as HTMLElement;
-          if (entidadBtnGestion) {
-            entidadBtnGestion.style.display = 'flex';
+          if (btnGestion) {
+            btnGestion.style.display = 'flex';
           }
-        }
-        const seccion = document.querySelector(
-          `#${permiso}.Opcion`,
-        ) as HTMLElement;
-        if (seccion) {
-          seccion.style.display = 'none';
-          seccion.classList.add('activado');
+
+          const entidadBtnNoDesplegable = document.querySelector(
+            `#Permissions #G-${entidadPermiso} > #${permiso}.OpcionNoPlegable`,
+          ) as HTMLElement;
+          if (entidadBtnNoDesplegable) {
+            entidadBtnNoDesplegable.style.display = 'flex';
+            entidadBtnNoDesplegable.classList.add('activado');
+          }
+          const elementoBtnDesplegable = document.querySelector(
+            `#Permissions #G-${entidadPermiso} > #${permiso}.Opcion`,
+          ) as HTMLElement;
+          if (elementoBtnDesplegable) {
+            elementoBtnDesplegable.style.display = 'none';
+            elementoBtnDesplegable.classList.add('activado');
+          }
         }
       });
     }

@@ -34,6 +34,13 @@ $secondary-40: map.get(colors.$secondary-pallete,40);
   align-items: center;
 }
 
+.Gestion > .OpcionGestion {
+  display: none;
+  justify-content: center;
+  padding: 6px;
+  width: 100%;
+}
+
 .Gestion > .OpcionNoPlegable {
   display: none;
   justify-content: center;

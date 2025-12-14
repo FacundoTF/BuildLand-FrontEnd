@@ -3,7 +3,7 @@
     <button
       matButton="filled"
       (click)="ToogleGestion('G-Di')"
-      class="OpcionNoPlegable sidebar-btn"
+      class="OpcionGestion sidebar-btn"
       [class.active]="activeButton() === 'G-Di'">
       Gestionar Distribuidoras
     </button>
@@ -36,12 +36,13 @@
     <button
       mat-flat-button
       (click)="ToogleGestion('G-Pf')"
-      class="OpcionNoPlegable sidebar-btn"
+      class="OpcionGestion sidebar-btn"
       [class.active]="activeButton() === 'G-Pf'">
       Gestionar personas fisicas
     </button>
     <button
       matButton="filled"
+      id="A-Pf"
       (click)="AgregarPersonaFisica()"
       class="Opcion sidebar-btn"
       [class.active]="activeButton() === 'A-Pf'">
