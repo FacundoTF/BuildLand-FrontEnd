@@ -1,4 +1,12 @@
-import { Component, inject, input, signal } from '@angular/core';
+import {
+  Component,
+  inject,
+  input,
+  OnInit,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { DialogService } from '../../../shared/services/dialog.service';
 import { ReturnSearchResponse } from '../../../shared/services/return-search-response';
 import { Presupuesto } from '../../../core/entities/presupuesto/presupuesto';
@@ -14,6 +22,7 @@ import {
 @Component({
   selector: 'app-recibir-presupuesto',
   imports: [
+    DatePipe,
     MatButton,
     MatCard,
     MatCardActions,
@@ -23,19 +32,19 @@ import {
   ],
   templateUrl: './recibir-presupuesto.html',
   styleUrl: './recibir-presupuesto.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RecibirPresupuesto {
+export class RecibirPresupuesto implements OnInit {
   dialog = inject(DialogService);
 
   presupuestosData = input.required<ReturnSearchResponse>();
-  presupuestos: Presupuesto[] = [];
-  contadorPresupuestos = signal(0);
+  presupuestos = signal<Presupuesto[]>([]);
 
   ngOnInit(): void {
-    this.presupuestos = this.presupuestosData().payload as Presupuesto[];
-  }
-  sumarContador() {
-    this.contadorPresupuestos.update((value) => value + 1);
-    return this.contadorPresupuestos();
+    const presupuestos = this.presupuestosData().payload as Presupuesto[];
+    if (presupuestos.length <= 0) {
+      this.dialog.showMessage('Aviso', 'No se encontraron presupuestos.');
+    }
+    this.presupuestos.set(presupuestos);
   }
 }
