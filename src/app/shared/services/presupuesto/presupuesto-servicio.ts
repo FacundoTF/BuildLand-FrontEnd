@@ -14,7 +14,7 @@ export class PresupuestoServicio {
 
   private API_URL = `${environment.server.host}${environment.server.port}/api/presupuestos`;
 
-  paginaActual = signal(1);
+  paginaActual = signal(0);
 
   async agregarPresupuesto(
     presupuesto: Presupuesto,
@@ -63,16 +63,31 @@ export class PresupuestoServicio {
     }
   }
 
+  private mapearPresupuestos(presupuestos: unknown[]): Presupuesto[] {
+    return presupuestos.map((p: any) => {
+      return new Presupuesto(
+        p.id,
+        p.persona,
+        p.categoria,
+        p.fecha ? new Date(p.fecha) : null,
+        p.fechaLimite ? new Date(p.fechaLimite) : null,
+        p.detalles,
+        p.cotizaciones,
+      );
+    });
+  }
+
   async obtenerPresupuestos(): Promise<ReturnSearchResponse> {
     const observable = this.http.get<Presupuesto[]>(
-      `${this.API_URL}/enlistar?page=${this.paginaActual()}&size=2&cuit=20438995671`,
+      `${this.API_URL}/enlistar?page=${this.paginaActual()}&size=4`,
       {
         observe: 'response',
       },
     );
     try {
       const response = await lastValueFrom(observable);
-      const presupuestos: Presupuesto[] = response.body || [];
+      const presupuestosRaw = response.body || [];
+      const presupuestos = this.mapearPresupuestos(presupuestosRaw);
       return {
         success: true,
         message: 'Presupuestos obtenidos con éxito.',
