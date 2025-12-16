@@ -425,21 +425,10 @@ button.btn-secondary {
 
   table {
     width: 100%;
-
-    th {
-      background-color: $primary-60;
-      color: $primary-100;
-      font-weight: 500;
-    }
-
-    td {
-      color: #1c1b1f;
-    }
-
-    tr:hover {
-      background-color: rgba(61, 160, 141, 0.05);
-    }
   }
+  @include mat.table-overrides((
+    background-color: var(--mat-sys-secondary-fixed-dim),
+  ))
 }
 
 // ========== ANIMATIONS ==========
