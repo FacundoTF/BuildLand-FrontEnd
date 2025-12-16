@@ -141,7 +141,7 @@ export class RealizarPresupuesto implements OnInit {
     let detallesPresupuesto = new Array<DetallePresupuesto>();
 
     const presupuesto = new Presupuesto(
-      null,
+      -1,
       personaFisicaPlaceHolder,
       categoria,
       null,
