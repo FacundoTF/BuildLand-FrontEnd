@@ -28,20 +28,3 @@ html {
   color: var(--mat-sys-on-surface);
   font: var(--mat-sys-body-medium);
 }
-// Primary buttons (filled)
-button {
-  @include mat.button-overrides((
-    filled-container-shape: 0,
-    filled-container-color: var(--mat-sys-primary),
-    filled-label-text-color: var(--mat-sys-on-primary),
-  ));
-}
-
-// Secondary buttons (outlined)
-button.btn-secondary {
-  @include mat.button-overrides((
-    outlined-container-shape: 0,
-    outlined-outline-color: var(--mat-sys-secondary),
-    outlined-label-text-color: var(--mat-sys-secondary),
-  ));
-}
