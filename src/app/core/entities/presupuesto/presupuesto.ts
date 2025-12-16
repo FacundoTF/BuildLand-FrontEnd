@@ -5,7 +5,7 @@ import { PersonaFisica } from '../personaFisica/persona-fisica';
 
 export class Presupuesto {
   constructor(
-    public id: number | null,
+    public id: number,
     public persona: PersonaFisica,
     public categoria: Categoria,
     public fecha: Date | null,

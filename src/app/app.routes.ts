@@ -12,8 +12,13 @@ import { Home } from './core/home/home';
 import { RestorePassword } from './core/restore-password/restore-password';
 import { ConfirmNewPassword } from './core/restore-password/confirm-new-password/confirm-new-password';
 import { SubmitSecret } from './core/restore-password/submit-secret/submit-secret';
-import { presupuestoResolver, categoriasResolver } from './data-resolvers';
+import {
+  presupuestoResolver,
+  categoriasResolver,
+  presupuestoDetalleResolver,
+} from './data-resolvers';
 import { RecibirPresupuesto } from './features/presupuesto/recibir-presupuesto/recibir-presupuesto';
+import { VerDetallesPresupuesto } from './features/presupuesto/recibir-presupuesto/ver-detalles-presupuesto/ver-detalles-presupuesto';
 
 export const routes: Routes = [
   { path: '', component: Home, pathMatch: 'full' },
@@ -66,6 +71,13 @@ export const routes: Routes = [
         component: RecibirPresupuesto,
         resolve: {
           presupuestosData: presupuestoResolver,
+        },
+      },
+      {
+        path: 'presupuesto/ver-detalles/:IdPresupuesto',
+        component: VerDetallesPresupuesto,
+        resolve: {
+          presupuestoDetalleData: presupuestoDetalleResolver,
         },
       },
     ],

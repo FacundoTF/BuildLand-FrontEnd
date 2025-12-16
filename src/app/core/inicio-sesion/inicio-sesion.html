@@ -55,7 +55,6 @@
         color="primary"
         type="submit"
         [disabled]="isSubmitting()"
-        class="submit-button"
       >
         @if (isSubmitting()) {
           <mat-spinner [diameter]="20" class="spinner"></mat-spinner>
@@ -71,7 +70,7 @@
         color="primary"
         type="button"
         (click)="onForgotPassword()"
-        class="forgot-password-button"
+        class="btn-secondary"
       >
         ¿Olvidaste tu contraseña?
       </button>

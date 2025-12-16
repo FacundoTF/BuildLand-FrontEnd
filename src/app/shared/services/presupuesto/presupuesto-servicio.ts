@@ -1,10 +1,11 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { environment } from '../../../../environments/environment.development';
 import { Presupuesto } from '../../../core/entities/presupuesto/presupuesto';
-import { lastValueFrom } from 'rxjs';
+import { catchError, lastValueFrom, map, Observable, of } from 'rxjs';
 import { ReturnResultResponse } from '../return-response';
 import { ReturnSearchResponse } from '../return-search-response';
+import { DetallePresupuesto } from '../../../core/entities/detalle-presupuesto/detalle-presupuesto';
 
 @Injectable({
   providedIn: 'root',
@@ -76,6 +77,16 @@ export class PresupuestoServicio {
       );
     });
   }
+  private mapearDetallesPresupuesto(detalles: unknown[]): DetallePresupuesto[] {
+    return detalles.map((p: any) => {
+      return new DetallePresupuesto(
+        p.id,
+        p.producto,
+        p.cantidad,
+        p.presupuesto,
+      );
+    });
+  }
 
   async obtenerPresupuestos(): Promise<ReturnSearchResponse> {
     const observable = this.http.get<Presupuesto[]>(
@@ -105,6 +116,36 @@ export class PresupuestoServicio {
   }
   incrementarPagina() {
     this.paginaActual.update((pagina) => pagina + 1);
+  }
+
+  obtenerPresupuestosDetalles(
+    idPresupuesto: number,
+  ): Observable<ReturnSearchResponse> {
+    const observable = this.http.get<DetallePresupuesto[]>(
+      `${this.API_URL}/detalles/${idPresupuesto}`,
+      {
+        observe: 'response',
+      },
+    );
+    const rest = observable.pipe(
+      map((response) => {
+        return {
+          success: true,
+          message: 'Detalles del presupuesto obtenidos con éxito.',
+          statusCode: response.status,
+          payload: this.mapearDetallesPresupuesto(response.body || []),
+        };
+      }),
+      catchError((error) =>
+        of({
+          success: false,
+          message: 'Error al obtener detalles del presupuesto.',
+          statusCode: error.status || 500,
+          payload: null,
+        }),
+      ),
+    );
+    return rest;
   }
 
   decrementarPagina() {

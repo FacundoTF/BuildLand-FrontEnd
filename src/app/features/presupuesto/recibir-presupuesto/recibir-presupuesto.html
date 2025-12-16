@@ -1,8 +1,5 @@
 <div class="container">
   <div id="content">
-    @if (presupuestos().length === 0) {
-      <p>No hay presupuestos disponibles. Vuelva en otro momento</p>
-    } @else {
       @for (p of presupuestos(); track p.id){
         <mat-card>
           <mat-card-header>
@@ -17,11 +14,11 @@
             }
           </mat-card-content>
           <mat-card-actions>
-            <button matButton="filled">Ver Detalles</button>
+            <button matButton="filled" (click)="verDetalles(p.id)">Ver Detalles</button>
           </mat-card-actions>
         </mat-card>
+      } @empty {
+        <p>No hay presupuestos disponibles. Vuelva en otro momento</p>
       }
-    }
-
   </div>
 </div>

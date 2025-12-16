@@ -4,6 +4,7 @@ import { PersonaFisica } from '../../core/entities/personaFisica/persona-fisica'
 import { Presupuesto } from '../../core/entities/presupuesto/presupuesto';
 import { Categoria } from '../../core/entities/categoria/categoria';
 import { Producto } from '../../core/entities/producto/producto';
+import { DetallePresupuesto } from '../../core/entities/detalle-presupuesto/detalle-presupuesto';
 
 type NullOrUndefined = null | undefined;
 
@@ -19,5 +20,7 @@ export interface ReturnSearchResponse extends ReturnResultResponse {
     | Categoria[]
     | Producto
     | Producto[]
+    | DetallePresupuesto
+    | DetallePresupuesto[]
     | NullOrUndefined;
 }
