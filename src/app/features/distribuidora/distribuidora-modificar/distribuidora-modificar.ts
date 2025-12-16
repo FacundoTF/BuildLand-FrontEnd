@@ -5,7 +5,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import { DistribuidoraServicio } from '../../../shared/services/distribuidora/distribuidora-servicio';
 import { Distribuidora } from '../../../core/entities/distribuidora/distribuidora';
 import { Categoria } from '../../../core/entities/categoria/categoria';
@@ -18,7 +18,7 @@ import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-distribuidora-modificar',
-  imports: [ReactiveFormsModule, CommonModule, MatCheckboxModule, MatButton],
+  imports: [ReactiveFormsModule, MatCheckboxModule, MatButton],
   templateUrl: './distribuidora-modificar.html',
   styleUrl: './distribuidora-modificar.scss',
 })

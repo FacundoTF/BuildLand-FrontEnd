@@ -15,7 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { CommonModule } from '@angular/common';
+
 import { UsuarioServicio } from '../../shared/services/usuario-servicio';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
@@ -27,9 +27,8 @@ import { Router } from '@angular/router';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatProgressSpinnerModule,
-    CommonModule,
-  ],
+    MatProgressSpinnerModule
+],
   templateUrl: './inicio-sesion.html',
   styleUrl: './inicio-sesion.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

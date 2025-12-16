@@ -5,7 +5,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import { Distribuidora } from '../../../core/entities/distribuidora/distribuidora';
 import { DistribuidoraServicio } from '../../../shared/services/distribuidora/distribuidora-servicio';
 import { Categoria } from '../../../core/entities/categoria/categoria';
@@ -16,7 +16,7 @@ import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-distribuidora-agregar',
-  imports: [ReactiveFormsModule, CommonModule, MatButton],
+  imports: [ReactiveFormsModule, MatButton],
   templateUrl: './distribuidora-agregar.html',
   styleUrl: './distribuidora-agregar.scss',
 })
