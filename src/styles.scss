@@ -172,7 +172,6 @@ button.btn-secondary {
 
 .search-actions {
   margin-top: 20px;
-  justify-content: center;
 }
 
 // Responsive form rows
@@ -285,7 +284,21 @@ button.btn-secondary {
 
   .checkbox-group {
     margin-bottom: 0;
+    .checkbox-delete {
+      @include mat.theme(
+        (
+          color: mat.$red-palette,
+        )
+      );
+    }
   }
+
+  //@include mat.checkbox-overrides(
+  //  (
+  //    selected-pressed-icon-color: orange,
+  //    selected-checkmark-color: red,
+  //  )
+  //);
 }
 
 // Custom checkbox styling
@@ -462,17 +475,14 @@ button.btn-secondary {
   }
 
   .form-actions {
-    flex-direction: row;
-    justify-content: flex-end;
-
+    flex-direction: column;
     button {
       min-width: 120px;
       flex: none;
     }
   }
-
   .search-actions {
-    justify-content: flex-end;
+    flex-direction: column;
   }
 
   .form-row {
@@ -507,5 +517,11 @@ button.btn-secondary {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
+  }
+
+  .form-actions,
+  .search-actions {
+    flex-direction: row;
+    justify-content: flex-end;
   }
 }
