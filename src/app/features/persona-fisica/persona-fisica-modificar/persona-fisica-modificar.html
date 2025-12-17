@@ -22,7 +22,9 @@
           />
         </div>
         <div class="search-actions">
-          <button type="submit" class="btn-search">Buscar Persona Física</button>
+          <button matButton="filled" type="submit" class="btn-search">
+            Buscar Persona Física
+          </button>
         </div>
       </form>
     </div>
@@ -137,7 +139,9 @@
         }
 
         <div class="form-actions">
-          <button type="reset" matButton="outlined" class="btn-secondary">Restaurar</button>
+          <button type="reset" matButton="outlined" class="btn-secondary">
+            Restaurar
+          </button>
           <button
             [disabled]="!personaFisicaForm.valid"
             type="submit"

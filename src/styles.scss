@@ -182,14 +182,14 @@ button.btn-secondary {
 
 // Search container styling
 .search-container {
-  background: $primary-100;
+  background-color: var(--mat-sys-surface-variant);
   padding: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 24px;
-  border-left: 4px solid $tertiary-60;
+  border-left: 4px solid var(--mat-sys-tertiary);
 
   h3 {
-    color: $tertiary-60;
+    color: var(--mat-sys-secondary);
     margin-bottom: 20px;
   }
 }
@@ -197,7 +197,7 @@ button.btn-secondary {
 // Edit/Delete container styling
 .edit-container,
 .delete-container {
-  background: $primary-100;
+  background-color: var(--mat-sys-surface-variant);
   padding: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 16px;
@@ -208,10 +208,10 @@ button.btn-secondary {
 }
 
 .edit-container {
-  border-left: 4px solid $primary-60;
+  border-left: 4px solid var(--mat-sys-primary);
 
   h3 {
-    color: $primary-60;
+    color: var(--mat-sys-secondary);
     margin-bottom: 20px;
   }
 
@@ -220,7 +220,6 @@ button.btn-secondary {
   }
 
   &.is-visible {
-    display: block !important;
     animation: slideIn 0.5s ease-out;
   }
 }
@@ -251,7 +250,7 @@ button.btn-secondary {
 .distribuidora-form,
 .persona-fisica-form,
 .presupuesto-form {
-  background: var(--mat-sys-surface-variant);
+  background-color: var(--mat-sys-surface-variant);
   padding: 20px 30px 20px 20px;
   margin-bottom: 16px;
   animation: slideIn 0.5s ease-out;
