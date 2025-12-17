@@ -1,5 +1,6 @@
 import { Component, inject, input, OnInit } from '@angular/core';
 import {
+  AbstractControl,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
@@ -13,10 +14,11 @@ import { TipoUsuario, Usuario } from '../../../core/entities/usuario/usuario';
 import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
 import { ReturnSearchResponse } from '../../../shared/services/return-search-response';
 import { MatButton } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-distribuidora-agregar',
-  imports: [ReactiveFormsModule, MatButton],
+  imports: [ReactiveFormsModule, MatButton, MatCheckboxModule],
   templateUrl: './distribuidora-agregar.html',
   styleUrl: './distribuidora-agregar.scss',
 })
@@ -57,6 +59,50 @@ export class DistribuidoraAgregar implements OnInit {
       Validators.minLength(6),
     ]),
   });
+
+  getCuit() {
+    const valor = this.distribuidoraForm.get('cuit');
+    if (valor === null) {
+      throw new Error('Cuit es nulo');
+    }
+    return valor as AbstractControl<string>;
+  }
+
+  getNombre() {
+    return this.distribuidoraForm.get('nombre');
+  }
+
+  getDireccion() {
+    return this.distribuidoraForm.get('direccion');
+  }
+
+  getCodigoPostal(): AbstractControl<string> {
+    const valor = this.distribuidoraForm.get('codigoPostal');
+    if (valor === null) {
+      throw new Error('Codigo Postal es nulo');
+    }
+    return valor as AbstractControl<string>;
+  }
+
+  getNumeroTelefono() {
+    return this.distribuidoraForm.get('numeroTelefono');
+  }
+
+  getDescripcion() {
+    return this.distribuidoraForm.get('descripcion');
+  }
+
+  getCiudad() {
+    return this.distribuidoraForm.get('ciudad');
+  }
+
+  getCorreoElectronico() {
+    return this.distribuidoraForm.get('correoElectronico');
+  }
+
+  getPassword() {
+    return this.distribuidoraForm.get('contraseña');
+  }
 
   toggleCategoria(nombreCategoria: string) {
     const index = this.categoriasSeleccionadas.indexOf(nombreCategoria);
