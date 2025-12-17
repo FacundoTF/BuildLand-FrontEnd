@@ -1,10 +1,15 @@
-<div class="container"><div id="content">
+<div class="container">
+  <div id="content">
     <h2>Eliminar Persona Física</h2>
 
     <!-- Contenedor para buscar persona física por CUIT -->
     <div class="search-container">
       <h3>Buscar Persona Física</h3>
-      <form [formGroup]="personaFisicaCuit" (ngSubmit)="handleSubmitCuit()" class="search-form">
+      <form
+        [formGroup]="personaFisicaCuit"
+        (ngSubmit)="handleSubmitCuit()"
+        class="search-form"
+      >
         <div class="form-group">
           <label for="searchCuit">CUIT de la Persona Física</label>
           <input
@@ -13,10 +18,13 @@
             name="searchCuit"
             placeholder="Ingrese el CUIT para buscar (ej: 20-12345678-9)"
             formControlName="cuit"
-            required>
+            required
+          />
         </div>
         <div class="search-actions">
-          <button type="submit" class="btn-search">Buscar Persona Física</button>
+          <button matButton="filled" type="submit">
+            Buscar Persona Física
+          </button>
         </div>
       </form>
     </div>
@@ -26,19 +34,21 @@
       <div class="delete-container">
         <h3>AREA PELIGROSA</h3>
         <div class="warning-message">
-          <strong>Advertencia:</strong> Esta acción no se puede deshacer. Los datos de la persona física se eliminarán permanentemente.
+          <strong>Advertencia:</strong> Esta acción no se puede deshacer. Los
+          datos de la persona física se eliminarán permanentemente.
         </div>
         <div class="confirmation-section">
-          <div class="form-group checkbox-group">
-            <label class="checkbox-label">
-              <input type="checkbox" id="confirmDelete" name="confirmDelete" required>
-              <span class="checkmark"></span>
-              Confirmo que deseo eliminar esta persona física permanentemente
-            </label>
+          <div class="form-group checkbox-group" [formGroup]="deleteForm">
+            <mat-checkbox formControlName="confirmDelete"
+              >Confirmo que deseo eliminar esta persona física
+              permanentemente</mat-checkbox
+            >
           </div>
         </div>
         <div class="form-actions">
-          <button type="submit" matButton="filled" (click)="handleRemove()">Eliminar Persona Física</button>
+          <button type="submit" matButton="filled" (click)="handleRemove()">
+            Eliminar Persona Física
+          </button>
         </div>
       </div>
     }

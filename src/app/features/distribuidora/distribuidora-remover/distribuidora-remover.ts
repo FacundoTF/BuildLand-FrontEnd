@@ -10,10 +10,11 @@ import { DistribuidoraServicio } from '../../../shared/services/distribuidora/di
 import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
 import { DialogService } from '../../../shared/services/dialog.service';
 import { MatButton } from '@angular/material/button';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-distribuidora-remover',
-  imports: [ReactiveFormsModule, MatButton],
+  imports: [ReactiveFormsModule, MatButton, MatCheckbox],
   templateUrl: './distribuidora-remover.html',
   styleUrl: './distribuidora-remover.scss',
 })
@@ -34,6 +35,10 @@ export class DistribuidoraRemover {
       Validators.required,
       Validators.pattern('^[0-9]{11}$'),
     ]),
+  });
+
+  deleteForm = new FormGroup({
+    confirmDelete: new FormControl(false, [Validators.requiredTrue]),
   });
 
   async handleSubmitCuit() {
@@ -61,6 +66,15 @@ export class DistribuidoraRemover {
   }
 
   async handleRemove() {
+    if (!this.deleteForm.valid) {
+      this.dialogService
+        .showMessage(
+          'Error',
+          'Debe confirmar que desea eliminar la distribuidora marcando la casilla de confirmación.',
+        )
+        .subscribe();
+      return;
+    }
     if (this.distribuidoraEncontrada) {
       try {
         const result = await this.service.removerDistribuidora(

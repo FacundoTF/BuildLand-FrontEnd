@@ -10,10 +10,11 @@ import { PersonaFisicaService } from '../../../shared/services/persona-fisica/pe
 import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
 import { DialogService } from '../../../shared/services/dialog.service';
 import { MatButton } from '@angular/material/button';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-persona-fisica-remover',
-  imports: [ReactiveFormsModule, MatButton],
+  imports: [ReactiveFormsModule, MatButton, MatCheckbox],
   templateUrl: './persona-fisica-remover.html',
   styleUrl: './persona-fisica-remover.scss',
 })
