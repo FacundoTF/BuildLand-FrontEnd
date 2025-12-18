@@ -1,1 +1,26 @@
-<p>ver-detalles-presupuesto works!</p>
+<div class="container">
+  <div id="content">
+    <h2>Detalles del Presupuesto</h2>
+    <div id="card-container">
+      <!-- Cards para cada detalle del presupuesto -->
+      @for (detalle of detalles(); track detalle.id) {
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>{{ detalle.producto.nombre }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>
+              <strong>Marca:</strong>
+              {{ detalle.producto.marca.nombre || "N/A" }}
+            </p>
+            <p><strong>Cantidad:</strong> {{ detalle.cantidad }}</p>
+          </mat-card-content>
+        </mat-card>
+      } @empty {
+        <p class="no-results">
+          No hay detalles disponibles para este presupuesto
+        </p>
+      }
+    </div>
+  </div>
+</div>

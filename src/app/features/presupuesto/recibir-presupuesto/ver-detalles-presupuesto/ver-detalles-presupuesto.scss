@@ -1,0 +1,14 @@
+#content {
+  justify-content: flex-start;
+}
+
+p {
+  margin: 12px 0;
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
+  strong {
+    color: var(--mat-sys-secondary);
+    font-weight: 600;
+  }
+}
