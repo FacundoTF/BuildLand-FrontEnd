@@ -1,24 +1,28 @@
 <div class="container">
   <div id="content">
-      @for (p of presupuestos(); track p.id){
+    <div id="card-container">
+      @for (p of presupuestos(); track p.id) {
         <mat-card>
           <mat-card-header>
             <mat-card-title>Presupuesto:</mat-card-title>
           </mat-card-header>
           <mat-card-content>
             @if (p.fecha) {
-              <p>Fecha de creación: {{p.fecha | date: 'short'}}</p>
+              <p>Fecha de creación: {{ p.fecha | date: "short" }}</p>
             }
             @if (p.fechaLimite) {
-              <p>Fecha límite: {{p.fechaLimite | date: 'short'}}</p>
+              <p>Fecha límite: {{ p.fechaLimite | date: "short" }}</p>
             }
           </mat-card-content>
           <mat-card-actions>
-            <button matButton="filled" (click)="verDetalles(p.id)">Ver Detalles</button>
+            <button matButton="filled" (click)="verDetalles(p.id)">
+              Ver Detalles
+            </button>
           </mat-card-actions>
         </mat-card>
       } @empty {
         <p>No hay presupuestos disponibles. Vuelva en otro momento</p>
       }
+    </div>
   </div>
 </div>

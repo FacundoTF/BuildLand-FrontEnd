@@ -2,16 +2,6 @@
 
 @use "@angular/material" as mat;
 @use "sass:map";
-@use "paleta-buildland" as colors;
-
-// Color Variables from Palette
-$primary-60: map.get(colors.$primary-palette, 60);
-$primary-35: map.get(colors.$primary-palette, 35);
-$primary-100: map.get(colors.$primary-palette, 100);
-$secondary-40: map.get(colors.$secondary-pallete, 40);
-$tertiary-60: map.get(colors.$tertiary-palette, 60);
-$neutral-90: map.get(colors.$neutral-pallete, 90);
-$error-60: map.get(colors.$error-pallete, 60);
 
 html,
 body {
@@ -19,7 +9,6 @@ body {
 }
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 #content {
@@ -28,6 +17,22 @@ body {
   flex-direction: column;
   width: 75%;
   padding: 3rem 0 0 0;
+
+  #card-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 3rem;
+    gap: 3rem;
+    mat-card {
+      width: clamp(13rem, 100%, 60rem);
+      @include mat.card-overrides(
+        (
+          elevated-container-color: var(--mat-sys-surface-container-highest),
+        )
+      );
+    }
+  }
 }
 
 // Primary buttons (filled)
@@ -64,32 +69,31 @@ button.btn-secondary {
 
   h2 {
     color: var(--mat-sys-primary);
-    font-size: 1.5rem;
-    font-weight: 500;
+    font: var(--mat-sys-headline-medium);
     margin-bottom: 24px;
     text-align: center;
-    font-family: "Roboto", "Helvetica Neue", sans-serif;
   }
 
   h3 {
     color: var(--mat-sys-primary);
-    font-size: 1.25rem;
-    font-weight: 500;
+    font: var(--mat-sys-headline-small);
     margin-bottom: 16px;
-    font-family: "Roboto", "Helvetica Neue", sans-serif;
   }
 }
 
 // Form groups styling
 .form-group {
   margin-bottom: 20px;
+  box-sizing: border-box;
 
   label {
     display: block;
     margin-bottom: 8px;
     color: var(--mat-sys-secondary);
-    font-weight: 500;
-    font-size: 0.875rem;
+    font: var(--mat-sys-label-medium);
+    box-sizing: border-box;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   input,
@@ -97,9 +101,10 @@ button.btn-secondary {
     width: 100%;
     padding: 10px 0 10px 8px;
     border: 2px solid var(--mat-sys-secondary);
-    font-size: 1rem;
+    font: var(--mat-sys-body-medium);
     transition: all 0.3s ease;
     background-color: white;
+    box-sizing: border-box;
 
     &:focus {
       outline: none;
@@ -112,11 +117,11 @@ button.btn-secondary {
     }
 
     &::placeholder {
-      font-size: 0.875rem;
+      font: var(--mat-sys-body-small);
     }
 
     &:invalid:not(:placeholder-shown) {
-      border-color: $error-60;
+      border-color: var(--mat-sys-error);
     }
 
     &[readonly] {
@@ -132,29 +137,6 @@ button.btn-secondary {
     min-height: 100px;
     font-family: inherit;
   }
-
-  // Validation states
-  //&.invalid {
-  //  input,
-  //  textarea {
-  //    border-color: var(--mat-sys-error);
-  //    background-color: #fef7f7;
-  //  }
-  //}
-  //
-  //&.valid {
-  //  input,
-  //  textarea {
-  //    border-color: $primary-60;
-  //    background-color: #f1f8e9;
-  //  }
-  //}
-
-  //&:has(input:not([required])) label::after,
-  //&:has(textarea:not([required])) label::after,
-  //&:has(input[readonly]) label::after {
-  //  content: "";
-  //}
 }
 
 // Form action buttons
@@ -177,6 +159,8 @@ button.btn-secondary {
 // Responsive form rows
 .form-row {
   display: block;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 // Search container styling
@@ -224,10 +208,10 @@ button.btn-secondary {
 }
 
 .delete-container {
-  border-left: 4px solid $error-60;
+  border-left: 4px solid var(--mat-sys-error);
 
   h3 {
-    color: $error-60;
+    color: var(--mat-sys-error);
     margin-bottom: 20px;
   }
 
@@ -270,7 +254,7 @@ button.btn-secondary {
   background-color: #fff3e0;
   border-color: #f57c00;
   color: #e65100;
-  font-weight: 500;
+  font: var(--mat-sys-label-medium);
 
   strong {
     color: #f57c00;
@@ -279,7 +263,7 @@ button.btn-secondary {
 
 .confirmation-section {
   background-color: #ffebee;
-  border-color: $error-60;
+  border-color: var(--mat-sys-error);
   flex-direction: column;
 
   .checkbox-group {
@@ -292,13 +276,6 @@ button.btn-secondary {
       );
     }
   }
-
-  //@include mat.checkbox-overrides(
-  //  (
-  //    selected-pressed-icon-color: orange,
-  //    selected-checkmark-color: red,
-  //  )
-  //);
 }
 
 // Custom checkbox styling
@@ -307,8 +284,8 @@ button.btn-secondary {
   align-items: flex-start;
   gap: 12px;
   cursor: pointer;
-  font-weight: 500;
-  color: $error-60;
+  font: var(--mat-sys-label-medium);
+  color: var(--mat-sys-error);
   line-height: 1.4;
 
   input[type="checkbox"] {
@@ -316,7 +293,7 @@ button.btn-secondary {
     margin: 0;
     padding: 0;
     transform: scale(1.2);
-    accent-color: $error-60;
+    accent-color: var(--mat-sys-error);
     cursor: pointer;
   }
 
@@ -331,26 +308,26 @@ button.btn-secondary {
   padding: 16px;
   margin-top: 16px;
   text-align: center;
-  font-weight: 500;
+  font: var(--mat-sys-label-medium);
   border: 1px solid;
 }
 
 .no-results {
   background-color: #fff3e0;
-  border-color: $tertiary-60;
+  border-color: var(--mat-sys-tertiary);
   color: #e65100;
 }
 
 .success-message {
   background-color: #e8f5e8;
-  border-color: $primary-60;
-  color: $primary-60;
+  border-color: var(--mat-sys-primary);
+  color: var(--mat-sys-primary);
 }
 
 .error-message {
   display: block;
-  color: $error-60;
-  font-size: 0.75rem;
+  color: var(--mat-sys-tertiary);
+  font: var(--mat-sys-label-small);
   margin-top: 8px;
 }
 
@@ -377,7 +354,7 @@ button.btn-secondary {
   }
 
   &.selected {
-    border-color: $primary-60;
+    border-color: var(--mat-sys-primary);
     background-color: var(--mat-sys-surface);
     box-shadow: 0 2px 8px rgba(61, 160, 141, 0.2);
     label {
@@ -388,7 +365,7 @@ button.btn-secondary {
   label {
     cursor: pointer;
     margin: 0;
-    font-weight: 400;
+    font: var(--mat-sys-body-medium);
     user-select: none;
     flex: 1;
   }
@@ -456,12 +433,11 @@ button.btn-secondary {
 @media (min-width: 768px) {
   .container {
     h2 {
-      font-size: 2rem;
       margin-bottom: 32px;
     }
 
     h3 {
-      font-size: 1.5rem;
+      // ...existing code...
     }
   }
 
@@ -488,21 +464,17 @@ button.btn-secondary {
   .form-row {
     flex-direction: row;
     gap: 20px;
+    box-sizing: border-box;
 
     .form-group {
       flex: 1;
+      box-sizing: border-box;
     }
   }
 }
 
 // Desktop
 @media (min-width: 1024px) {
-  .container {
-    h2 {
-      font-size: 2.25rem;
-    }
-  }
-
   .distribuidora-form,
   .persona-fisica-form,
   .presupuesto-form,
@@ -517,6 +489,7 @@ button.btn-secondary {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
+    box-sizing: border-box;
   }
 
   .form-actions,
