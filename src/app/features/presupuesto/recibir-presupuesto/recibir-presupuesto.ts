@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { DialogService } from '../../../shared/services/dialog.service';
-import { ReturnSearchResponse } from '../../../shared/services/return-search-response';
+import { ReturnSearchResponse } from '../../../core/response-type/return-search-response';
 import { Presupuesto } from '../../../core/entities/presupuesto/presupuesto';
 import { MatButton } from '@angular/material/button';
 import { Router } from '@angular/router';

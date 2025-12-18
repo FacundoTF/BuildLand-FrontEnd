@@ -4,8 +4,8 @@ import { environment } from '../../../../environments/environment.development';
 import { PersonaFisica } from '../../../core/entities/personaFisica/persona-fisica';
 import { Usuario } from '../../../core/entities/usuario/usuario';
 import { lastValueFrom } from 'rxjs';
-import { ReturnResultResponse } from '../return-response';
-import { ReturnSearchResponse } from '../return-search-response';
+import { ReturnResultResponse } from '../../../core/response-type/return-response';
+import { ReturnSearchResponse } from '../../../core/response-type/return-search-response';
 
 @Injectable({
   providedIn: 'root',

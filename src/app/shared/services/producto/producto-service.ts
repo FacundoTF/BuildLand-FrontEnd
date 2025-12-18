@@ -4,7 +4,7 @@ import { environment } from '../../../../environments/environment.development';
 import { Producto } from '../../../core/entities/producto/producto';
 import { Categoria } from '../../../core/entities/categoria/categoria';
 import { lastValueFrom } from 'rxjs';
-import { ReturnSearchResponse } from '../return-search-response';
+import { ReturnSearchResponse } from '../../../core/response-type/return-search-response';
 
 @Injectable({
   providedIn: 'root',

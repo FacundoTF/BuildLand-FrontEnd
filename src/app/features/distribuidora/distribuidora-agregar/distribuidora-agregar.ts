@@ -12,7 +12,7 @@ import { DistribuidoraServicio } from '../../../shared/services/distribuidora/di
 import { Categoria } from '../../../core/entities/categoria/categoria';
 import { TipoUsuario, Usuario } from '../../../core/entities/usuario/usuario';
 import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
-import { ReturnSearchResponse } from '../../../shared/services/return-search-response';
+import { ReturnSearchResponse } from '../../../core/response-type/return-search-response';
 import { MatButton } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 

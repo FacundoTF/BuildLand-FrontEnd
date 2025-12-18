@@ -3,19 +3,19 @@ import { Injectable, inject, signal } from '@angular/core';
 import { environment } from '../../../../environments/environment.development';
 import { Presupuesto } from '../../../core/entities/presupuesto/presupuesto';
 import { catchError, lastValueFrom, map, Observable, of } from 'rxjs';
-import { ReturnResultResponse } from '../return-response';
-import { ReturnSearchResponse } from '../return-search-response';
+import { ReturnResultResponse } from '../../../core/response-type/return-response';
+import { ReturnSearchResponse } from '../../../core/response-type/return-search-response';
 import { DetallePresupuesto } from '../../../core/entities/detalle-presupuesto/detalle-presupuesto';
+import { PaginationService } from '../pagination-service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PresupuestoServicio {
   http = inject(HttpClient);
+  paginationService = inject(PaginationService);
 
   private API_URL = `${environment.server.host}${environment.server.port}/api/presupuestos`;
-
-  paginaActual = signal(0);
 
   async agregarPresupuesto(
     presupuesto: Presupuesto,
@@ -90,7 +90,7 @@ export class PresupuestoServicio {
 
   async obtenerPresupuestos(): Promise<ReturnSearchResponse> {
     const observable = this.http.get<Presupuesto[]>(
-      `${this.API_URL}/enlistar?page=${this.paginaActual()}&size=4`,
+      `${this.API_URL}/enlistar?page=${this.paginationService.paginaActual()}&size=4`,
       {
         observe: 'response',
       },
@@ -114,8 +114,10 @@ export class PresupuestoServicio {
       };
     }
   }
-  incrementarPagina() {
-    this.paginaActual.update((pagina) => pagina + 1);
+
+  async incrementarPaginaPresupuesto() {
+    this.paginationService.incrementarPagina();
+    return this.obtenerPresupuestos();
   }
 
   obtenerPresupuestosDetalles(
@@ -146,13 +148,5 @@ export class PresupuestoServicio {
       ),
     );
     return rest;
-  }
-
-  decrementarPagina() {
-    this.paginaActual.update((pagina) => (pagina > 1 ? pagina - 1 : pagina));
-  }
-
-  resetearPagina() {
-    this.paginaActual.set(1);
   }
 }

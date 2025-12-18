@@ -5,7 +5,7 @@ import {
   ChangeDetectionStrategy,
   OnInit,
 } from '@angular/core';
-import { ReturnSearchResponse } from '../../../../shared/services/return-search-response';
+import { ReturnSearchResponse } from '../../../../core/response-type/return-search-response';
 import { DetallePresupuesto } from '../../../../core/entities/detalle-presupuesto/detalle-presupuesto';
 import {
   MatCard,

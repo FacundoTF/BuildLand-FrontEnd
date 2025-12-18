@@ -2,7 +2,7 @@ import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
 import { PresupuestoServicio } from './shared/services/presupuesto/presupuesto-servicio';
 import { CategoriaService } from './shared/services/categoria/categoria-service';
 import { inject } from '@angular/core';
-import { ReturnSearchResponse } from './shared/services/return-search-response';
+import { ReturnSearchResponse } from './core/response-type/return-search-response';
 
 export const presupuestoResolver: ResolveFn<
   ReturnSearchResponse

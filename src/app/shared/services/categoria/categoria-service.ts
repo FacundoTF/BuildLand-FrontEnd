@@ -3,7 +3,7 @@ import { environment } from '../../../../environments/environment.development';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Categoria } from '../../../core/entities/categoria/categoria';
 import { lastValueFrom, Observable } from 'rxjs';
-import { ReturnSearchResponse } from '../return-search-response';
+import { ReturnSearchResponse } from '../../../core/response-type/return-search-response';
 
 @Injectable({
   providedIn: 'root',

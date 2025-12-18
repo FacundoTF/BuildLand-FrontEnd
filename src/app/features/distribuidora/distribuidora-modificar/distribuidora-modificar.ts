@@ -11,7 +11,7 @@ import { Distribuidora } from '../../../core/entities/distribuidora/distribuidor
 import { Categoria } from '../../../core/entities/categoria/categoria';
 import { TipoUsuario, Usuario } from '../../../core/entities/usuario/usuario';
 import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
-import { ReturnSearchResponse } from '../../../shared/services/return-search-response';
+import { ReturnSearchResponse } from '../../../core/response-type/return-search-response';
 import { Permiso } from '../../../core/entities/permiso/permiso';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButton } from '@angular/material/button';

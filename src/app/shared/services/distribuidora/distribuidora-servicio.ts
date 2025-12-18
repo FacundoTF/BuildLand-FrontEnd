@@ -3,8 +3,8 @@ import { Distribuidora } from '../../../core/entities/distribuidora/distribuidor
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment.development';
-import { ReturnResultResponse } from '../return-response';
-import { ReturnSearchResponse } from '../return-search-response';
+import { ReturnResultResponse } from '../../../core/response-type/return-response';
+import { ReturnSearchResponse } from '../../../core/response-type/return-search-response';
 
 @Injectable({
   providedIn: 'root',

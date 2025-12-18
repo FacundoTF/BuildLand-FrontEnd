@@ -25,7 +25,7 @@ import { Usuario, TipoUsuario } from '../../../core/entities/usuario/usuario';
 import { DetallePresupuesto } from '../../../core/entities/detalle-presupuesto/detalle-presupuesto';
 import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
 import { DialogService } from '../../../shared/services/dialog.service';
-import { ReturnSearchResponse } from '../../../shared/services/return-search-response';
+import { ReturnSearchResponse } from '../../../core/response-type/return-search-response';
 
 interface PresupuestoItem {
   producto: string;
@@ -115,14 +115,6 @@ export class RealizarPresupuesto implements OnInit {
   }
 
   async confirmarPresupuesto() {
-    /*
-     * 1) Obtener los items del presupuesto -- HECHO
-     * 2) Obtener la categoria del presupuesto -- HECHO
-     * 3) Obtener el usuario actual, osea la persona fisica -- PENDIENTE (FALTA IMPLEMENTAR)
-     * 4) Crear una nueva instancia de Presupuesto con los items y la categoria
-     * 5) Hacer la peticion POST del servicio para guardar el presupuesto
-     * 6) Mostrar un mensaje de confirmacion al usuario o de error si no se pudo guardar
-     * */
     const items = this.presupuestoItems();
     const categoria = this.selectedCategory.value;
     const personaFisicaPlaceHolder = new PersonaFisica(
