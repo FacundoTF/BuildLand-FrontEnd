@@ -1,19 +1,18 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { environment } from '../../../../environments/environment.development';
 import { Presupuesto } from '../../../core/entities/presupuesto/presupuesto';
 import { catchError, lastValueFrom, map, Observable, of } from 'rxjs';
 import { ReturnResultResponse } from '../../../core/response-type/return-response';
 import { ReturnSearchResponse } from '../../../core/response-type/return-search-response';
 import { DetallePresupuesto } from '../../../core/entities/detalle-presupuesto/detalle-presupuesto';
-import { PaginationService } from '../pagination-service';
+import { ReturnPaginationResponse } from '../../../core/response-type/return-pagination-response';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PresupuestoServicio {
   http = inject(HttpClient);
-  paginationService = inject(PaginationService);
 
   private API_URL = `${environment.server.host}${environment.server.port}/api/presupuestos`;
 
@@ -64,8 +63,8 @@ export class PresupuestoServicio {
     }
   }
 
-  private mapearPresupuestos(presupuestos: unknown[]): Presupuesto[] {
-    return presupuestos.map((p: any) => {
+  private mapearPresupuestos(presupuestos: Presupuesto[]): Presupuesto[] {
+    return presupuestos.map((p: Presupuesto) => {
       return new Presupuesto(
         p.id,
         p.persona,
@@ -88,22 +87,48 @@ export class PresupuestoServicio {
     });
   }
 
-  async obtenerPresupuestos(): Promise<ReturnSearchResponse> {
-    const observable = this.http.get<Presupuesto[]>(
-      `${this.API_URL}/enlistar?page=${this.paginationService.paginaActual()}&size=4`,
+  async obtenerPresupuestos(): Promise<ReturnPaginationResponse> {
+    const observable = this.http.get<ReturnPaginationResponse>(
+      `${this.API_URL}/enlistar?page=0&size=4`,
       {
         observe: 'response',
       },
     );
+    return this.procesarObservableObtenerPresupuestos(
+      observable as Observable<HttpResponse<ReturnPaginationResponse>>,
+    );
+  }
+
+  async obtenerPresupuestosPorPagina(
+    numeroPagina: number,
+  ): Promise<ReturnPaginationResponse> {
+    const observable = this.http.get<ReturnPaginationResponse>(
+      `${this.API_URL}/enlistar?page=${numeroPagina}&size=4`,
+      {
+        observe: 'response',
+      },
+    );
+    return this.procesarObservableObtenerPresupuestos(
+      observable as Observable<HttpResponse<ReturnPaginationResponse>>,
+    );
+  }
+
+  async procesarObservableObtenerPresupuestos(
+    observable: Observable<HttpResponse<ReturnPaginationResponse>>,
+  ): Promise<ReturnPaginationResponse> {
+    let presupuestos: Presupuesto[] = [];
     try {
       const response = await lastValueFrom(observable);
-      const presupuestosRaw = response.body || [];
-      const presupuestos = this.mapearPresupuestos(presupuestosRaw);
+      const presupuestosRaw = response.body;
+      presupuestos = presupuestosRaw?.payload as Presupuesto[];
+      presupuestos = this.mapearPresupuestos(presupuestos);
       return {
         success: true,
         message: 'Presupuestos obtenidos con éxito.',
         statusCode: response.status,
         payload: presupuestos,
+        hasPrevious: presupuestosRaw!.hasPrevious,
+        hasNext: presupuestosRaw!.hasNext,
       };
     } catch (error: any) {
       return {
@@ -111,13 +136,14 @@ export class PresupuestoServicio {
         message: 'Error al obtener presupuestos.',
         statusCode: error.status || 500,
         payload: null,
+        hasPrevious: false,
+        hasNext: false,
       };
     }
   }
 
-  async incrementarPaginaPresupuesto() {
-    this.paginationService.incrementarPagina();
-    return this.obtenerPresupuestos();
+  async alterarPaginaPresupuesto(numero: number) {
+    return this.obtenerPresupuestosPorPagina(numero);
   }
 
   obtenerPresupuestosDetalles(

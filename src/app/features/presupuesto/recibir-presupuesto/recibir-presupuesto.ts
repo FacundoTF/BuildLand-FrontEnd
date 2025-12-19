@@ -19,6 +19,9 @@ import {
   MatCardHeader,
   MatCardTitle,
 } from '@angular/material/card';
+import { PresupuestoServicio } from '../../../shared/services/presupuesto/presupuesto-servicio';
+import { ReturnPaginationResponse } from '../../../core/response-type/return-pagination-response';
+import { PaginationService } from '../../../shared/services/pagination-service';
 
 @Component({
   selector: 'app-recibir-presupuesto',
@@ -31,6 +34,7 @@ import {
     MatCardHeader,
     MatCardTitle,
   ],
+  providers: [PaginationService],
   templateUrl: './recibir-presupuesto.html',
   styleUrl: './recibir-presupuesto.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,14 +42,66 @@ import {
 export class RecibirPresupuesto implements OnInit {
   dialog = inject(DialogService);
   router = inject(Router);
-  presupuestosData = input.required<ReturnSearchResponse>();
+  presupuestoService = inject(PresupuestoServicio);
+  paginationService = inject(PaginationService);
+
+  presupuestosData = input.required<ReturnPaginationResponse>();
   presupuestos = signal<Presupuesto[]>([]);
   ngOnInit(): void {
     const presupuestos = this.presupuestosData().payload as Presupuesto[];
     if (presupuestos.length <= 0) {
       this.dialog.showMessage('Aviso', 'No se encontraron presupuestos.');
     }
+    this.paginationService.firstPage.set(true);
+    if (this.presupuestosData().hasNext) {
+      this.paginationService.lastPage.set(false);
+    }
     this.presupuestos.set(presupuestos);
+  }
+  async incrementarPagina(numeroPagina: number): Promise<void> {
+    const nuevosResultados =
+      await this.presupuestoService.alterarPaginaPresupuesto(numeroPagina);
+    const presupuestos = nuevosResultados.payload as Presupuesto[];
+    if (presupuestos.length <= 0) {
+      this.dialog
+        .showMessage('Aviso', 'No se encontraron más presupuestos.')
+        .subscribe();
+      return;
+    }
+
+    this.alternarBotonesPaginacion(
+      nuevosResultados.hasPrevious,
+      nuevosResultados.hasNext,
+    );
+
+    this.paginationService.incrementarPagina();
+    this.presupuestos.set(presupuestos);
+  }
+  async decrementarPagina(numeroPagina: number): Promise<void> {
+    const nuevosResultados =
+      await this.presupuestoService.alterarPaginaPresupuesto(numeroPagina);
+    const presupuestos = nuevosResultados.payload as Presupuesto[];
+    this.alternarBotonesPaginacion(
+      nuevosResultados.hasPrevious,
+      nuevosResultados.hasNext,
+    );
+    this.paginationService.decrementarPagina();
+    this.presupuestos.set(presupuestos);
+  }
+  private alternarBotonesPaginacion(
+    hasPrevious: boolean,
+    hasNext: boolean,
+  ): void {
+    if (hasPrevious && hasNext) {
+      this.paginationService.firstPage.set(true);
+      this.paginationService.lastPage.set(true);
+    } else if (hasPrevious) {
+      this.paginationService.firstPage.set(false);
+      this.paginationService.lastPage.set(true);
+    } else if (hasNext) {
+      this.paginationService.firstPage.set(true);
+      this.paginationService.lastPage.set(false);
+    }
   }
   verDetalles(IdPresupuesto: number): void {
     this.router

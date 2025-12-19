@@ -1,5 +1,6 @@
 <div class="container">
   <div id="content">
+    <h2>Presupuestos pendientes</h2>
     <div id="card-container">
       @for (p of presupuestos(); track p.id) {
         <mat-card>
@@ -22,6 +23,29 @@
         </mat-card>
       } @empty {
         <p>No hay presupuestos disponibles. Vuelva en otro momento</p>
+      }
+    </div>
+    <div id="pagination-controls">
+      @if (this.paginationService.lastPage()) {
+        <button
+          matButton="filled"
+          (click)="this.decrementarPagina(paginationService.currentPage() - 1)"
+        >
+          <-
+        </button>
+      } @else {
+        <button matButton="filled" style="visibility: hidden"><-</button>
+      }
+      <small>{{ paginationService.currentPage() + 1 }}</small>
+      @if (this.paginationService.firstPage()) {
+        <button
+          matButton="filled"
+          (click)="this.incrementarPagina(paginationService.currentPage() + 1)"
+        >
+          ->
+        </button>
+      } @else {
+        <button matButton="filled" style="visibility: hidden">-></button>
       }
     </div>
   </div>

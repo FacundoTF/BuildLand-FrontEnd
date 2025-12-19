@@ -3,9 +3,10 @@ import { PresupuestoServicio } from './shared/services/presupuesto/presupuesto-s
 import { CategoriaService } from './shared/services/categoria/categoria-service';
 import { inject } from '@angular/core';
 import { ReturnSearchResponse } from './core/response-type/return-search-response';
+import { ReturnPaginationResponse } from './core/response-type/return-pagination-response';
 
 export const presupuestoResolver: ResolveFn<
-  ReturnSearchResponse
+  ReturnPaginationResponse
 > = async () => {
   return await inject(PresupuestoServicio).obtenerPresupuestos();
 };
