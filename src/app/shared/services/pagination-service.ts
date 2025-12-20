@@ -15,6 +15,8 @@ export class PaginationService {
   }
 
   resetearPagina() {
+    this.firstPage.set(false);
+    this.lastPage.set(false);
     this.currentPage.set(0);
   }
 }
