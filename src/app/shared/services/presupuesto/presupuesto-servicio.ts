@@ -1,5 +1,5 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, input, signal } from '@angular/core';
 import { environment } from '../../../../environments/environment.development';
 import { Presupuesto } from '../../../core/entities/presupuesto/presupuesto';
 import { catchError, lastValueFrom, map, Observable, of } from 'rxjs';
@@ -15,6 +15,8 @@ export class PresupuestoServicio {
   http = inject(HttpClient);
 
   private API_URL = `${environment.server.host}${environment.server.port}/api/presupuestos`;
+
+  presupuestoId = signal<number>(-1);
 
   async agregarPresupuesto(
     presupuesto: Presupuesto,
@@ -76,8 +78,10 @@ export class PresupuestoServicio {
       );
     });
   }
-  private mapearDetallesPresupuesto(detalles: unknown[]): DetallePresupuesto[] {
-    return detalles.map((p: any) => {
+  private mapearDetallesPresupuesto(
+    detalles: DetallePresupuesto[],
+  ): DetallePresupuesto[] {
+    return detalles.map((p: DetallePresupuesto) => {
       return new DetallePresupuesto(
         p.id,
         p.producto,
@@ -149,30 +153,61 @@ export class PresupuestoServicio {
   obtenerPresupuestosDetalles(
     idPresupuesto: number,
   ): Observable<ReturnSearchResponse> {
-    const observable = this.http.get<DetallePresupuesto[]>(
-      `${this.API_URL}/detalles/${idPresupuesto}`,
+    const observable = this.http.get<ReturnPaginationResponse>(
+      `${this.API_URL}/detalles/${idPresupuesto}/enlistar?page=0&size=4`,
       {
         observe: 'response',
       },
     );
-    const rest = observable.pipe(
+    return this.procesarObservableObtenerDetallesPresupuesto(
+      observable as Observable<HttpResponse<ReturnPaginationResponse>>,
+    );
+  }
+  obtenerPresupuestosDetallesPorPagina(
+    numeroPagina: number,
+  ): Observable<ReturnPaginationResponse> {
+    const observable = this.http.get<ReturnPaginationResponse>(
+      `${this.API_URL}/detalles/${this.presupuestoId()}/enlistar?page=${numeroPagina}&size=4`,
+      {
+        observe: 'response',
+      },
+    );
+    return this.procesarObservableObtenerDetallesPresupuesto(
+      observable as Observable<HttpResponse<ReturnPaginationResponse>>,
+    );
+  }
+
+  procesarObservableObtenerDetallesPresupuesto(
+    observable: Observable<HttpResponse<ReturnPaginationResponse>>,
+  ): Observable<ReturnPaginationResponse> {
+    return observable.pipe(
       map((response) => {
+        const detallesRaw = response.body;
+        const detalles = detallesRaw?.payload as DetallePresupuesto[];
+        const detallesMapeados = this.mapearDetallesPresupuesto(detalles);
         return {
           success: true,
-          message: 'Detalles del presupuesto obtenidos con éxito.',
+          message: 'Detalles de presupuesto obtenidos con éxito.',
           statusCode: response.status,
-          payload: this.mapearDetallesPresupuesto(response.body || []),
+          payload: detallesMapeados,
+          hasPrevious: detallesRaw!.hasPrevious,
+          hasNext: detallesRaw!.hasNext,
         };
       }),
       catchError((error) =>
         of({
           success: false,
-          message: 'Error al obtener detalles del presupuesto.',
+          message: 'Error al obtener detalles de presupuesto.',
           statusCode: error.status || 500,
           payload: null,
+          hasPrevious: false,
+          hasNext: false,
         }),
       ),
     );
-    return rest;
+  }
+
+  alterarPaginaDetallesPresupuesto(numero: number) {
+    return this.obtenerPresupuestosDetallesPorPagina(numero);
   }
 }

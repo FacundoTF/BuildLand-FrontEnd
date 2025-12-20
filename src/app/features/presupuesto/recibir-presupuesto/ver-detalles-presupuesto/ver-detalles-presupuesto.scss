@@ -20,3 +20,11 @@ p {
     font-weight: 600;
   }
 }
+
+@media (min-width: 1024px) {
+  button {
+    width: 60%;
+    align-self: center;
+    margin-bottom: 2rem;
+  }
+}

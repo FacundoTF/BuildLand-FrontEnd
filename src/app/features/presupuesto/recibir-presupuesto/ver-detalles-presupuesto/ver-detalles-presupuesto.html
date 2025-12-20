@@ -1,6 +1,9 @@
 <div class="container">
   <div id="content">
     <h2>Detalles del Presupuesto</h2>
+    <button matButton="filled" (click)="volverAlListado()">
+      Volver al listado de presupuestos
+    </button>
     <div id="card-container">
       <!-- Cards para cada detalle del presupuesto -->
       @for (detalle of detalles(); track detalle.id) {
@@ -11,7 +14,7 @@
           <mat-card-content>
             <p>
               <strong>Marca:</strong>
-              {{ detalle.producto.marca.nombre || "N/A" }}
+              {{ detalle.producto.marca?.nombre || "N/A" }}
             </p>
             <p><strong>Cantidad:</strong> {{ detalle.cantidad }}</p>
           </mat-card-content>
@@ -22,5 +25,36 @@
         </p>
       }
     </div>
+    @if (this.detalles().length !== 0) {
+      <div id="pagination-controls">
+        @if (this.paginationService.lastPage()) {
+          <button
+            matButton="filled"
+            (click)="
+              this.decrementarPagina(paginationService.currentPage() - 1)
+            "
+          >
+            <-
+          </button>
+        } @else {
+          <button matButton="filled" style="visibility: hidden"><-</button>
+        }
+        <small>Página: {{ paginationService.currentPage() + 1 }}</small>
+        @if (this.paginationService.firstPage()) {
+          <button
+            matButton="filled"
+            (click)="
+              this.incrementarPagina(paginationService.currentPage() + 1)
+            "
+          >
+            ->
+          </button>
+        } @else {
+          <button matButton="filled" style="visibility: hidden">-></button>
+        }
+      </div>
+    }
+    <button matButton="filled">Descargar PDF</button>
+    <button matButton="filled">Realizar cotización</button>
   </div>
 </div>

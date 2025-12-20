@@ -4,7 +4,7 @@ import { Producto } from '../producto/producto';
 
 export class DetallePresupuesto {
   constructor(
-    public id: number | null,
+    public id: number,
     public producto: Producto,
     public cantidad: number,
     public presupuesto: Presupuesto | null,

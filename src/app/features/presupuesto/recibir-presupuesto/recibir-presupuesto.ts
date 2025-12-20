@@ -104,6 +104,8 @@ export class RecibirPresupuesto implements OnInit {
     }
   }
   verDetalles(IdPresupuesto: number): void {
+    this.presupuestoService.presupuestoId.set(IdPresupuesto);
+    this.paginationService.resetearPagina();
     this.router
       .navigate(['base-page/presupuesto/ver-detalles', IdPresupuesto])
       .catch(() => {
