@@ -25,3 +25,10 @@ export const presupuestoDetalleResolver: ResolveFn<ReturnSearchResponse> = (
     : 0;
   return presupuestoServicio.obtenerPresupuestosDetalles(idPresupuesto);
 };
+
+export const presupuestoDetallesCotizarResolver: ResolveFn<
+  ReturnSearchResponse
+> = () => {
+  const presupuestoServicio = inject(PresupuestoServicio);
+  return presupuestoServicio.obtenerDetallesParaCotizar();
+};

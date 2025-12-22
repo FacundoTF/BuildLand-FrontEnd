@@ -14,11 +14,10 @@ import {
   MatCardHeader,
   MatCardTitle,
 } from '@angular/material/card';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { DialogService } from '../../../../shared/services/dialog.service';
 import { PaginationService } from '../../../../shared/services/pagination-service';
-import { Presupuesto } from '../../../../core/entities/presupuesto/presupuesto';
 import { PresupuestoServicio } from '../../../../shared/services/presupuesto/presupuesto-servicio';
 
 @Component({
@@ -119,5 +118,15 @@ export class VerDetallesPresupuesto implements OnInit {
       this.paginationService.firstPage.set(true);
       this.paginationService.lastPage.set(false);
     }
+  }
+  redirigirParaCotizar() {
+    this.router
+      .navigate([`/base-page/presupuesto/cotizar`])
+      .catch(() =>
+        this.dialog.showMessage(
+          'Error',
+          'No se pudo navegar a la página de cotización.',
+        ),
+      );
   }
 }

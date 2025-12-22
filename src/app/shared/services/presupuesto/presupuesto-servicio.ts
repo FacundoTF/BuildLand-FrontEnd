@@ -152,17 +152,30 @@ export class PresupuestoServicio {
 
   obtenerPresupuestosDetalles(
     idPresupuesto: number,
-  ): Observable<ReturnSearchResponse> {
+  ): Observable<ReturnPaginationResponse> {
     const observable = this.http.get<ReturnPaginationResponse>(
       `${this.API_URL}/detalles/${idPresupuesto}/enlistar?page=0&size=4`,
       {
         observe: 'response',
       },
     );
-    return this.procesarObservableObtenerDetallesPresupuesto(
+    return this.procesarDetallesPresupuestoPaginable(
       observable as Observable<HttpResponse<ReturnPaginationResponse>>,
     );
   }
+
+  obtenerDetallesParaCotizar(): Observable<ReturnSearchResponse> {
+    const observable = this.http.get<DetallePresupuesto[]>(
+      `${this.API_URL}/detalles/${this.presupuestoId()}/cotizar`,
+      {
+        observe: 'response',
+      },
+    );
+    return this.procesarDetallesPresupuesto(
+      observable as Observable<HttpResponse<DetallePresupuesto[]>>,
+    );
+  }
+
   obtenerPresupuestosDetallesPorPagina(
     numeroPagina: number,
   ): Observable<ReturnPaginationResponse> {
@@ -172,12 +185,12 @@ export class PresupuestoServicio {
         observe: 'response',
       },
     );
-    return this.procesarObservableObtenerDetallesPresupuesto(
+    return this.procesarDetallesPresupuestoPaginable(
       observable as Observable<HttpResponse<ReturnPaginationResponse>>,
     );
   }
 
-  procesarObservableObtenerDetallesPresupuesto(
+  procesarDetallesPresupuestoPaginable(
     observable: Observable<HttpResponse<ReturnPaginationResponse>>,
   ): Observable<ReturnPaginationResponse> {
     return observable.pipe(
@@ -202,6 +215,32 @@ export class PresupuestoServicio {
           payload: null,
           hasPrevious: false,
           hasNext: false,
+        }),
+      ),
+    );
+  }
+
+  procesarDetallesPresupuesto(
+    observable: Observable<HttpResponse<DetallePresupuesto[]>>,
+  ): Observable<ReturnSearchResponse> {
+    return observable.pipe(
+      map((response) => {
+        const detalles = response.body as DetallePresupuesto[];
+        const detallesMapeados: DetallePresupuesto[] =
+          this.mapearDetallesPresupuesto(detalles);
+        return {
+          success: true,
+          message: 'Detalles de presupuesto obtenidos con éxito.',
+          statusCode: response.status,
+          payload: detallesMapeados,
+        };
+      }),
+      catchError((error) =>
+        of({
+          success: false,
+          message: 'Error al obtener detalles de presupuesto.',
+          statusCode: error.status || 500,
+          payload: null,
         }),
       ),
     );

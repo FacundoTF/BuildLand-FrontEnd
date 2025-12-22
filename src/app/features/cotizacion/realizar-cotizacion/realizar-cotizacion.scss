@@ -1,0 +1,67 @@
+#content {
+  justify-content: flex-start;
+}
+
+.tabla-container {
+  margin: 2rem 0;
+  width: 100%;
+  overflow-x: auto;
+
+  table {
+    width: 100%;
+    min-width: 600px;
+  }
+
+  input[type="number"] {
+    width: 100px;
+    padding: 8px;
+    border: 2px solid var(--mat-sys-secondary);
+    font: var(--mat-sys-body-medium);
+    text-align: right;
+
+    &:focus {
+      outline: none;
+      border-color: var(--mat-sys-primary);
+    }
+
+    &.input-bloqueado {
+      background-color: var(--mat-sys-surface-container);
+      color: var(--mat-sys-on-surface-variant);
+      cursor: not-allowed;
+    }
+  }
+
+  .fila-bloqueada {
+    background-color: var(--mat-sys-surface-container-highest);
+  }
+
+  button {
+    min-width: 100px;
+  }
+
+  .btn-deshacer {
+    background-color: var(--mat-sys-tertiary);
+    color: var(--mat-sys-on-tertiary);
+  }
+}
+
+.btn-enviar {
+  margin-top: 1rem;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+@media (min-width: 1024px) {
+  button {
+    width: auto;
+    align-self: center;
+    margin-bottom: 2rem;
+  }
+
+  .btn-enviar {
+    width: 60%;
+  }
+}

@@ -16,9 +16,11 @@ import {
   presupuestoResolver,
   categoriasResolver,
   presupuestoDetalleResolver,
+  presupuestoDetallesCotizarResolver,
 } from './data-resolvers';
 import { RecibirPresupuesto } from './features/presupuesto/recibir-presupuesto/recibir-presupuesto';
 import { VerDetallesPresupuesto } from './features/presupuesto/recibir-presupuesto/ver-detalles-presupuesto/ver-detalles-presupuesto';
+import { RealizarCotizacion } from './features/cotizacion/realizar-cotizacion/realizar-cotizacion';
 
 export const routes: Routes = [
   { path: '', component: Home, pathMatch: 'full' },
@@ -78,6 +80,13 @@ export const routes: Routes = [
         component: VerDetallesPresupuesto,
         resolve: {
           presupuestoDetalleData: presupuestoDetalleResolver,
+        },
+      },
+      {
+        path: 'presupuesto/cotizar',
+        component: RealizarCotizacion,
+        resolve: {
+          detalles: presupuestoDetallesCotizarResolver,
         },
       },
     ],
