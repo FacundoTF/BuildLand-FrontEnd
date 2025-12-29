@@ -15,6 +15,9 @@ import { DialogService } from '../../../shared/services/dialog.service';
 import { PresupuestoServicio } from '../../../shared/services/presupuesto/presupuesto-servicio';
 import { ReturnSearchResponse } from '../../../core/response-type/return-search-response';
 import { DetallePresupuesto } from '../../../core/entities/detalle-presupuesto/detalle-presupuesto';
+import { CotizacionServicio } from '../../../shared/services/cotizacion/cotizacion-servicio';
+import { Producto } from '../../../core/entities/producto/producto';
+import { Marca } from '../../../core/entities/marca/marca';
 
 interface FilaCotizacion {
   id: number;
@@ -36,6 +39,7 @@ export class RealizarCotizacion implements OnInit {
   private router = inject(Router);
   private dialog = inject(DialogService);
   private presupuestoService = inject(PresupuestoServicio);
+  private cotizacionServicio = inject(CotizacionServicio);
 
   detalles = input.required<ReturnSearchResponse>();
 
@@ -113,6 +117,8 @@ export class RealizarCotizacion implements OnInit {
     const detallesCotizacion = filasActuales.map((fila) => ({
       idDetallePresupuesto: fila.id,
       precioUnitario: fila.importe,
+      productoNombre: fila.productoNombre,
+      productoMarca: fila.marcaNombre,
     }));
 
     this.dialog
@@ -133,24 +139,50 @@ export class RealizarCotizacion implements OnInit {
     detallesCotizacion: {
       idDetallePresupuesto: number;
       precioUnitario: number | null;
+      productoNombre: string;
+      productoMarca: string;
     }[],
   ): void {
-    // Simulación de envío exitoso - aquí iría la llamada al servicio real
-    // Por ahora redirigimos como si fuera exitoso
-    // Cuando el servicio esté implementado, usar algo como:
-    // this.cotizacionService.enviarCotizacion(detallesCotizacion).subscribe({...})
-
-    this.dialog
-      .showMessage('Éxito', 'Cotización enviada correctamente.')
-      .subscribe(() => {
-        this.router
-          .navigate(['/base-page/presupuesto/recibir'])
-          .catch(() =>
-            this.dialog.showMessage(
+    this.cotizacionServicio
+      .enviarCotizacion(
+        detallesCotizacion.map((detalle) => ({
+          idDetalleCotizacion: detalle.idDetallePresupuesto,
+          producto: new Producto(
+            null,
+            detalle.productoNombre,
+            null,
+            new Marca(null, detalle.productoMarca, null),
+          ),
+          precioUnitario: detalle.precioUnitario || 0,
+          cotizacion: null as any, // Aquí se debería mapear correctamente la cotización
+          marca: new Marca(null, detalle.productoMarca, null), // Aquí se debería mapear correctamente la marca
+        })),
+      )
+      .subscribe({
+        next: (response) => {
+          if (!response.success) {
+            this.dialog
+              .showMessage('Éxito', 'Cotización enviada correctamente.')
+              .subscribe(() => {
+                this.router
+                  .navigate(['/base-page/presupuesto/recibir'])
+                  .catch(() =>
+                    this.dialog.showMessage(
+                      'Error',
+                      'No se pudo navegar al listado de presupuestos.',
+                    ),
+                  );
+              });
+          }
+        },
+        error: () => {
+          this.dialog
+            .showMessage(
               'Error',
-              'No se pudo navegar al listado de presupuestos.',
-            ),
-          );
+              'Ocurrió un error al enviar la cotización. Intente nuevamente.',
+            )
+            .subscribe();
+        },
       });
   }
 }
