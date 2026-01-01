@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment.development';
 import { DetalleCotizacion } from '../../../core/entities/detalle-cotizacion/detalle-cotizacion';
 import { PresupuestoServicio } from '../presupuesto/presupuesto-servicio';
+import { Cotizacion } from '../../../core/entities/cotizacion/cotizacion';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +19,7 @@ export class CotizacionServicio {
     detalles: DetalleCotizacion[],
   ): Observable<ReturnResultResponse> {
     console.log(this.presupuestoServicio.presupuestoId());
-    const observable = this.http.post<ReturnResultResponse>(
+    const observable = this.http.post<Cotizacion>(
       `${this.API_URL}/${this.presupuestoServicio.presupuestoId()}`,
       {
         detalles,
@@ -30,8 +31,11 @@ export class CotizacionServicio {
 
     return observable.pipe(
       map((response) => ({
-        success: response.body?.success || false,
-        message: response.body?.message || 'Error al enviar cotización.',
+        success: response.status === 201,
+        message:
+          response.status === 201
+            ? 'Cotizacion enviada con éxito'
+            : 'Error al enviar cotización.',
         statusCode: response.status,
       })),
       catchError((error) => {
