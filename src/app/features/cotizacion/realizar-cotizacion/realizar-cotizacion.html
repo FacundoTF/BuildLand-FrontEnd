@@ -31,15 +31,13 @@
           <th mat-header-cell *matHeaderCellDef>Importe</th>
           <td mat-cell *matCellDef="let fila">
             <input
+              #importeInput
+              matInput
               type="number"
-              step="0.01"
               min="0"
               placeholder="0.00"
               [value]="fila.importe"
               [disabled]="fila.bloqueado"
-              (input)="
-                actualizarImporte(fila, $any($event.target).valueAsNumber)
-              "
               [class.input-bloqueado]="fila.bloqueado"
             />
           </td>
@@ -48,10 +46,10 @@
         <!-- Columna Guardar -->
         <ng-container matColumnDef="guardar">
           <th mat-header-cell *matHeaderCellDef>Guardar</th>
-          <td mat-cell *matCellDef="let fila">
+          <td mat-cell *matCellDef="let fila; let i = index">
             <button
               matButton="filled"
-              (click)="toggleBloqueoFila(fila)"
+              (click)="toggleBloqueoFila(fila, importeInputs()[i])"
               [class.btn-deshacer]="fila.bloqueado"
             >
               {{ fila.bloqueado ? "Deshacer" : "Confirmar" }}

@@ -6,6 +6,8 @@ import {
   signal,
   OnInit,
   computed,
+  viewChildren,
+  ElementRef,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
@@ -18,6 +20,7 @@ import { DetallePresupuesto } from '../../../core/entities/detalle-presupuesto/d
 import { CotizacionServicio } from '../../../shared/services/cotizacion/cotizacion-servicio';
 import { Producto } from '../../../core/entities/producto/producto';
 import { Marca } from '../../../core/entities/marca/marca';
+import { MatInput } from '@angular/material/input';
 
 interface FilaCotizacion {
   id: number;
@@ -30,7 +33,7 @@ interface FilaCotizacion {
 
 @Component({
   selector: 'app-realizar-cotizacion',
-  imports: [MatTableModule, MatButtonModule, FormsModule],
+  imports: [MatTableModule, MatButtonModule, FormsModule, MatInput],
   templateUrl: './realizar-cotizacion.html',
   styleUrl: './realizar-cotizacion.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -42,6 +45,8 @@ export class RealizarCotizacion implements OnInit {
   private cotizacionServicio = inject(CotizacionServicio);
 
   detalles = input.required<ReturnSearchResponse>();
+
+  importeInputs = viewChildren<ElementRef<HTMLInputElement>>('importeInput');
 
   filas = signal<FilaCotizacion[]>([]);
   columnas = ['producto', 'cantidad', 'marca', 'importe', 'guardar'];
@@ -76,28 +81,33 @@ export class RealizarCotizacion implements OnInit {
       );
   }
 
-  toggleBloqueoFila(fila: FilaCotizacion): void {
-    if (!fila.bloqueado && (fila.importe === null || fila.importe <= 0)) {
-      this.dialog
-        .showMessage(
-          'Error',
-          'Debe ingresar un importe válido antes de confirmar.',
-        )
-        .subscribe();
-      return;
+  toggleBloqueoFila(
+    fila: FilaCotizacion,
+    inputRef: ElementRef<HTMLInputElement> | undefined,
+  ): void {
+    if (!fila.bloqueado) {
+      const valorInput = inputRef?.nativeElement?.valueAsNumber;
+
+      if (valorInput === undefined || isNaN(valorInput) || valorInput <= 0) {
+        this.dialog
+          .showMessage(
+            'Error',
+            'Debe ingresar un importe válido antes de confirmar.',
+          )
+          .subscribe();
+        return;
+      }
+
+      this.filas.update((filas) =>
+        filas.map((f) =>
+          f.id === fila.id ? { ...f, importe: valorInput, bloqueado: true } : f,
+        ),
+      );
+    } else {
+      this.filas.update((filas) =>
+        filas.map((f) => (f.id === fila.id ? { ...f, bloqueado: false } : f)),
+      );
     }
-
-    this.filas.update((filas) =>
-      filas.map((f) =>
-        f.id === fila.id ? { ...f, bloqueado: !f.bloqueado } : f,
-      ),
-    );
-  }
-
-  actualizarImporte(fila: FilaCotizacion, valor: number | null): void {
-    this.filas.update((filas) =>
-      filas.map((f) => (f.id === fila.id ? { ...f, importe: valor } : f)),
-    );
   }
 
   enviarCotizacion(): void {
@@ -160,7 +170,7 @@ export class RealizarCotizacion implements OnInit {
       )
       .subscribe({
         next: (response) => {
-          if (!response.success) {
+          if (response.success) {
             this.dialog
               .showMessage('Éxito', 'Cotización enviada correctamente.')
               .subscribe(() => {
