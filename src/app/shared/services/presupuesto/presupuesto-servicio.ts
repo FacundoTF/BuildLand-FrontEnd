@@ -139,7 +139,7 @@ export class PresupuestoServicio {
         success: false,
         message: 'Error al obtener presupuestos.',
         statusCode: error.status || 500,
-        payload: null,
+        payload: [],
         hasPrevious: false,
         hasNext: false,
       };
