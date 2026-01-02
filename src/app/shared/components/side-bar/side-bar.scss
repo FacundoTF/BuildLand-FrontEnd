@@ -1,13 +1,21 @@
-@use 'sass:map';
+@use "sass:map";
 //@use '../../../../styles/buildland-colors' as colors;
 @use "../../../../paleta-buildland" as colors;
 
-// Extraer colores de la paleta
-//$primary-60: colors.$primary-palette(60);
-$primary-60: map.get(colors.$primary-palette,60);
-$primary-35: map.get(colors.$primary-palette,35);
-$primary-100: map.get(colors.$primary-palette,100);
-$secondary-40: map.get(colors.$secondary-pallete,40);
+//:host {
+//  display: block;
+//  width: 100%;
+//  height: auto;
+//}
+
+// Desktop - altura completa
+@media (min-width: 1024px) {
+  :host {
+    height: 100vh;
+    position: sticky;
+    top: 0;
+  }
+}
 
 #Permissions {
   display: flex;

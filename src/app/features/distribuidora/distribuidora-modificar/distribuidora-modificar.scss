@@ -1,2 +1,3 @@
-// Componente específico si es necesario agregar estilos personalizados
-// Los estilos comunes están centralizados en styles.scss
+:host {
+  flex-grow: 2;
+}
