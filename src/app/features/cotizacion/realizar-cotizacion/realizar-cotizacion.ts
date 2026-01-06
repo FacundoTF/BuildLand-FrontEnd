@@ -126,7 +126,7 @@ export class RealizarCotizacion implements OnInit {
 
     const detallesCotizacion = filasActuales.map((fila) => ({
       idDetallePresupuesto: fila.id,
-      precioUnitario: fila.importe,
+      importe: fila.importe,
       productoNombre: fila.productoNombre,
       productoMarca: fila.marcaNombre,
     }));
@@ -148,7 +148,7 @@ export class RealizarCotizacion implements OnInit {
   private procesarEnvioCotizacion(
     detallesCotizacion: {
       idDetallePresupuesto: number;
-      precioUnitario: number | null;
+      importe: number | null;
       productoNombre: string;
       productoMarca: string;
     }[],
@@ -163,7 +163,7 @@ export class RealizarCotizacion implements OnInit {
             null,
             new Marca(null, detalle.productoMarca, null),
           ),
-          precioUnitario: detalle.precioUnitario || 0,
+          importe: detalle.importe || 0,
           cotizacion: null as any, // Aquí se debería mapear correctamente la cotización
           marca: new Marca(null, detalle.productoMarca, null), // Aquí se debería mapear correctamente la marca
         })),

@@ -6,8 +6,8 @@ export class DetalleCotizacion {
   constructor(
     public idDetalleCotizacion: number,
     public producto: Producto,
-    public precioUnitario: number,
+    public importe: number,
     public cotizacion: Cotizacion,
-    public marca: Marca
+    public marca: Marca,
   ) {}
 }
