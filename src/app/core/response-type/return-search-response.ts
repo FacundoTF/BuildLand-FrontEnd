@@ -5,6 +5,10 @@ import { Presupuesto } from '../entities/presupuesto/presupuesto';
 import { Categoria } from '../entities/categoria/categoria';
 import { Producto } from '../entities/producto/producto';
 import { DetallePresupuesto } from '../entities/detalle-presupuesto/detalle-presupuesto';
+import { Cotizacion } from '../entities/cotizacion/cotizacion';
+import { DetalleCotizacion } from '../entities/detalle-cotizacion/detalle-cotizacion';
+import { ResultadoCotizacion } from '../entities/cotizacion/resultado-cotizacion';
+import { Usuario } from '../entities/usuario/usuario';
 
 type NullOrUndefined = null | undefined;
 
@@ -22,5 +26,12 @@ export interface ReturnSearchResponse extends ReturnResultResponse {
     | Producto[]
     | DetallePresupuesto
     | DetallePresupuesto[]
+    | Cotizacion
+    | Cotizacion[]
+    | DetalleCotizacion
+    | DetalleCotizacion[]
+    | ResultadoCotizacion
+    | ResultadoCotizacion[]
+    | Usuario
     | NullOrUndefined;
 }
