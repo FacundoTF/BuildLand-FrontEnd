@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment.development';
 import { map, catchError, Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
+import { ReturnSearchResponse } from '../../core/response-type/return-search-response';
+import { Usuario } from '../../core/entities/usuario/usuario';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +20,36 @@ export class UsuarioServicio {
   confirmarNuevaContrasena = signal(false);
 
   private API_URL = `${environment.server.host}${environment.server.port}/api`;
+
+  identificarUsuario(): Observable<ReturnSearchResponse> {
+    return this.http.get<Usuario>(`${this.API_URL}/usuarios`).pipe(
+      map((res) => {
+        console.log('Usuario identificado');
+        console.log(res);
+        this.estaAutenticado.set(true);
+        if (res) {
+          return {
+            success: true,
+            payload: res,
+            message: 'Usuario identificado correctamente',
+            statusCode: 200,
+          };
+        } else {
+          return {
+            success: false,
+            payload: null,
+            message: 'Usuario no identificado correctamente',
+            statusCode: 404,
+          };
+        }
+      }),
+      catchError((error: Error) => {
+        console.error('Error al identificar usuario:', error);
+        this.estaAutenticado.set(false);
+        return throwError(() => error);
+      }),
+    );
+  }
 
   iniciarSesion(correo: string, contra: string): Observable<Object | never> {
     return this.http
