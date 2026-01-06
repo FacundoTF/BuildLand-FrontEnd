@@ -1,6 +1,10 @@
 <div class="container">
   <div id="content">
-    <h2>Presupuestos pendientes</h2>
+    @if (esDistribuidora() === true) {
+      <h2>Presupuestos pendientes</h2>
+    } @else {
+      <h2>Presupuestos recibidos</h2>
+    }
     <div id="card-container">
       @for (p of presupuestos(); track p.id) {
         <mat-card>
@@ -19,6 +23,18 @@
             <button matButton="filled" (click)="verDetalles(p.id)">
               Ver Detalles
             </button>
+            @if (esDistribuidora() === true) {
+              <button matButton="filled" (click)="rechazarPresupuesto(p.id)">
+                Rechazar presupuesto
+              </button>
+            } @else {
+              <button
+                matButton="filled"
+                (click)="verCotizaciones(p.id.toString())"
+              >
+                Ver cotizaciones asociadas
+              </button>
+            }
           </mat-card-actions>
         </mat-card>
       } @empty {
