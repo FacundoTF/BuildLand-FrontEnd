@@ -19,6 +19,8 @@ import { MatButton } from '@angular/material/button';
 import { DialogService } from '../../../../shared/services/dialog.service';
 import { PaginationService } from '../../../../shared/services/pagination-service';
 import { PresupuestoServicio } from '../../../../shared/services/presupuesto/presupuesto-servicio';
+import { Usuario } from '../../../../core/entities/usuario/usuario';
+import { UsuarioServicio } from '../../../../shared/services/usuario-servicio';
 
 @Component({
   selector: 'app-ver-detalles-presupuesto',
@@ -36,8 +38,22 @@ export class VerDetallesPresupuesto implements OnInit {
   dialog = inject(DialogService);
   paginationService = inject(PaginationService);
   presupuestoService = inject(PresupuestoServicio);
+  usuarioServicio = inject(UsuarioServicio);
+
+  esDistribuidora = signal(false);
 
   ngOnInit(): void {
+    const rol = this.usuarioServicio.identificarUsuario();
+    rol.subscribe((value) => {
+      const usuario = value.payload as Usuario;
+
+      if (usuario.tipoUsuario === 'DISTRIBUIDORA') {
+        this.esDistribuidora.set(true);
+      } else {
+        this.esDistribuidora.set(false);
+      }
+    });
+
     console.log('Este componente se esta inicializando');
     const detalles = this.presupuestoDetalleData()
       .payload as DetallePresupuesto[];

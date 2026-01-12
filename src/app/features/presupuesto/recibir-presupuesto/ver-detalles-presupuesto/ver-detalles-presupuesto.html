@@ -55,8 +55,10 @@
       </div>
     }
     <button matButton="filled">Descargar PDF</button>
-    <button matButton="filled" (click)="redirigirParaCotizar()">
-      Realizar cotización
-    </button>
+    @if (esDistribuidora() === true) {
+      <button matButton="filled" (click)="redirigirParaCotizar()">
+        Realizar cotización
+      </button>
+    }
   </div>
 </div>
