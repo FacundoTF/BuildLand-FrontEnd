@@ -4,7 +4,8 @@
       matButton="filled"
       (click)="ToogleGestion('G-Di')"
       class="OpcionGestion sidebar-btn"
-      [class.active]="activeButton() === 'G-Di'">
+      [class.active]="activeButton() === 'G-Di'"
+    >
       Gestionar Distribuidoras
     </button>
     <button
@@ -12,7 +13,8 @@
       id="A-Di"
       (click)="AgregarDistribuidora()"
       class="Opcion sidebar-btn"
-      [class.active]="activeButton() === 'A-Di'">
+      [class.active]="activeButton() === 'A-Di'"
+    >
       Agregar distribuidora
     </button>
     <button
@@ -20,7 +22,8 @@
       id="R-Di"
       (click)="RemoverDistribuidora()"
       class="Opcion sidebar-btn"
-      [class.active]="activeButton() === 'R-Di'">
+      [class.active]="activeButton() === 'R-Di'"
+    >
       Remover distribuidora
     </button>
     <button
@@ -28,7 +31,8 @@
       id="M-Di"
       (click)="ModificarDistribuidora()"
       class="Opcion sidebar-btn"
-      [class.active]="activeButton() === 'M-Di'">
+      [class.active]="activeButton() === 'M-Di'"
+    >
       Modificar distribuidora
     </button>
   </div>
@@ -37,7 +41,8 @@
       mat-flat-button
       (click)="ToogleGestion('G-Pf')"
       class="OpcionGestion sidebar-btn"
-      [class.active]="activeButton() === 'G-Pf'">
+      [class.active]="activeButton() === 'G-Pf'"
+    >
       Gestionar personas fisicas
     </button>
     <button
@@ -45,7 +50,8 @@
       id="A-Pf"
       (click)="AgregarPersonaFisica()"
       class="Opcion sidebar-btn"
-      [class.active]="activeButton() === 'A-Pf'">
+      [class.active]="activeButton() === 'A-Pf'"
+    >
       Agregar persona física
     </button>
     <button
@@ -53,7 +59,8 @@
       id="R-Pf"
       (click)="RemoverPersonaFisica()"
       class="Opcion sidebar-btn"
-      [class.active]="activeButton() === 'R-Pf'">
+      [class.active]="activeButton() === 'R-Pf'"
+    >
       Remover persona fisica
     </button>
     <button
@@ -61,7 +68,8 @@
       id="M-Pf"
       (click)="ModificarPersonaFisica()"
       class="Opcion sidebar-btn"
-      [class.active]="activeButton() === 'M-Pf'">
+      [class.active]="activeButton() === 'M-Pf'"
+    >
       Modificar persona fisica
     </button>
   </div>
@@ -71,7 +79,8 @@
       id="Z-Pr"
       (click)="RealizarPresupuesto()"
       class="OpcionNoPlegable sidebar-btn"
-      [class.active]="activeButton() === 'Z-Pr'">
+      [class.active]="activeButton() === 'Z-Pr'"
+    >
       Realizar presupuesto
     </button>
     <button
@@ -79,7 +88,8 @@
       id="Y-Pr"
       class="OpcionNoPlegable sidebar-btn"
       [class.active]="activeButton() === 'Y-Pr'"
-      (click)="RecibirPresupuesto()">
+      (click)="RecibirPresupuesto()"
+    >
       Presupuestos pendientes
     </button>
   </div>
@@ -88,7 +98,8 @@
       matButton="filled"
       id="CerrarSesion"
       class="sidebar-btn"
-      (click)="CerrarSesion()">
+      (click)="CerrarSesion()"
+    >
       Cerrar sesión
     </button>
   </div>

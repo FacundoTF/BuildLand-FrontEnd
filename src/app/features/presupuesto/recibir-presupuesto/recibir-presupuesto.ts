@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { DialogService } from '../../../shared/services/dialog.service';
-import { ReturnSearchResponse } from '../../../core/response-type/return-search-response';
 import { Presupuesto } from '../../../core/entities/presupuesto/presupuesto';
 import { MatButton } from '@angular/material/button';
 import { Router } from '@angular/router';
@@ -54,8 +53,8 @@ export class RecibirPresupuesto implements OnInit {
   presupuestos = signal<Presupuesto[]>([]);
   ngOnInit(): void {
     const rol = this.usuarioServicio.identificarUsuario();
-    rol.subscribe((rol) => {
-      const usuario = rol.payload as Usuario;
+    rol.subscribe((value) => {
+      const usuario = value.payload as Usuario;
 
       if (usuario.tipoUsuario === 'DISTRIBUIDORA') {
         this.esDistribuidora.set(true);
@@ -131,7 +130,7 @@ export class RecibirPresupuesto implements OnInit {
   }
   rechazarPresupuesto(IdPresupuesto: number): void {
     this.presupuestoService.rechazarPresupuesto(IdPresupuesto).subscribe({
-      next: (res) => {
+      next: () => {
         this.dialog
           .showMessage('Éxito', 'Presupuesto rechazado correctamente.')
           .subscribe(() => {
@@ -142,7 +141,7 @@ export class RecibirPresupuesto implements OnInit {
             this.presupuestos.set(presupuestosActualizados);
           });
       },
-      error: (err) => {
+      error: () => {
         this.dialog
           .showMessage(
             'Error',

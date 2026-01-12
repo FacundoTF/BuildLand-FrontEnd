@@ -9,7 +9,6 @@ import { Router } from '@angular/router';
 import { UsuarioServicio } from '../../services/usuario-servicio';
 import { MatButtonModule } from '@angular/material/button';
 import { DialogService } from '../../services/dialog.service';
-// import { RealizarCotizacion } from '../../../features/cotizacion/realizar-cotizacion/realizar-cotizacion';
 
 @Component({
   selector: 'app-side-bar',
@@ -42,8 +41,6 @@ export class SideBar implements OnInit {
           `#Permissions > #G-${entidadPermiso}`,
         ) as HTMLElement;
         if (entidadContenedorGestion) {
-          // entidadContenedorGestion.style.display = 'flex';
-
           const btnGestion = entidadContenedorGestion.querySelector(
             `#Permissions > #G-${entidadPermiso} > .OpcionGestion`,
           ) as HTMLElement;

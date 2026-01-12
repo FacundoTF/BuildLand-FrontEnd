@@ -27,8 +27,8 @@ import { Router } from '@angular/router';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatProgressSpinnerModule
-],
+    MatProgressSpinnerModule,
+  ],
   templateUrl: './inicio-sesion.html',
   styleUrl: './inicio-sesion.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
