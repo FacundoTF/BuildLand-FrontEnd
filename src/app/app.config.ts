@@ -1,5 +1,6 @@
 import {
   ApplicationConfig,
+  DEFAULT_CURRENCY_CODE,
   provideBrowserGlobalErrorListeners,
   provideZoneChangeDetection,
 } from '@angular/core';
@@ -20,5 +21,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withComponentInputBinding()),
     provideHttpClient(withInterceptorsFromDi()),
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: DEFAULT_CURRENCY_CODE, useValue: 'ARS' },
   ],
 };

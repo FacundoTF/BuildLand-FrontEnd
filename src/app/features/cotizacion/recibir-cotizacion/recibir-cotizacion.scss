@@ -1,0 +1,16 @@
+:host {
+  flex-grow: 2;
+}
+
+#content {
+  justify-content: flex-start;
+}
+
+#pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 3rem;
+}

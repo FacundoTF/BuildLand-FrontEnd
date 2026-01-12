@@ -153,12 +153,26 @@ export class RecibirPresupuesto implements OnInit {
   }
 
   verCotizaciones(idPresupuesto: string) {
-    this.router
-      .navigate(['base-page/cotizacion/recibir', idPresupuesto])
-      .catch(() => {
-        this.dialog
-          .showMessage('Error', 'Hubo un error al entrar en esta página')
-          .subscribe();
+    this.presupuestoService
+      .verificarFechaLimite(idPresupuesto)
+      .subscribe((res) => {
+        if (!res.success) {
+          this.dialog
+            .showMessage(
+              'Aviso',
+              'La fecha límite para ver las cotizaciones de este presupuesto todavía no llegó.',
+            )
+            .subscribe();
+          return;
+        } else {
+          this.router
+            .navigate(['base-page/cotizacion/recibir', idPresupuesto])
+            .catch(() => {
+              this.dialog
+                .showMessage('Error', 'Hubo un error al entrar en esta página')
+                .subscribe();
+            });
+        }
       });
   }
 }

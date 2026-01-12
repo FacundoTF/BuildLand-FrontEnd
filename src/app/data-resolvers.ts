@@ -1,6 +1,7 @@
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
 import { PresupuestoServicio } from './shared/services/presupuesto/presupuesto-servicio';
 import { CategoriaService } from './shared/services/categoria/categoria-service';
+import { CotizacionServicio } from './shared/services/cotizacion/cotizacion-servicio';
 import { inject } from '@angular/core';
 import { ReturnSearchResponse } from './core/response-type/return-search-response';
 import { ReturnPaginationResponse } from './core/response-type/return-pagination-response';
@@ -31,4 +32,16 @@ export const presupuestoDetallesCotizarResolver: ResolveFn<
 > = () => {
   const presupuestoServicio = inject(PresupuestoServicio);
   return presupuestoServicio.obtenerDetallesParaCotizar();
+};
+
+export const cotizacionesResolver: ResolveFn<ReturnPaginationResponse> = (
+  route: ActivatedRouteSnapshot,
+) => {
+  let idPresupuestoString = route.paramMap.get('IdPresupuesto');
+  if (!idPresupuestoString) {
+    idPresupuestoString = '';
+  }
+  return inject(CotizacionServicio).obtenerCotizaciones(
+    parseInt(idPresupuestoString),
+  );
 };

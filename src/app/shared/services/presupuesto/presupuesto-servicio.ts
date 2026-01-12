@@ -1,5 +1,5 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Injectable, inject, input, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { environment } from '../../../../environments/environment.development';
 import { Presupuesto } from '../../../core/entities/presupuesto/presupuesto';
 import { catchError, lastValueFrom, map, Observable, of } from 'rxjs';
@@ -7,12 +7,14 @@ import { ReturnResultResponse } from '../../../core/response-type/return-respons
 import { ReturnSearchResponse } from '../../../core/response-type/return-search-response';
 import { DetallePresupuesto } from '../../../core/entities/detalle-presupuesto/detalle-presupuesto';
 import { ReturnPaginationResponse } from '../../../core/response-type/return-pagination-response';
+import { UsuarioServicio } from '../usuario-servicio';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PresupuestoServicio {
   http = inject(HttpClient);
+  usuarioServicio = inject(UsuarioServicio);
 
   private API_URL = `${environment.server.host}${environment.server.port}/api/presupuestos`;
 
@@ -164,6 +166,35 @@ export class PresupuestoServicio {
     );
   }
 
+  verificarFechaLimite(
+    idPresupuesto: string,
+  ): Observable<ReturnResultResponse> {
+    const observable = this.http.get<boolean>(
+      `${this.API_URL}/verificarFechaLimite/${idPresupuesto}`,
+      {
+        observe: 'response',
+      },
+    );
+    return observable.pipe(
+      map((response) => {
+        return {
+          success: response.body || false,
+          message: response.body
+            ? 'La fecha límite no ha sido superada.'
+            : 'La fecha límite ha sido superada.',
+          statusCode: response.status,
+        };
+      }),
+      catchError((error) =>
+        of({
+          success: false,
+          message: 'Error al verificar la fecha límite.',
+          statusCode: error.status || 500,
+        }),
+      ),
+    );
+  }
+
   obtenerDetallesParaCotizar(): Observable<ReturnSearchResponse> {
     const observable = this.http.get<DetallePresupuesto[]>(
       `${this.API_URL}/detalles/${this.presupuestoId()}/cotizar`,
@@ -248,5 +279,32 @@ export class PresupuestoServicio {
 
   alterarPaginaDetallesPresupuesto(numero: number) {
     return this.obtenerPresupuestosDetallesPorPagina(numero);
+  }
+  rechazarPresupuesto(IdPresupuesto: number): Observable<ReturnResultResponse> {
+    const observable = this.http.post<boolean>(
+      `${this.API_URL}/rechazar/${IdPresupuesto}`,
+      {},
+      {
+        observe: 'response',
+      },
+    );
+    return observable.pipe(
+      map((response) => {
+        return {
+          success: response.body || false,
+          message: response.body
+            ? 'Presupuesto rechazado con exito.'
+            : 'Error al rechazar presupuesto.',
+          statusCode: response.status,
+        };
+      }),
+      catchError((error) =>
+        of({
+          success: false,
+          message: 'Error al rechazar presupuesto.',
+          statusCode: error.status || 500,
+        }),
+      ),
+    );
   }
 }
