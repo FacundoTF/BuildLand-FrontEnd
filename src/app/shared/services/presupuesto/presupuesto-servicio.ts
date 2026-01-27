@@ -86,7 +86,7 @@ export class PresupuestoServicio {
     return detalles.map((p: DetallePresupuesto) => {
       return new DetallePresupuesto(
         p.id,
-        p.producto,
+        p.productoMarca,
         p.cantidad,
         p.presupuesto,
       );

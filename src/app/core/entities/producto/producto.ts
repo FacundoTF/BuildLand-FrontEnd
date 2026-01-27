@@ -6,6 +6,5 @@ export class Producto {
     public id: number | null,
     public nombre: string,
     public categoria: Categoria | null,
-    public marca: Marca,
   ) {}
 }

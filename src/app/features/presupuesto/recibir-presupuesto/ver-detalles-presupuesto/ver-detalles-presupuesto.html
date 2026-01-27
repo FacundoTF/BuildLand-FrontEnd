@@ -9,12 +9,14 @@
       @for (detalle of detalles(); track detalle.id) {
         <mat-card>
           <mat-card-header>
-            <mat-card-title>{{ detalle.producto.nombre }}</mat-card-title>
+            <mat-card-title>{{
+              detalle.productoMarca.producto.nombre
+            }}</mat-card-title>
           </mat-card-header>
           <mat-card-content>
             <p>
               <strong>Marca:</strong>
-              {{ detalle.producto.marca.nombre || "N/A" }}
+              {{ detalle.productoMarca.marca.nombre || "N/A" }}
             </p>
             <p><strong>Cantidad:</strong> {{ detalle.cantidad }}</p>
           </mat-card-content>

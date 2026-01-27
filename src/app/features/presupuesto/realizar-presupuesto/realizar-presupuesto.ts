@@ -26,6 +26,7 @@ import { DetallePresupuesto } from '../../../core/entities/detalle-presupuesto/d
 import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
 import { DialogService } from '../../../shared/services/dialog.service';
 import { ReturnSearchResponse } from '../../../core/response-type/return-search-response';
+import { ProductoMarca } from '../../../core/entities/producto-marca';
 
 interface PresupuestoItem {
   producto: string;
@@ -146,10 +147,8 @@ export class RealizarPresupuesto implements OnInit {
       detallesPresupuesto.push(
         new DetallePresupuesto(
           -1,
-          new Producto(
-            null,
-            item.producto,
-            null,
+          new ProductoMarca(
+            new Producto(null, item.producto, null),
             new Marca(null, item.marca, null),
           ),
           item.cantidad,

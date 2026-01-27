@@ -21,6 +21,7 @@ import { CotizacionServicio } from '../../../shared/services/cotizacion/cotizaci
 import { Producto } from '../../../core/entities/producto/producto';
 import { Marca } from '../../../core/entities/marca/marca';
 import { MatInput } from '@angular/material/input';
+import { ProductoMarca } from '../../../core/entities/producto-marca';
 
 interface FilaCotizacion {
   id: number;
@@ -60,9 +61,9 @@ export class RealizarCotizacion implements OnInit {
     const detallesData = this.detalles().payload as DetallePresupuesto[];
     const filasIniciales: FilaCotizacion[] = detallesData.map((detalle) => ({
       id: detalle.id,
-      productoNombre: detalle.producto.nombre,
+      productoNombre: detalle.productoMarca.producto.nombre,
       cantidad: detalle.cantidad,
-      marcaNombre: detalle.producto.marca?.nombre || 'N/A',
+      marcaNombre: detalle.productoMarca.marca.nombre || 'N/A',
       importe: null,
       bloqueado: false,
     }));
@@ -157,15 +158,12 @@ export class RealizarCotizacion implements OnInit {
       .enviarCotizacion(
         detallesCotizacion.map((detalle) => ({
           idDetalleCotizacion: detalle.idDetallePresupuesto,
-          producto: new Producto(
-            null,
-            detalle.productoNombre,
-            null,
+          productoMarca: new ProductoMarca(
+            new Producto(null, detalle.productoNombre, null),
             new Marca(null, detalle.productoMarca, null),
           ),
           importe: detalle.importe || 0,
           cotizacion: null as any, // Aquí se debería mapear correctamente la cotización
-          marca: new Marca(null, detalle.productoMarca, null), // Aquí se debería mapear correctamente la marca
         })),
       )
       .subscribe({

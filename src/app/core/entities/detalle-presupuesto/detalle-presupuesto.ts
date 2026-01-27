@@ -1,11 +1,10 @@
-import { Marca } from '../marca/marca';
 import { Presupuesto } from '../presupuesto/presupuesto';
-import { Producto } from '../producto/producto';
+import { ProductoMarca } from '../producto-marca';
 
 export class DetallePresupuesto {
   constructor(
     public id: number,
-    public producto: Producto,
+    public productoMarca: ProductoMarca,
     public cantidad: number,
     public presupuesto: Presupuesto | null,
   ) {}
