@@ -146,7 +146,7 @@ export class RealizarPresupuesto implements OnInit {
     items.forEach((item) => {
       detallesPresupuesto.push(
         new DetallePresupuesto(
-          -1,
+          null as any,
           new ProductoMarca(
             new Producto(null, item.producto, null),
             new Marca(null, item.marca, null),
