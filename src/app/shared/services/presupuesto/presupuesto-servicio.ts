@@ -85,7 +85,7 @@ export class PresupuestoServicio {
   ): DetallePresupuesto[] {
     return detalles.map((p: DetallePresupuesto) => {
       return new DetallePresupuesto(
-        p.id,
+        p.idDetallePresupuesto,
         p.productoMarca,
         p.cantidad,
         p.presupuesto,
@@ -233,7 +233,7 @@ export class PresupuestoServicio {
           success: true,
           message: 'Detalles de presupuesto obtenidos con éxito.',
           statusCode: response.status,
-          payload: detallesMapeados,
+          payload: detallesRaw?.payload as DetallePresupuesto[],
           hasPrevious: detallesRaw!.hasPrevious,
           hasNext: detallesRaw!.hasNext,
         };
@@ -263,7 +263,7 @@ export class PresupuestoServicio {
           success: true,
           message: 'Detalles de presupuesto obtenidos con éxito.',
           statusCode: response.status,
-          payload: detallesMapeados,
+          payload: detalles,
         };
       }),
       catchError((error) =>

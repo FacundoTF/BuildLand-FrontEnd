@@ -6,7 +6,7 @@
     </button>
     <div id="card-container">
       <!-- Cards para cada detalle del presupuesto -->
-      @for (detalle of detalles(); track detalle.id) {
+      @for (detalle of detalles(); track detalle.idDetallePresupuesto) {
         <mat-card>
           <mat-card-header>
             <mat-card-title>{{

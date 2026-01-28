@@ -3,7 +3,7 @@ import { ProductoMarca } from '../producto-marca';
 
 export class DetallePresupuesto {
   constructor(
-    public id: number,
+    public idDetallePresupuesto: number,
     public productoMarca: ProductoMarca,
     public cantidad: number,
     public presupuesto: Presupuesto | null,
