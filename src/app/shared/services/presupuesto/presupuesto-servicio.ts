@@ -291,10 +291,8 @@ export class PresupuestoServicio {
     return observable.pipe(
       map((response) => {
         return {
-          success: response.body || false,
-          message: response.body
-            ? 'Presupuesto rechazado con exito.'
-            : 'Error al rechazar presupuesto.',
+          success: response.status === 200,
+          message: 'Presupuesto rechazado con exito.',
           statusCode: response.status,
         };
       }),

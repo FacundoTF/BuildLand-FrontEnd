@@ -130,7 +130,25 @@ export class RecibirPresupuesto implements OnInit {
   }
   rechazarPresupuesto(IdPresupuesto: number): void {
     this.presupuestoService.rechazarPresupuesto(IdPresupuesto).subscribe({
-      next: () => {
+      next: (response) => {
+        if (!response.success) {
+          if (response.statusCode === 403) {
+            this.dialog
+              .showMessage(
+                'Error',
+                'No puede rechazar un presupuesto que ya cotizó.',
+              )
+              .subscribe();
+            return;
+          }
+          this.dialog
+            .showMessage(
+              'Error',
+              'Hubo un error al rechazar el presupuesto. Intente nuevamente.',
+            )
+            .subscribe();
+          return;
+        }
         this.dialog
           .showMessage('Éxito', 'Presupuesto rechazado correctamente.')
           .subscribe(() => {
