@@ -6,8 +6,6 @@ import {
   signal,
   OnInit,
   computed,
-  viewChildren,
-  ElementRef,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
@@ -24,10 +22,8 @@ import { MatInput } from '@angular/material/input';
 import { ProductoMarca } from '../../../core/entities/producto-marca';
 
 interface FilaCotizacion {
-  id: number;
-  productoNombre: string;
-  cantidad: number;
-  marcaNombre: string;
+  idDetallePresupuesto: number;
+  detalle: ProductoMarca;
   importe: number | null;
   bloqueado: boolean;
 }
@@ -47,7 +43,8 @@ export class RealizarCotizacion implements OnInit {
 
   detalles = input.required<ReturnSearchResponse>();
 
-  importeInputs = viewChildren<ElementRef<HTMLInputElement>>('importeInput');
+  // Guarda los valores temporales de los inputs por id de detalle
+  private importesEdicion: { [key: number]: number } = {};
 
   filas = signal<FilaCotizacion[]>([]);
   columnas = ['producto', 'cantidad', 'marca', 'importe', 'guardar'];
@@ -60,10 +57,9 @@ export class RealizarCotizacion implements OnInit {
   ngOnInit(): void {
     const detallesData = this.detalles().payload as DetallePresupuesto[];
     const filasIniciales: FilaCotizacion[] = detallesData.map((detalle) => ({
-      id: detalle.id,
-      productoNombre: detalle.productoMarca.producto.nombre,
+      idDetallePresupuesto: detalle.idDetallePresupuesto,
+      detalle: detalle.productoMarca,
       cantidad: detalle.cantidad,
-      marcaNombre: detalle.productoMarca.marca.nombre || 'N/A',
       importe: null,
       bloqueado: false,
     }));
@@ -82,14 +78,23 @@ export class RealizarCotizacion implements OnInit {
       );
   }
 
-  toggleBloqueoFila(
-    fila: FilaCotizacion,
-    inputRef: ElementRef<HTMLInputElement> | undefined,
-  ): void {
-    if (!fila.bloqueado) {
-      const valorInput = inputRef?.nativeElement?.valueAsNumber;
+  actualizarImporte(id: number, event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    this.importesEdicion[id] = inputElement.valueAsNumber;
+  }
 
-      if (valorInput === undefined || isNaN(valorInput) || valorInput <= 0) {
+  toggleBloqueoFila(fila: FilaCotizacion): void {
+    if (!fila.bloqueado) {
+      // Priorizamos el valor editado, si no existe usamos el que ya tenía la fila
+      const valorInput =
+        this.importesEdicion[fila.idDetallePresupuesto] ?? fila.importe;
+
+      if (
+        valorInput === undefined ||
+        valorInput === null ||
+        isNaN(valorInput) ||
+        valorInput <= 0
+      ) {
         this.dialog
           .showMessage(
             'Error',
@@ -101,12 +106,18 @@ export class RealizarCotizacion implements OnInit {
 
       this.filas.update((filas) =>
         filas.map((f) =>
-          f.id === fila.id ? { ...f, importe: valorInput, bloqueado: true } : f,
+          f.idDetallePresupuesto === fila.idDetallePresupuesto
+            ? { ...f, importe: valorInput, bloqueado: true }
+            : f,
         ),
       );
     } else {
       this.filas.update((filas) =>
-        filas.map((f) => (f.id === fila.id ? { ...f, bloqueado: false } : f)),
+        filas.map((f) =>
+          f.idDetallePresupuesto === fila.idDetallePresupuesto
+            ? { ...f, bloqueado: false }
+            : f,
+        ),
       );
     }
   }
@@ -126,10 +137,10 @@ export class RealizarCotizacion implements OnInit {
     }
 
     const detallesCotizacion = filasActuales.map((fila) => ({
-      idDetallePresupuesto: fila.id,
+      idDetallePresupuesto: fila.idDetallePresupuesto,
       importe: fila.importe,
-      productoNombre: fila.productoNombre,
-      productoMarca: fila.marcaNombre,
+      productoNombre: fila.detalle.producto.nombre,
+      productoMarca: fila.detalle.marca.nombre,
     }));
 
     this.dialog
@@ -157,7 +168,7 @@ export class RealizarCotizacion implements OnInit {
     this.cotizacionServicio
       .enviarCotizacion(
         detallesCotizacion.map((detalle) => ({
-          idDetalleCotizacion: detalle.idDetallePresupuesto,
+          idDetalleCotizacion: undefined as any,
           productoMarca: new ProductoMarca(
             new Producto(null, detalle.productoNombre, null),
             new Marca(null, detalle.productoMarca, null),
