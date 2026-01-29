@@ -93,6 +93,15 @@
       Presupuestos pendientes
     </button>
   </div>
+  <div id="Reportes">
+    <button
+      mat-button="filled"
+      id="X-P"
+      (click)="ReporteProductosMasSolicitados()"
+      class="OpcionNoPlegable sidebar-btn"
+      [class.active]="activeButton() === 'X-P'"
+    ></button>
+  </div>
   <div class="Gestion">
     <button
       matButton="filled"

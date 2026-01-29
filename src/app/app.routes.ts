@@ -23,6 +23,7 @@ import { RecibirPresupuesto } from './features/presupuesto/recibir-presupuesto/r
 import { VerDetallesPresupuesto } from './features/presupuesto/recibir-presupuesto/ver-detalles-presupuesto/ver-detalles-presupuesto';
 import { RealizarCotizacion } from './features/cotizacion/realizar-cotizacion/realizar-cotizacion';
 import { RecibirCotizacion } from './features/cotizacion/recibir-cotizacion/recibir-cotizacion';
+import { ProductosSolicitados } from './features/reportes/productos-solicitados/productos-solicitados';
 
 export const routes: Routes = [
   { path: '', component: Home, pathMatch: 'full' },
@@ -97,6 +98,10 @@ export const routes: Routes = [
         resolve: {
           cotizacionesData: cotizacionesResolver,
         },
+      },
+      {
+        path: 'reporte/productos-mas-solicitados',
+        component: ProductosSolicitados,
       },
     ],
   },

@@ -144,6 +144,16 @@ export class SideBar implements OnInit {
         .subscribe();
     });
   }
+  ReporteProductosMasSolicitados() {
+    this.setActiveButton('X-P');
+    this.router
+      .navigate(['base-page/reporte/productos-mas-solicitados'])
+      .catch(() => {
+        this.dialogService
+          .showMessage('Error', 'Hubo un error al entrar en esta página')
+          .subscribe();
+      });
+  }
   CerrarSesion() {
     this.usuarioServicio.cerrarSesion();
   }
