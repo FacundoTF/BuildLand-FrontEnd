@@ -45,3 +45,9 @@ export const cotizacionesResolver: ResolveFn<ReturnPaginationResponse> = (
     parseInt(idPresupuestoString),
   );
 };
+
+export const categoriasDistribuidoraResolver: ResolveFn<
+  ReturnSearchResponse
+> = () => {
+  return inject(CategoriaService).traerCategoriasDeDistribuidora();
+};

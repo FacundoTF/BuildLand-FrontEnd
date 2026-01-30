@@ -18,6 +18,7 @@ import {
   presupuestoDetallesCotizarResolver,
   cotizacionesResolver,
   presupuestoResolver,
+  categoriasDistribuidoraResolver,
 } from './data-resolvers';
 import { RecibirPresupuesto } from './features/presupuesto/recibir-presupuesto/recibir-presupuesto';
 import { VerDetallesPresupuesto } from './features/presupuesto/recibir-presupuesto/ver-detalles-presupuesto/ver-detalles-presupuesto';
@@ -102,6 +103,9 @@ export const routes: Routes = [
       {
         path: 'reporte/productos-mas-solicitados',
         component: ProductosSolicitados,
+        resolve: {
+          categoriasData: categoriasDistribuidoraResolver,
+        },
       },
     ],
   },
