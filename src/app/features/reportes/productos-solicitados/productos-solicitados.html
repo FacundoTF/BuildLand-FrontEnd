@@ -1,1 +1,165 @@
-<canvas id="cuadro"></canvas>
+<div class="container">
+  <div class="header">
+    <button
+      mat-raised-button
+      color="warn"
+      [disabled]="!resetEnabled()"
+      (click)="resetear()"
+    >
+      Resetear Formulario
+    </button>
+  </div>
+
+  <div class="fase-container">
+    <h3>1) Elegir Categoría</h3>
+    <mat-radio-group
+      [ngModel]="categoriaSeleccionada()"
+      (ngModelChange)="categoriaSeleccionada.set($event)"
+      [disabled]="fase1Confirmada()"
+      class="radio-group"
+    >
+      @for (cat of categorias(); track cat.nombre) {
+        <mat-radio-button [value]="cat">{{ cat.nombre }}</mat-radio-button>
+      }
+    </mat-radio-group>
+
+    @if (!fase1Confirmada()) {
+      <div class="actions">
+        <button mat-flat-button color="primary" (click)="confirmarFase1()">
+          Confirmar
+        </button>
+      </div>
+    }
+  </div>
+
+  @if (fase1Confirmada()) {
+    <div class="fase-container">
+      <h3>2) Elegir Tipo de Reporte</h3>
+      <mat-radio-group
+        [ngModel]="tipoReporte()"
+        (ngModelChange)="cambioTipoReporte($event)"
+        [disabled]="fase2Confirmada()"
+        class="radio-group"
+      >
+        <mat-radio-button value="general">General</mat-radio-button>
+        <mat-radio-button value="marca">Por Marca</mat-radio-button>
+        <mat-radio-button value="producto">Por Producto</mat-radio-button>
+      </mat-radio-group>
+
+      @if (tipoReporte() === "marca") {
+        <div class="sub-selection">
+          <mat-form-field appearance="fill">
+            <mat-label>Seleccione Marca</mat-label>
+            <mat-select
+              [ngModel]="marcaSeleccionada()"
+              (selectionChange)="onMarcaSeleccionada($event.value)"
+              [disabled]="fase2Confirmada()"
+            >
+              @for (m of marcas(); track m.id) {
+                <mat-option [value]="m">{{ m.nombre }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Seleccione Producto</mat-label>
+            <mat-select
+              [ngModel]="productoSeleccionado()"
+              (selectionChange)="productoSeleccionado.set($event.value)"
+              [disabled]="fase2Confirmada()"
+            >
+              @for (p of productos(); track p.id) {
+                <mat-option [value]="p">{{ p.nombre }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+      }
+
+      @if (tipoReporte() === "producto") {
+        <div class="sub-selection">
+          <mat-form-field appearance="fill">
+            <mat-label>Seleccione Producto</mat-label>
+            <mat-select
+              [ngModel]="productoSeleccionado()"
+              (selectionChange)="onProductoSeleccionado($event.value)"
+              [disabled]="fase2Confirmada()"
+            >
+              @for (p of productos(); track p.id) {
+                <mat-option [value]="p">{{ p.nombre }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Seleccione Marca</mat-label>
+            <mat-select
+              [ngModel]="marcaSeleccionada()"
+              (selectionChange)="marcaSeleccionada.set($event.value)"
+              [disabled]="fase2Confirmada()"
+            >
+              @for (m of marcas(); track m.id) {
+                <mat-option [value]="m">{{ m.nombre }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+      }
+
+      @if (!fase2Confirmada()) {
+        <div class="actions">
+          <button mat-flat-button color="primary" (click)="confirmarFase2()">
+            Confirmar
+          </button>
+        </div>
+      }
+    </div>
+  }
+
+  @if (fase2Confirmada()) {
+    <div class="fase-container">
+      <h3>3) Periodo del Reporte</h3>
+      <mat-form-field appearance="fill">
+        <mat-label>Ingrese un rango de fechas</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+          <input
+            matStartDate
+            placeholder="Fecha Inicio"
+            [ngModel]="fechaInicio()"
+            (dateChange)="fechaInicio.set($event.value)"
+            [disabled]="fase3Confirmada()"
+          />
+          <input
+            matEndDate
+            placeholder="Fecha Fin"
+            [ngModel]="fechaFin()"
+            (dateChange)="fechaFin.set($event.value)"
+            [disabled]="fase3Confirmada()"
+          />
+        </mat-date-range-input>
+        <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker"
+          [disabled]="fase3Confirmada()"
+        ></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+      </mat-form-field>
+
+      @if (!fase3Confirmada()) {
+        <div class="actions">
+          <button mat-flat-button color="primary" (click)="confirmarFase3()">
+            Confirmar
+          </button>
+        </div>
+      }
+    </div>
+  }
+
+  @if (fase3Confirmada()) {
+    <div class="fase-container">
+      <h3>4) Resultado (Gráficos)</h3>
+      <canvas id="chartCanvas"></canvas>
+    </div>
+  }
+</div>
