@@ -9,6 +9,7 @@ import { Cotizacion } from '../entities/cotizacion/cotizacion';
 import { DetalleCotizacion } from '../entities/detalle-cotizacion/detalle-cotizacion';
 import { ResultadoCotizacion } from '../entities/cotizacion/resultado-cotizacion';
 import { Usuario } from '../entities/usuario/usuario';
+import { ReporteProductosSolicitados } from '../entities/reporte/productosSolicitados/reporte-productos-solicitados';
 
 type NullOrUndefined = null | undefined;
 
@@ -33,5 +34,6 @@ export interface ReturnSearchResponse extends ReturnResultResponse {
     | ResultadoCotizacion
     | ResultadoCotizacion[]
     | Usuario
+    | ReporteProductosSolicitados[]
     | NullOrUndefined;
 }

@@ -60,19 +60,6 @@
               }
             </mat-select>
           </mat-form-field>
-
-          <mat-form-field appearance="fill">
-            <mat-label>Seleccione Producto</mat-label>
-            <mat-select
-              [ngModel]="productoSeleccionado()"
-              (selectionChange)="productoSeleccionado.set($event.value)"
-              [disabled]="fase2Confirmada()"
-            >
-              @for (p of productos(); track p.id) {
-                <mat-option [value]="p">{{ p.nombre }}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
         </div>
       }
 
@@ -87,19 +74,6 @@
             >
               @for (p of productos(); track p.id) {
                 <mat-option [value]="p">{{ p.nombre }}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-
-          <mat-form-field appearance="fill">
-            <mat-label>Seleccione Marca</mat-label>
-            <mat-select
-              [ngModel]="marcaSeleccionada()"
-              (selectionChange)="marcaSeleccionada.set($event.value)"
-              [disabled]="fase2Confirmada()"
-            >
-              @for (m of marcas(); track m.id) {
-                <mat-option [value]="m">{{ m.nombre }}</mat-option>
               }
             </mat-select>
           </mat-form-field>
@@ -158,7 +132,7 @@
 
   @if (fase3Confirmada()) {
     <div class="fase-container">
-      <h3>4) Resultado (Gráficos)</h3>
+      <h3>4) Resultado</h3>
       <canvas id="chartCanvas"></canvas>
     </div>
   }

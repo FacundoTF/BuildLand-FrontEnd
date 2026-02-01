@@ -15,7 +15,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { CategoriaService } from '../../../shared/services/categoria/categoria-service';
+import { ReporteService } from '../../../shared/services/reporte/reporte';
 import { ProductoService } from '../../../shared/services/producto/producto-service';
 import { MarcaService } from '../../../shared/services/marca/marca-service';
 import { DialogService } from '../../../shared/services/dialog.service';
@@ -25,6 +25,7 @@ import { Marca } from '../../../core/entities/marca/marca';
 
 import * as chartjs from 'chart.js';
 import { ReturnSearchResponse } from '../../../core/response-type/return-search-response';
+import { ReporteProductosSolicitados } from '../../../core/entities/reporte/productosSolicitados/reporte-productos-solicitados';
 
 chartjs.Chart.register(...chartjs.registerables);
 @Component({
@@ -47,10 +48,10 @@ chartjs.Chart.register(...chartjs.registerables);
   providers: [],
 })
 export class ProductosSolicitados implements OnInit {
-  private categoriaService = inject(CategoriaService);
   private productoService = inject(ProductoService);
   private marcaService = inject(MarcaService);
   private dialogService = inject(DialogService);
+  private reporteService = inject(ReporteService);
 
   // Fases
   faseActual = signal<number>(1);
@@ -148,28 +149,10 @@ export class ProductosSolicitados implements OnInit {
 
   async onMarcaSeleccionada(marca: Marca) {
     this.marcaSeleccionada.set(marca);
-    if (this.tipoReporte() === 'marca') {
-      // Relevar productos de la categoría (ya tenemos la categoría) y marca elegida.
-      // Dado que no hay endpoint para filtrar por marca, traemos todos de la categoría.
-      const categoria = this.categoriaSeleccionada()!;
-      const response =
-        await this.productoService.traerProductosPorCategoria(categoria);
-      if (response.success) {
-        this.productos.set(response.payload as Producto[]);
-        // Aquí filtraríamos si tuviéramos la relación en el frontend
-      }
-    }
   }
 
   async onProductoSeleccionado(producto: Producto) {
     this.productoSeleccionado.set(producto);
-    if (this.tipoReporte() === 'producto') {
-      // Relevar marcas de la categoría y producto elegido.
-      const categoria = this.categoriaSeleccionada()!;
-      const marcas = await this.marcaService.traerMarcas(categoria);
-      this.marcas.set(marcas);
-      // Filtrado omitido por falta de relación explícita
-    }
   }
 
   async confirmarFase2() {
@@ -187,13 +170,6 @@ export class ProductosSolicitados implements OnInit {
         this.dialogService.showMessage('Error', 'Debe seleccionar una marca.');
         return;
       }
-      if (!this.productoSeleccionado()) {
-        this.dialogService.showMessage(
-          'Error',
-          'Debe seleccionar un producto.',
-        );
-        return;
-      }
     }
 
     if (tipo === 'producto') {
@@ -202,10 +178,6 @@ export class ProductosSolicitados implements OnInit {
           'Error',
           'Debe seleccionar un producto.',
         );
-        return;
-      }
-      if (!this.marcaSeleccionada()) {
-        this.dialogService.showMessage('Error', 'Debe seleccionar una marca.');
         return;
       }
     }
@@ -233,7 +205,7 @@ export class ProductosSolicitados implements OnInit {
 
     this.fase3Confirmada.set(true);
     this.faseActual.set(4);
-    this.generarGrafico();
+    this.realizarFase4();
   }
 
   resetear() {
@@ -254,40 +226,221 @@ export class ProductosSolicitados implements OnInit {
     // Remove chart if exists (not implemented logic but clearing state)
   }
 
-  generarGrafico() {
-    console.log('Generando gráfico con:', {
-      categoria: this.categoriaSeleccionada(),
-      tipo: this.tipoReporte(),
-      marca: this.marcaSeleccionada(),
-      producto: this.productoSeleccionado(),
-      inicio: this.fechaInicio(),
-      fin: this.fechaFin(),
-    });
+  realizarFase4() {
+    const categoriaElegida = this.categoriaSeleccionada();
+    const fechaInicioElegida = this.fechaInicio();
+    const fechaFinElegida = this.fechaFin();
+    const tipoReporteElegido = this.tipoReporte();
+    if (!categoriaElegida) {
+      this.dialogService.showMessage(
+        'Error',
+        'Categoría no seleccionada para generar el gráfico.',
+      );
+      return;
+    }
+    if (!fechaFinElegida) {
+      this.dialogService.showMessage(
+        'Error',
+        'Fecha fin no seleccionada para generar el gráfico.',
+      );
+      return;
+    }
+    if (!fechaInicioElegida) {
+      this.dialogService.showMessage(
+        'Error',
+        'Fecha inicio no seleccionada para generar el gráfico.',
+      );
+      return;
+    }
+    if (tipoReporteElegido === 'general') {
+      this.realizarReporteGeneral(
+        categoriaElegida,
+        fechaInicioElegida,
+        fechaFinElegida,
+      );
+    } else if (tipoReporteElegido === 'producto') {
+      const productoElegido = this.productoSeleccionado();
+      if (!productoElegido) {
+        this.dialogService.showMessage(
+          'Error',
+          'Producto no seleccionado para generar el gráfico.',
+        );
+        return;
+      }
+      this.realizarReporteProducto(
+        categoriaElegida,
+        fechaInicioElegida,
+        fechaFinElegida,
+        productoElegido,
+      );
+    } else if (tipoReporteElegido === 'marca') {
+      const marcaElegida = this.marcaSeleccionada();
+      if (!marcaElegida) {
+        this.dialogService.showMessage(
+          'Error',
+          'Marca no seleccionada para generar el gráfico.',
+        );
+        return;
+      }
+      this.realizarReporteMarca(
+        categoriaElegida,
+        fechaInicioElegida,
+        fechaFinElegida,
+        marcaElegida,
+      );
+    } else {
+      this.dialogService.showMessage(
+        'Error',
+        'Tipo de reporte no seleccionado para generar el gráfico.',
+      );
+      return;
+    }
+  }
 
-    // Ejemplo básico de inicialización de Chart.js
+  realizarReporteGeneral(
+    categoriaElegida: Categoria,
+    fechaInicioElegida: Date,
+    fechaFinElegida: Date,
+  ) {
+    const resultado = this.reporteService.productosSolicitadosGeneral(
+      categoriaElegida,
+      fechaInicioElegida,
+      fechaFinElegida,
+    );
+    resultado.subscribe((data) => {
+      if (!data.success) {
+        this.dialogService.showMessage(
+          'Error',
+          'Error al obtener datos para el gráfico: ' + data.message,
+        );
+        return;
+      }
+      if ((data.payload as ReporteProductosSolicitados[]).length === 0) {
+        this.dialogService.showMessage(
+          'Aviso',
+          'No se encontraron datos para el gráfico en el rango de fechas seleccionado.',
+        );
+        this.resetear();
+        return;
+      }
+      const reporteData = data.payload as ReporteProductosSolicitados[];
+      this.generarGrafico(reporteData);
+    });
+  }
+
+  realizarReporteMarca(
+    categoriaElegida: Categoria,
+    fechaInicioElegida: Date,
+    fechaFinElegida: Date,
+    marca: Marca,
+  ) {
+    const resultado = this.reporteService.productosSolicitadosMarca(
+      categoriaElegida,
+      fechaInicioElegida,
+      fechaFinElegida,
+      marca,
+    );
+    resultado.subscribe((data) => {
+      if (!data.success) {
+        this.dialogService.showMessage(
+          'Error',
+          'Error al obtener datos para el gráfico: ' + data.message,
+        );
+        return;
+      }
+      if ((data.payload as ReporteProductosSolicitados[]).length === 0) {
+        this.dialogService.showMessage(
+          'Aviso',
+          'No se encontraron datos para el gráfico en el rango de fechas seleccionado. Intente con otra marca o rango de fechas.',
+        );
+        this.resetear();
+        return;
+      }
+      const reporteData = data.payload as ReporteProductosSolicitados[];
+      this.generarGrafico(reporteData);
+    });
+  }
+
+  realizarReporteProducto(
+    categoriaElegida: Categoria,
+    fechaInicioElegida: Date,
+    fechaFinElegida: Date,
+    producto: Producto,
+  ) {
+    const resultado = this.reporteService.productosSolicitadosProducto(
+      categoriaElegida,
+      fechaInicioElegida,
+      fechaFinElegida,
+      producto,
+    );
+    resultado.subscribe((data) => {
+      if (!data.success) {
+        this.dialogService.showMessage(
+          'Error',
+          'Error al obtener datos para el gráfico: ' + data.message,
+        );
+        return;
+      }
+      if ((data.payload as ReporteProductosSolicitados[]).length === 0) {
+        this.dialogService.showMessage(
+          'Aviso',
+          'No se encontraron datos para el gráfico en el rango de fechas seleccionado. Intente con otro producto o rango de fechas.',
+        );
+        this.resetear();
+        return;
+      }
+      const reporteData = data.payload as ReporteProductosSolicitados[];
+      this.generarGrafico(reporteData);
+    });
+  }
+
+  procesarDatosParaGrafico(datos: ReporteProductosSolicitados[]) {
+    const labelsProductos = datos.map((dato) => {
+      if (this.tipoReporte() === 'general') {
+        return `${dato.producto} - ${dato.marca}`;
+      } else if (this.tipoReporte() === 'producto') {
+        return `${dato.marca}`;
+      } else if (this.tipoReporte() === 'marca') {
+        return `${dato.producto}`;
+      } else {
+        return '';
+      }
+    });
+    const porcentajes = datos.map((dato) => {
+      return dato.porcentaje;
+    });
+    const porcentajeTotal = porcentajes.reduce((acc, val) => acc + val, 0);
+
+    if (!(porcentajeTotal === 100)) {
+      labelsProductos.push('Otros');
+      const otrosPorcentaje = 100 - porcentajeTotal;
+      porcentajes.push(otrosPorcentaje);
+    }
+
+    return { labelsProductos, porcentajes };
+  }
+
+  generarGrafico(datos: ReporteProductosSolicitados[]) {
+    const datosProcesados = this.procesarDatosParaGrafico(datos);
+    const labelsProductos = datosProcesados.labelsProductos;
+    const porcentajes = datosProcesados.porcentajes;
+
     setTimeout(() => {
       const canvas = document.getElementById(
         'chartCanvas',
       ) as HTMLCanvasElement;
       if (canvas) {
         new chartjs.Chart(canvas, {
-          type: 'bar',
+          type: 'pie',
           data: {
-            labels: ['Enero', 'Febrero', 'Marzo'],
+            labels: [...labelsProductos],
             datasets: [
               {
-                label: 'Reporte de Productos',
-                data: [12, 19, 3],
+                label: 'Porcentaje',
+                data: [...porcentajes],
                 borderWidth: 1,
               },
             ],
-          },
-          options: {
-            scales: {
-              y: {
-                beginAtZero: true,
-              },
-            },
           },
         });
       }
