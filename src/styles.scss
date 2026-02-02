@@ -13,10 +13,8 @@ body {
 
 #content {
   display: flex;
-  justify-content: center;
   flex-direction: column;
   width: 75%;
-  padding: 3rem 0 0 0;
 
   #card-container {
     display: flex;
@@ -482,6 +480,9 @@ button.btn-secondary {
   .edit-container,
   .delete-container {
     padding: 40px;
+  }
+  .container {
+    width: 75vw;
   }
 
   // Layout de dos columnas para campos más pequeños
