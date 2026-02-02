@@ -2,18 +2,14 @@
 //@use '../../../../styles/buildland-colors' as colors;
 @use "../../../../paleta-buildland" as colors;
 
-//:host {
-//  display: block;
-//  width: 100%;
-//  height: auto;
-//}
-
 // Desktop - altura completa
 @media (min-width: 1024px) {
   :host {
     height: 100vh;
     position: sticky;
     top: 0;
+    width: 25vw;
+    background: var(--mat-sys-primary);
   }
 }
 

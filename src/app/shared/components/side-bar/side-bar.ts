@@ -129,7 +129,7 @@ export class SideBar implements OnInit {
     });
   }
   RealizarPresupuesto() {
-    this.setActiveButton('R-Pr');
+    this.setActiveButton('Z-Pr');
     this.router.navigate(['/base-page/presupuesto/realizar']).catch(() => {
       this.dialogService
         .showMessage('Error', 'Hubo un error al entrar en esta página')
@@ -137,7 +137,7 @@ export class SideBar implements OnInit {
     });
   }
   RecibirPresupuesto() {
-    this.setActiveButton('Z-Co');
+    this.setActiveButton('Y-Pr');
     this.router.navigate(['/base-page/presupuesto/recibir']).catch(() => {
       this.dialogService
         .showMessage('Error', 'Hubo un error al entrar en esta página')
@@ -145,7 +145,7 @@ export class SideBar implements OnInit {
     });
   }
   ReporteProductosMasSolicitados() {
-    this.setActiveButton('X-P');
+    this.setActiveButton('P-X');
     this.router
       .navigate(['base-page/reporte/productos-mas-solicitados'])
       .catch(() => {

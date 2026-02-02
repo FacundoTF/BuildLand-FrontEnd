@@ -90,17 +90,19 @@
       [class.active]="activeButton() === 'Y-Pr'"
       (click)="RecibirPresupuesto()"
     >
-      Presupuestos pendientes
+      Gestionar presupuestos actuales
     </button>
   </div>
   <div id="G-X" class="Gestion">
     <button
-      mat-button="filled"
-      id="X-P"
+      matButton="filled"
+      id="P-X"
       (click)="ReporteProductosMasSolicitados()"
       class="OpcionNoPlegable sidebar-btn"
-      [class.active]="activeButton() === 'X-P'"
-    ></button>
+      [class.active]="activeButton() === 'P-X'"
+    >
+      Reporte productos más solicitados
+    </button>
   </div>
   <div class="Gestion">
     <button
