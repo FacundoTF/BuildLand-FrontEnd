@@ -118,11 +118,4 @@ export class RecibirCotizacion implements OnInit {
       this.paginationService.lastPage.set(false);
     }
   }
-
-  verDetalles(idCotizacion: number): void {
-    // TODO: Implementar navegación a ver-detalles-cotizacion cuando esté disponible
-    this.dialog
-      .showMessage('Aviso', 'Funcionalidad de ver detalles próximamente.')
-      .subscribe();
-  }
 }
