@@ -11,6 +11,8 @@ import { ResultadoCotizacion } from '../entities/cotizacion/resultado-cotizacion
 import { Usuario } from '../entities/usuario/usuario';
 import { ReporteProductosSolicitados } from '../entities/reporte/productosSolicitados/reporte-productos-solicitados';
 import { MensajeRechazoCotizacion } from '../entities/cotizacion/mensaje-rechazo-cotizacion';
+import { ReporteMensajesCotizacionRechazoGral } from '../entities/reporte/mensajesCotizacionRechazo/reporte-mensajes-cotizacion-rechazo-gral';
+import { ReporteMensajesCotizacionRechazo } from '../entities/reporte/mensajesCotizacionRechazo/reporte-mensajes-cotizacion-rechazo';
 
 type NullOrUndefined = null | undefined;
 
@@ -37,5 +39,7 @@ export interface ReturnSearchResponse extends ReturnResultResponse {
     | Usuario
     | ReporteProductosSolicitados[]
     | MensajeRechazoCotizacion[]
+    | ReporteMensajesCotizacionRechazoGral[]
+    | ReporteMensajesCotizacionRechazo[]
     | NullOrUndefined;
 }
