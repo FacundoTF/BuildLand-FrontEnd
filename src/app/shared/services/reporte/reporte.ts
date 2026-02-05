@@ -7,6 +7,7 @@ import { ReporteProductosSolicitados } from '../../../core/entities/reporte/prod
 import { ReturnSearchResponse } from '../../../core/response-type/return-search-response';
 import { Marca } from '../../../core/entities/marca/marca';
 import { Producto } from '../../../core/entities/producto/producto';
+import { ReporteMensajesCotizacionRechazoGral } from '../../../core/entities/reporte/mensajesCotizacionRechazo/reporte-mensajes-cotizacion-rechazo-gral';
 
 @Injectable({
   providedIn: 'root',
@@ -130,6 +131,58 @@ export class ReporteService {
           statusCode: error.status || 500,
         });
       }),
+    );
+  }
+  mensajesRechazoCotizacion(
+    fechaInicio: Date,
+    fechaFin: Date,
+  ): Observable<ReturnSearchResponse> {
+    const ruta = `${this.API_URL}/cotizaciones-rechazadas-mensajes`;
+    const observable = this.http.post<ReporteMensajesCotizacionRechazoGral[]>(
+      ruta,
+      {
+        fechaInicio: fechaInicio.toISOString(),
+        fechaFin: fechaFin.toISOString(),
+      },
+      {
+        observe: 'response',
+      },
+    );
+    return observable.pipe(
+      map((response) => ({
+        success: response.status === 200,
+        message:
+          response.status === 200
+            ? 'Mensajes de rechazo obtenidos con éxito.'
+            : 'Error al obtener mensajes de rechazo.',
+        statusCode: response.status,
+        payload: this.separarCategoriasMensajeCotizacionRechazada(
+          response.body || [],
+        ),
+      })),
+      catchError((error) => {
+        return of({
+          success: false,
+          message: 'Error al obtener mensajes de rechazo.',
+          statusCode: error.status || 500,
+          payload: [],
+        });
+      }),
+    );
+  }
+  separarCategoriasMensajeCotizacionRechazada(
+    reporte: ReporteMensajesCotizacionRechazoGral[],
+  ) {
+    return reporte.reduce(
+      (acc, curr) => {
+        const categoria = curr.categoria;
+        if (!acc[categoria]) {
+          acc[categoria] = [];
+        }
+        acc[categoria].push(curr);
+        return acc;
+      },
+      {} as Record<string, ReporteMensajesCotizacionRechazoGral[]>,
     );
   }
 }

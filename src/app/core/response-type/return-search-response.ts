@@ -39,7 +39,7 @@ export interface ReturnSearchResponse extends ReturnResultResponse {
     | Usuario
     | ReporteProductosSolicitados[]
     | MensajeRechazoCotizacion[]
-    | ReporteMensajesCotizacionRechazoGral[]
+    | Record<string, ReporteMensajesCotizacionRechazoGral[]>
     | ReporteMensajesCotizacionRechazo[]
     | NullOrUndefined;
 }
