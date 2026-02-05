@@ -21,6 +21,8 @@ import { CotizacionServicio } from '../../../shared/services/cotizacion/cotizaci
 import { ReturnPaginationResponse } from '../../../core/response-type/return-pagination-response';
 import { PaginationService } from '../../../shared/services/pagination-service';
 import { ResultadoCotizacion } from '../../../core/entities/cotizacion/resultado-cotizacion';
+import { RejectionDialog } from '../../../shared/components/rejection-dialog/rejection-dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-recibir-cotizacion',
@@ -41,6 +43,7 @@ import { ResultadoCotizacion } from '../../../core/entities/cotizacion/resultado
 })
 export class RecibirCotizacion implements OnInit {
   dialog = inject(DialogService);
+  matDialog = inject(MatDialog);
   router = inject(Router);
   cotizacionService = inject(CotizacionServicio);
   paginationService = inject(PaginationService);
@@ -59,6 +62,76 @@ export class RecibirCotizacion implements OnInit {
       this.paginationService.lastPage.set(false);
     }
     this.cotizaciones.set(cotizaciones);
+  }
+
+  recargarPagina(): void {
+    this.router.navigate(['/base-page/presupuesto/recibir']).catch(() => {
+      this.dialog
+        .showMessage('Error', 'Hubo un error al entrar en esta página')
+        .subscribe();
+    });
+  }
+
+  rechazarCotizacion(idCotizacion: number): void {
+    this.dialog
+      .showConfirm(
+        'Confirmar Rechazo',
+        '¿Está seguro de que desea rechazar esta cotización?',
+      )
+      .subscribe((confirmado) => {
+        if (confirmado) {
+          const dialogRef = this.matDialog.open(RejectionDialog, {
+            width: '500px',
+          });
+
+          dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+              this.cotizacionService
+                .rechazarCotizacion(idCotizacion, result)
+                .subscribe({
+                  next: (response) => {
+                    if (response.success) {
+                      this.dialog
+                        .showMessage('Éxito', response.message)
+                        .subscribe(() => {
+                          this.recargarPagina();
+                        });
+                    } else {
+                      this.dialog
+                        .showMessage('Error', response.message)
+                        .subscribe();
+                    }
+                  },
+                });
+            }
+          });
+        }
+      });
+  }
+
+  aceptarCotizacion(idCotizacion: number): void {
+    this.dialog
+      .showConfirm(
+        'Confirmar Aceptación',
+        '¿Está seguro de que desea aceptar esta cotización?',
+      )
+      .subscribe((confirmado) => {
+        if (confirmado) {
+          this.cotizacionService.aceptarCotizacion(idCotizacion).subscribe({
+            next: (response) => {
+              if (response.success) {
+                this.dialog
+                  .showMessage('Éxito', response.message)
+                  .subscribe(() => {
+                    this.recargarPagina();
+                  });
+              } else {
+                this.dialog.showMessage('Error', response.message).subscribe();
+              }
+            },
+          });
+        }
+      });
   }
 
   incrementarPagina(numeroPagina: number): void {

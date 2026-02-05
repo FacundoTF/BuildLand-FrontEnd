@@ -8,6 +8,8 @@ import { PresupuestoServicio } from '../presupuesto/presupuesto-servicio';
 import { Cotizacion } from '../../../core/entities/cotizacion/cotizacion';
 import { ResultadoCotizacion } from '../../../core/entities/cotizacion/resultado-cotizacion';
 import { ReturnPaginationResponse } from '../../../core/response-type/return-pagination-response';
+import { ReturnSearchResponse } from '../../../core/response-type/return-search-response';
+import { MensajeRechazoCotizacion } from '../../../core/entities/cotizacion/mensaje-rechazo-cotizacion';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +22,6 @@ export class CotizacionServicio {
   enviarCotizacion(
     detalles: DetalleCotizacion[],
   ): Observable<ReturnResultResponse> {
-    console.log(this.presupuestoServicio.presupuestoId());
     const observable = this.http.post<Cotizacion>(
       `${this.API_URL}/${this.presupuestoServicio.presupuestoId()}`,
       {
@@ -52,6 +53,108 @@ export class CotizacionServicio {
           success: false,
           message,
           statusCode: error.status,
+        });
+      }),
+    );
+  }
+
+  rechazarCotizacion(
+    IdCotizacion: number,
+    mensaje: MensajeRechazoCotizacion,
+  ): Observable<ReturnResultResponse> {
+    const ruta = `${this.API_URL}/rechazar/${IdCotizacion}`;
+    const observable = this.http.post<void>(
+      ruta,
+      { idMensaje: mensaje.idMensaje, mensaje: mensaje.mensaje },
+      {
+        observe: 'response',
+      },
+    );
+    return observable.pipe(
+      map((response) => ({
+        success: response.status === 200,
+        message:
+          response.status === 200
+            ? 'Cotización rechazada con éxito.'
+            : 'Error al rechazar cotización.',
+        statusCode: response.status,
+      })),
+      catchError((error) => {
+        let message = 'Error al rechazar cotización.';
+        if (error.status === 404) {
+          message = 'No puede rechazar una cotización que ya aceptó.';
+        } else if (error.status === 409) {
+          message = 'No puede volver rechazar una cotización que ya rechazó.';
+        } else if (error.status === 401) {
+          message = 'No autorizado para rechazar cotización';
+        }
+        return of({
+          success: false,
+          message,
+          statusCode: error.status,
+        });
+      }),
+    );
+  }
+
+  aceptarCotizacion(IdCotizacion: number): Observable<ReturnResultResponse> {
+    const ruta = `${this.API_URL}/aceptar/${IdCotizacion}`;
+    const observable = this.http.post<Cotizacion>(
+      ruta,
+      {},
+      {
+        observe: 'response',
+      },
+    );
+    return observable.pipe(
+      map((response) => ({
+        success: response.status === 200,
+        message:
+          response.status === 200
+            ? 'Cotización aceptada con éxito.'
+            : 'Error al aceptar cotización.',
+        statusCode: response.status,
+      })),
+      catchError((error) => {
+        let message = 'Error al aceptar cotización.';
+        if (error.status === 404) {
+          message = 'No puede aceptar una cotización que ya rechazó.';
+        } else if (error.status === 409) {
+          message = 'No puede volver a aceptar una cotización que ya aceptó.';
+        } else if (error.status === 401) {
+          message =
+            'No autorizado para aceptar cotización. Cierre de sesión inminente.';
+        }
+        return of({
+          success: false,
+          message,
+          statusCode: error.status,
+        });
+      }),
+    );
+  }
+
+  relevarMensajesRechazo(): Observable<ReturnSearchResponse> {
+    const ruta = `${this.API_URL}/mensajes-rechazo`;
+    const observable = this.http.get<MensajeRechazoCotizacion[]>(ruta, {
+      observe: 'response',
+    });
+    return observable.pipe(
+      map((response) => ({
+        success: response.status === 200,
+        message:
+          response.status === 200
+            ? 'Mensajes de rechazo obtenidos con éxito.'
+            : 'Error al obtener mensajes de rechazo.',
+        statusCode: response.status,
+        payload: response.body || [],
+      })),
+      catchError((error) => {
+        return of({
+          success: false,
+          message: 'Error al obtener mensajes de rechazo.',
+          statusCode: error.status || 500,
+          payload: [],
         });
       }),
     );
