@@ -16,11 +16,6 @@
   .messages-container {
     max-height: 300px;
     overflow-y: auto;
-
-    mat-radio-button {
-      display: block;
-      margin-bottom: 8px;
-    }
   }
 
   .no-messages {
@@ -35,4 +30,9 @@
     gap: 8px;
     margin-top: 16px;
   }
+}
+
+mat-radio-group {
+  display: flex;
+  flex-direction: column;
 }

@@ -40,7 +40,8 @@ export class RejectionDialog implements OnInit {
     this.cotizacionService.relevarMensajesRechazo().subscribe({
       next: (response) => {
         if (response.success) {
-          this.messages.set(response.payload as MensajeRechazoCotizacion[]);
+          const resultado = response.payload as MensajeRechazoCotizacion[];
+          this.messages.set(resultado.reverse());
         }
         this.loading.set(false);
       },
