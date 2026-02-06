@@ -221,4 +221,40 @@ export class ReporteService {
       }),
     );
   }
+  cotizacionesGanadasPerdidas(
+    fechaInicio: Date,
+    fechaFin: Date,
+  ): Observable<ReturnSearchResponse> {
+    const ruta = `${this.API_URL}/cotizaciones-ganadas-perdidas`;
+    const observable = this.http.post<ReporteMensajesCotizacionRechazo[]>(
+      ruta,
+      {
+        fechaInicio: fechaInicio.toISOString(),
+        fechaFin: fechaFin.toISOString(),
+      },
+      {
+        observe: 'response',
+      },
+    );
+    return observable.pipe(
+      map((response) => ({
+        success: response.status === 200,
+        message:
+          response.status === 200
+            ? 'Reporte de cotizaciones ganadas y perdidas obtenido con éxito.'
+            : 'Error al obtener reporte de cotizaciones ganadas y perdidas.',
+        statusCode: response.status,
+        payload: response.body || [],
+      })),
+      catchError((error) => {
+        return of({
+          success: false,
+          message:
+            'Error al obtener reporte de cotizaciones ganadas y perdidas.',
+          statusCode: error.status || 500,
+          payload: [],
+        });
+      }),
+    );
+  }
 }
