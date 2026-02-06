@@ -8,6 +8,7 @@ import { ReturnSearchResponse } from '../../../core/response-type/return-search-
 import { Marca } from '../../../core/entities/marca/marca';
 import { Producto } from '../../../core/entities/producto/producto';
 import { ReporteMensajesCotizacionRechazoGral } from '../../../core/entities/reporte/mensajesCotizacionRechazo/reporte-mensajes-cotizacion-rechazo-gral';
+import { ReporteMensajesCotizacionRechazo } from '../../../core/entities/reporte/mensajesCotizacionRechazo/reporte-mensajes-cotizacion-rechazo';
 
 @Injectable({
   providedIn: 'root',
@@ -183,6 +184,41 @@ export class ReporteService {
         return acc;
       },
       {} as Record<string, ReporteMensajesCotizacionRechazoGral[]>,
+    );
+  }
+  mensajesRechazoCotizacionGeneral(
+    fechaInicio: Date,
+    fechaFin: Date,
+  ): Observable<ReturnSearchResponse> {
+    const ruta = `${this.API_URL}/cotizaciones-rechazadas-mensajes-general`;
+    const observable = this.http.post<ReporteMensajesCotizacionRechazo[]>(
+      ruta,
+      {
+        fechaInicio: fechaInicio.toISOString(),
+        fechaFin: fechaFin.toISOString(),
+      },
+      {
+        observe: 'response',
+      },
+    );
+    return observable.pipe(
+      map((response) => ({
+        success: response.status === 200,
+        message:
+          response.status === 200
+            ? 'Mensajes de rechazo general obtenidos con éxito.'
+            : 'Error al obtener mensajes de rechazo general.',
+        statusCode: response.status,
+        payload: response.body || [],
+      })),
+      catchError((error) => {
+        return of({
+          success: false,
+          message: 'Error al obtener mensajes de rechazo general.',
+          statusCode: error.status || 500,
+          payload: [],
+        });
+      }),
     );
   }
 }
