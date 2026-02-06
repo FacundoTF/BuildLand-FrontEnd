@@ -25,6 +25,7 @@ import { VerDetallesPresupuesto } from './features/presupuesto/recibir-presupues
 import { RealizarCotizacion } from './features/cotizacion/realizar-cotizacion/realizar-cotizacion';
 import { RecibirCotizacion } from './features/cotizacion/recibir-cotizacion/recibir-cotizacion';
 import { ProductosSolicitados } from './features/reportes/productos-solicitados/productos-solicitados';
+import { CotizacionesPerdidasGanadas } from './features/reportes/cotizaciones-perdidas-ganadas/cotizaciones-perdidas-ganadas';
 
 export const routes: Routes = [
   { path: '', component: Home, pathMatch: 'full' },
@@ -106,6 +107,10 @@ export const routes: Routes = [
         resolve: {
           categoriasData: categoriasDistribuidoraResolver,
         },
+      },
+      {
+        path: 'reporte/cotizaciones-perdidas-ganadas',
+        component: CotizacionesPerdidasGanadas,
       },
     ],
   },
