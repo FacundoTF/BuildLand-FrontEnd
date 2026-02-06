@@ -15,6 +15,7 @@ export class UsuarioServicio {
 
   emailRecuperando = signal('');
   estaAutenticado = signal(false);
+  nombreUsuario = signal('');
 
   enviarCodigoRestauracion = signal(false);
   confirmarNuevaContrasena = signal(false);
@@ -51,6 +52,31 @@ export class UsuarioServicio {
     );
   }
 
+  obtenerNombreUsuario(correo: string) {
+    const response = this.http
+      .get(`${this.API_URL}/usuarios/${correo}`, {
+        responseType: 'text',
+      })
+      .pipe(
+        map((res) => {
+          console.log('Nombre de usuario obtenido');
+          console.log(res);
+          if (res) {
+            return res;
+          } else {
+            return '';
+          }
+        }),
+        catchError((error: Error) => {
+          console.error('Error al obtener nombre de usuario:', error);
+          return throwError(() => error);
+        }),
+      );
+    response.subscribe((res) => {
+      this.nombreUsuario.set(res);
+    });
+  }
+
   iniciarSesion(correo: string, contra: string): Observable<Object | never> {
     return this.http
       .post(`${this.API_URL}/auth/token`, {
@@ -62,6 +88,7 @@ export class UsuarioServicio {
           console.log('Usuario encontrado');
           console.log(res);
           this.estaAutenticado.set(true);
+          this.obtenerNombreUsuario(correo);
           return res;
         }),
         catchError((error: Error) => {

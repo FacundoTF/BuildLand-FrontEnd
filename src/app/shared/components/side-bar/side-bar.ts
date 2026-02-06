@@ -66,6 +66,11 @@ export class SideBar implements OnInit {
       });
     }
   }
+
+  obtenerNombreUsuario() {
+    return this.usuarioServicio.nombreUsuario();
+  }
+
   ToogleGestion(id: string) {
     this.setActiveButton(id);
     console.log(id);
