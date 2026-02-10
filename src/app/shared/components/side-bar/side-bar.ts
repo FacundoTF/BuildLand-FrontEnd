@@ -9,10 +9,11 @@ import { Router } from '@angular/router';
 import { UsuarioServicio } from '../../services/usuario-servicio';
 import { MatButtonModule } from '@angular/material/button';
 import { DialogService } from '../../services/dialog.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-side-bar',
-  imports: [MatButtonModule],
+  imports: [MatButtonModule, MatIconModule],
   templateUrl: './side-bar.html',
   styleUrl: './side-bar.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
