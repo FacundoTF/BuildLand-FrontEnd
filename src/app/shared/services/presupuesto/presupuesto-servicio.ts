@@ -24,7 +24,7 @@ export class PresupuestoServicio {
     presupuesto: Presupuesto,
   ): Promise<ReturnResultResponse> {
     const body = {
-      IdPresupuesto: presupuesto.id,
+      id: null,
       persona: presupuesto.persona,
       categoria: presupuesto.categoria,
       fecha: presupuesto.fecha,
