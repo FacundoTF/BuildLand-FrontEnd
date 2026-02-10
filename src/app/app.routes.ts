@@ -26,6 +26,7 @@ import { RealizarCotizacion } from './features/cotizacion/realizar-cotizacion/re
 import { RecibirCotizacion } from './features/cotizacion/recibir-cotizacion/recibir-cotizacion';
 import { ProductosSolicitados } from './features/reportes/productos-solicitados/productos-solicitados';
 import { CotizacionesPerdidasGanadas } from './features/reportes/cotizaciones-perdidas-ganadas/cotizaciones-perdidas-ganadas';
+import { AgregarUsuario } from './features/usuario/agregar-usuario/agregar-usuario';
 
 export const routes: Routes = [
   { path: '', component: Home, pathMatch: 'full' },
@@ -33,6 +34,11 @@ export const routes: Routes = [
     path: 'base-page',
     component: BasePage,
     children: [
+      // Usuarios
+      {
+        path: 'usuario/agregar',
+        component: AgregarUsuario,
+      },
       // Distribuidoras
       {
         path: 'distribuidora/agregar',

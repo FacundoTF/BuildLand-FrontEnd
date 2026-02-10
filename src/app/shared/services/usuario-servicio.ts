@@ -5,6 +5,29 @@ import { map, catchError, Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { ReturnSearchResponse } from '../../core/response-type/return-search-response';
 import { Usuario } from '../../core/entities/usuario/usuario';
+import { Distribuidora } from '../../core/entities/distribuidora/distribuidora';
+import { Empleado } from '../../core/entities/empleado/empleado';
+import { PersonaFisica } from '../../core/entities/personaFisica/persona-fisica';
+import { Categoria } from '../../core/entities/categoria/categoria';
+import { TipoUsuario } from '../../core/entities/usuario/usuario';
+
+export interface UsuarioCreationRequest {
+  nombre: string;
+  ciudad: string;
+  codigoPostal: string;
+  numeroTelefono: string;
+  direccion?: string;
+  descripcion?: string;
+  usuario: {
+    cuit: string | null;
+    email: string;
+    password?: string;
+    tipoUsuario: TipoUsuario;
+  };
+  categorias?: Categoria[];
+}
+
+export type EntidadRegistrada = Empleado | Distribuidora | PersonaFisica;
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +44,23 @@ export class UsuarioServicio {
   confirmarNuevaContrasena = signal(false);
 
   private API_URL = `${environment.server.host}${environment.server.port}/api`;
+
+  agregarUsuario(
+    request: UsuarioCreationRequest,
+  ): Observable<EntidadRegistrada> {
+    return this.http
+      .post<EntidadRegistrada>(`${this.API_URL}/usuarios`, request)
+      .pipe(
+        map((res) => {
+          console.log('Usuario agregado con éxito', res);
+          return res;
+        }),
+        catchError((error: Error) => {
+          console.error('Error al agregar usuario:', error);
+          return throwError(() => error);
+        }),
+      );
+  }
 
   identificarUsuario(): Observable<ReturnSearchResponse> {
     return this.http.get<Usuario>(`${this.API_URL}/usuarios`).pipe(

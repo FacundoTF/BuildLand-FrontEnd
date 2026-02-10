@@ -1,0 +1,10 @@
+.radio-group {
+  display: flex;
+  gap: 15px;
+  label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+}
