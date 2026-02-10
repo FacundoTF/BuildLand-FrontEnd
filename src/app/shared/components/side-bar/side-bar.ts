@@ -160,6 +160,16 @@ export class SideBar implements OnInit {
           .subscribe();
       });
   }
+  ReporteCotizacionesPerdidasYGanadas() {
+    this.setActiveButton('C-X');
+    this.router
+      .navigate(['base-page/reporte/cotizaciones-perdidas-ganadas'])
+      .catch(() => {
+        this.dialogService
+          .showMessage('Error', 'Hubo un error al entrar en esta página')
+          .subscribe();
+      });
+  }
   CerrarSesion() {
     this.usuarioServicio.cerrarSesion();
   }

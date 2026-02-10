@@ -109,6 +109,16 @@
     >
       Reporte productos más solicitados
     </button>
+    <button
+      matButton="filled"
+      id="C-X"
+      (click)="ReporteCotizacionesPerdidasYGanadas()"
+      class="OpcionNoPlegable sidebar-btn"
+      [class.active]="activeButton() === 'C-X'"
+    >
+      Reporte cotizaciones ganadas y perdidas
+    </button>
+  </div>
   </div>
   <div class="Gestion">
     <button
