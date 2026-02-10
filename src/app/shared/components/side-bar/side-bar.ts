@@ -170,6 +170,14 @@ export class SideBar implements OnInit {
           .subscribe();
       });
   }
+  AgregarUsuario() {
+    this.setActiveButton('A-Us');
+    this.router.navigate(['/base-page/usuario/agregar']).catch(() => {
+      this.dialogService
+        .showMessage('Error', 'Hubo un error al entrar en esta página')
+        .subscribe();
+    });
+  }
   CerrarSesion() {
     this.usuarioServicio.cerrarSesion();
   }
