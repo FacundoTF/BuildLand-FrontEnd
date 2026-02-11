@@ -178,6 +178,22 @@ export class SideBar implements OnInit {
         .subscribe();
     });
   }
+  RemoverUsuario() {
+    this.setActiveButton('R-Us');
+    this.router.navigate(['/base-page/usuario/remover']).catch(() => {
+      this.dialogService
+        .showMessage('Error', 'Hubo un error al entrar en esta página')
+        .subscribe();
+    });
+  }
+  ModificarUsuario() {
+    this.setActiveButton('M-Us');
+    this.router.navigate(['/base-page/usuario/modificar']).catch(() => {
+      this.dialogService
+        .showMessage('Error', 'Hubo un error al entrar en esta página')
+        .subscribe();
+    });
+  }
   CerrarSesion() {
     this.usuarioServicio.cerrarSesion();
   }
