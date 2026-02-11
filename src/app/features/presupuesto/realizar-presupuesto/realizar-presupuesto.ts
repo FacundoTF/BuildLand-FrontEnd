@@ -118,14 +118,6 @@ export class RealizarPresupuesto implements OnInit {
   async confirmarPresupuesto() {
     const items = this.presupuestoItems();
     const categoria = this.selectedCategory.value;
-    const personaFisicaPlaceHolder = new PersonaFisica(
-      new Usuario('20438442317', TipoUsuario.PERSONA_FISICA, '', null, '', ''),
-      '20438442317',
-      'Facu',
-      '3416614462',
-      '2000',
-      'Rosario',
-    );
 
     if (!categoria) {
       return;
@@ -135,7 +127,7 @@ export class RealizarPresupuesto implements OnInit {
 
     const presupuesto = new Presupuesto(
       -1,
-      personaFisicaPlaceHolder,
+      null,
       categoria,
       null,
       null,
