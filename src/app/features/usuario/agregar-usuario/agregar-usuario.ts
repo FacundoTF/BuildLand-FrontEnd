@@ -15,10 +15,8 @@ import {
   ValidationErrors,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import {
-  UsuarioServicio,
-  UsuarioCreationRequest,
-} from '../../../shared/services/usuario-servicio';
+import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
+import { UsuarioRequest } from '../../../core/entities/usuario/usuario-request';
 import { CategoriaService } from '../../../shared/services/categoria/categoria-service';
 import { Categoria } from '../../../core/entities/categoria/categoria';
 import { TipoUsuario } from '../../../core/entities/usuario/usuario';
@@ -141,7 +139,7 @@ export class AgregarUsuario {
     const formValue = this.form.value;
     const tipo = formValue.tipoUsuario;
 
-    const request: UsuarioCreationRequest = {
+    const request: UsuarioRequest = {
       nombre: formValue.nombre!,
       ciudad: formValue.ciudad!,
       codigoPostal: formValue.codigoPostal!,
@@ -151,6 +149,7 @@ export class AgregarUsuario {
         email: formValue.email!,
         password: formValue.password!,
         tipoUsuario: tipo!,
+        conjunto: [],
       },
     };
 
