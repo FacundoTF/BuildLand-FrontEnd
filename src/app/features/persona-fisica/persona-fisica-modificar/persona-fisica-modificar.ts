@@ -170,10 +170,10 @@ export class PersonaFisicaModificar {
       }
 
       const usuarioModificar = new Usuario(
-        '20438442317',
-        TipoUsuario.PERSONA_FISICA,
         cuit,
-        null as any, // grupo is not needed for modification
+        TipoUsuario.PERSONA_FISICA,
+        null,
+        null,
         personaFisicaData.correoElectronico!,
         personaFisicaData.contraseña!,
       );

@@ -126,7 +126,7 @@ export class DistribuidoraAgregar implements OnInit {
         new Usuario(
           this.distribuidoraForm.value.cuit!,
           TipoUsuario.DISTRIBUIDORA,
-          '',
+          true,
           null,
           this.distribuidoraForm.value.correoElectronico!,
           this.distribuidoraForm.value.contraseña!,

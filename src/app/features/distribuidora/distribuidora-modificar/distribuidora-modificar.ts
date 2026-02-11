@@ -203,7 +203,7 @@ export class DistribuidoraModificar implements OnInit {
         new Usuario(
           this.distribuidoraCuit.value.cuit!,
           TipoUsuario.DISTRIBUIDORA,
-          '',
+          null,
           null,
           this.distribuidoraForm.value.correoElectronico!,
           this.distribuidoraForm.value.contraseña!,

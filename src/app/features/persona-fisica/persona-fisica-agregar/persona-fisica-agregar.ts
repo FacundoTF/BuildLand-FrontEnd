@@ -68,10 +68,10 @@ export class PersonaFisicaAgregar {
       } = this.personaFisicaForm.getRawValue();
 
       const usuario = new Usuario(
-        null,
-        TipoUsuario.PERSONA_FISICA,
         cuit,
-        null as any,
+        TipoUsuario.PERSONA_FISICA,
+        true,
+        null,
         correoElectronico,
         contraseña,
       );
