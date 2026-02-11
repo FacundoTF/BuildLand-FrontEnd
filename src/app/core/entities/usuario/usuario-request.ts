@@ -13,6 +13,7 @@ export interface UsuarioRequest {
     cuit: string | null;
     email: string;
     password?: string;
+    estado: boolean;
     tipoUsuario: TipoUsuario;
     conjunto: ConjuntoGrupoPermiso[];
   };
