@@ -19,6 +19,7 @@ import {
   cotizacionesResolver,
   presupuestoResolver,
   categoriasDistribuidoraResolver,
+  usuarioPorEmailResolver,
 } from './data-resolvers';
 import { RecibirPresupuesto } from './features/presupuesto/recibir-presupuesto/recibir-presupuesto';
 import { VerDetallesPresupuesto } from './features/presupuesto/recibir-presupuesto/ver-detalles-presupuesto/ver-detalles-presupuesto';
@@ -28,6 +29,8 @@ import { ProductosSolicitados } from './features/reportes/productos-solicitados/
 import { CotizacionesPerdidasGanadas } from './features/reportes/cotizaciones-perdidas-ganadas/cotizaciones-perdidas-ganadas';
 import { AgregarUsuario } from './features/usuario/agregar-usuario/agregar-usuario';
 import { UsuarioRemover } from './features/usuario/usuario-remover/usuario-remover';
+import { UsuarioModificar } from './features/usuario/usuario-modificar/usuario-modificar';
+import { ModificandoUsuario } from './features/usuario/modificando-usuario/modificando-usuario';
 
 export const routes: Routes = [
   { path: '', component: Home, pathMatch: 'full' },
@@ -43,6 +46,18 @@ export const routes: Routes = [
       {
         path: 'usuario/remover',
         component: UsuarioRemover,
+      },
+      {
+        path: 'usuario/modificar',
+        component: UsuarioModificar,
+      },
+      {
+        path: 'usuario/modificando/:email',
+        component: ModificandoUsuario,
+        resolve: {
+          usuarioData: usuarioPorEmailResolver,
+          categoriasData: categoriasResolver,
+        },
       },
       // Distribuidoras
       {
@@ -122,6 +137,18 @@ export const routes: Routes = [
       {
         path: 'reporte/cotizaciones-perdidas-ganadas',
         component: CotizacionesPerdidasGanadas,
+      },
+      {
+        path: 'grupo/agregar',
+      },
+      {
+        path: 'grupo/remover',
+      },
+      {
+        path: 'grupo/modificar',
+      },
+      {
+        path: 'grupo/modificando/:grupoId',
       },
     ],
   },

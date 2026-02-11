@@ -2,6 +2,7 @@ import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
 import { PresupuestoServicio } from './shared/services/presupuesto/presupuesto-servicio';
 import { CategoriaService } from './shared/services/categoria/categoria-service';
 import { CotizacionServicio } from './shared/services/cotizacion/cotizacion-servicio';
+import { UsuarioServicio } from './shared/services/usuario-servicio';
 import { inject } from '@angular/core';
 import { ReturnSearchResponse } from './core/response-type/return-search-response';
 import { ReturnPaginationResponse } from './core/response-type/return-pagination-response';
@@ -50,4 +51,12 @@ export const categoriasDistribuidoraResolver: ResolveFn<
   ReturnSearchResponse
 > = () => {
   return inject(CategoriaService).traerCategoriasDeDistribuidora();
+};
+
+export const usuarioPorEmailResolver: ResolveFn<ReturnSearchResponse> = (
+  route: ActivatedRouteSnapshot,
+) => {
+  const usuarioServicio = inject(UsuarioServicio);
+  const email = route.paramMap.get('email');
+  return usuarioServicio.buscarUsuarioPorEmail(email);
 };

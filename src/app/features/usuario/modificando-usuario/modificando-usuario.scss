@@ -1,0 +1,11 @@
+.form-actions-permissions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 20px 0;
+
+  button {
+    flex: 1 1 calc(50% - 6px);
+    min-width: 150px;
+  }
+}
