@@ -3,6 +3,7 @@ import { PresupuestoServicio } from './shared/services/presupuesto/presupuesto-s
 import { CategoriaService } from './shared/services/categoria/categoria-service';
 import { CotizacionServicio } from './shared/services/cotizacion/cotizacion-servicio';
 import { UsuarioServicio } from './shared/services/usuario-servicio';
+import { GrupoServicio } from './shared/services/grupo/grupo-servicio';
 import { inject } from '@angular/core';
 import { ReturnSearchResponse } from './core/response-type/return-search-response';
 import { ReturnPaginationResponse } from './core/response-type/return-pagination-response';
@@ -59,4 +60,12 @@ export const usuarioPorEmailResolver: ResolveFn<ReturnSearchResponse> = (
   const usuarioServicio = inject(UsuarioServicio);
   const email = route.paramMap.get('email');
   return usuarioServicio.buscarUsuarioPorEmail(email);
+};
+
+export const gruposResolver: ResolveFn<ReturnSearchResponse> = () => {
+  return inject(GrupoServicio).obtenerGrupos();
+};
+
+export const permisosResolver: ResolveFn<ReturnSearchResponse> = () => {
+  return inject(GrupoServicio).obtenerPermisos();
 };

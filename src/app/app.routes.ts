@@ -20,6 +20,8 @@ import {
   presupuestoResolver,
   categoriasDistribuidoraResolver,
   usuarioPorEmailResolver,
+  gruposResolver,
+  permisosResolver,
 } from './data-resolvers';
 import { RecibirPresupuesto } from './features/presupuesto/recibir-presupuesto/recibir-presupuesto';
 import { VerDetallesPresupuesto } from './features/presupuesto/recibir-presupuesto/ver-detalles-presupuesto/ver-detalles-presupuesto';
@@ -31,6 +33,7 @@ import { AgregarUsuario } from './features/usuario/agregar-usuario/agregar-usuar
 import { UsuarioRemover } from './features/usuario/usuario-remover/usuario-remover';
 import { UsuarioModificar } from './features/usuario/usuario-modificar/usuario-modificar';
 import { ModificandoUsuario } from './features/usuario/modificando-usuario/modificando-usuario';
+import { GrupoAgregar } from './features/grupo/grupo-agregar/grupo-agregar';
 
 export const routes: Routes = [
   { path: '', component: Home, pathMatch: 'full' },
@@ -140,16 +143,21 @@ export const routes: Routes = [
       },
       {
         path: 'grupo/agregar',
+        component: GrupoAgregar,
+        resolve: {
+          gruposData: gruposResolver,
+          permisosData: permisosResolver,
+        },
       },
-      {
-        path: 'grupo/remover',
-      },
-      {
-        path: 'grupo/modificar',
-      },
-      {
-        path: 'grupo/modificando/:grupoId',
-      },
+      // {
+      //   path: 'grupo/remover',
+      // },
+      // {
+      //   path: 'grupo/modificar',
+      // },
+      // {
+      //   path: 'grupo/modificando/:grupoId',
+      // },
     ],
   },
   // Rutas de autenticación

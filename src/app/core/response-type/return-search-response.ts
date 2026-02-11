@@ -13,6 +13,9 @@ import { ReporteProductosSolicitados } from '../entities/reporte/productosSolici
 import { MensajeRechazoCotizacion } from '../entities/cotizacion/mensaje-rechazo-cotizacion';
 import { ReporteMensajesCotizacionRechazoGral } from '../entities/reporte/mensajesCotizacionRechazo/reporte-mensajes-cotizacion-rechazo-gral';
 import { ReporteMensajesCotizacionRechazo } from '../entities/reporte/mensajesCotizacionRechazo/reporte-mensajes-cotizacion-rechazo';
+import { ConjuntoGrupoPermiso } from '../entities/conjuntoGrupoPermiso/conjunto-grupo-permiso';
+import { Permiso } from '../entities/permiso/permiso';
+import { Grupo } from '../entities/grupo/grupo';
 
 type NullOrUndefined = null | undefined;
 
@@ -41,5 +44,7 @@ export interface ReturnSearchResponse extends ReturnResultResponse {
     | MensajeRechazoCotizacion[]
     | Record<string, ReporteMensajesCotizacionRechazoGral[]>
     | ReporteMensajesCotizacionRechazo[]
+    | Permiso[]
+    | Grupo[]
     | NullOrUndefined;
 }
