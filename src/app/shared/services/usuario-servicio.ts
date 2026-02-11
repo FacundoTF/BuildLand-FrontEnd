@@ -72,18 +72,14 @@ export class UsuarioServicio {
 
   obtenerNombreUsuario(correo: string) {
     const response = this.http
-      .get(`${this.API_URL}/usuarios/${correo}`, {
-        responseType: 'text',
+      .get<EntidadRegistrada>(`${this.API_URL}/usuarios/email/${correo}`, {
+        observe: 'response',
       })
       .pipe(
         map((res) => {
           console.log('Nombre de usuario obtenido');
           console.log(res);
-          if (res) {
-            return res;
-          } else {
-            return '';
-          }
+          return res;
         }),
         catchError((error: Error) => {
           console.error('Error al obtener nombre de usuario:', error);
@@ -91,7 +87,8 @@ export class UsuarioServicio {
         }),
       );
     response.subscribe((res) => {
-      this.nombreUsuario.set(res);
+      const nombre = res.body?.nombre || '';
+      this.nombreUsuario.set(nombre);
     });
   }
 
@@ -259,6 +256,37 @@ export class UsuarioServicio {
       };
     }
   }
+
+  async modificarUsuario(
+    entidad: EntidadRegistrada,
+  ): Promise<ReturnResultResponse> {
+    const observable = this.http.patch<EntidadRegistrada>(
+      `${this.API_URL}/usuarios`,
+      entidad,
+      {
+        observe: 'response',
+      },
+    );
+    try {
+      const response = await lastValueFrom(observable);
+      return {
+        success: true,
+        message: 'Usuario modificado con éxito.',
+        statusCode: response.status,
+      };
+    } catch (error: any) {
+      console.error('Error al modificar usuario:', error);
+      let errorMessage = 'Error al modificar usuario.';
+      if (error.status === 404) {
+        errorMessage = 'Usuario no encontrado.';
+      } else if (error.status === 401) {
+        errorMessage =
+          'No autorizado para modificar el usuario. Cierre de sesión inminente.';
+      }
+      return {
+        success: false,
+        message: errorMessage,
+        statusCode: error.status || 500,
       };
     }
   }
