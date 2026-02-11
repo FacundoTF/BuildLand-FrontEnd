@@ -171,6 +171,51 @@ export class UsuarioServicio {
     this.emailRecuperando.set(email);
   }
 
+  async buscarUsuarioPorEmail(
+    email: string | null | undefined,
+  ): Promise<ReturnSearchResponse> {
+    const emailElegido = email?.trim();
+
+    if (emailElegido) {
+      const observable = this.http.get<EntidadRegistrada>(
+        `${this.API_URL}/usuarios/email/${encodeURIComponent(emailElegido)}`,
+        {
+          observe: 'response',
+        },
+      );
+      try {
+        const response = await lastValueFrom(observable);
+        return {
+          success: true,
+          message: 'Usuario encontrado con éxito.',
+          payload: response.body,
+          statusCode: response.status,
+        };
+      } catch (error: any) {
+        let errorMessage = 'Error al buscar usuario.';
+        if (error.status === 404) {
+          errorMessage = 'Usuario no encontrado con ese correo electrónico.';
+        } else if (error.status === 401) {
+          errorMessage =
+            'No autorizado para buscar el usuario. Cierre de sesión inminente.';
+        }
+        return {
+          success: false,
+          message: errorMessage,
+          payload: null,
+          statusCode: error.status || 500,
+        };
+      }
+    } else {
+      return {
+        success: false,
+        message: 'Correo electrónico inválido o vacío.',
+        payload: null,
+        statusCode: 400,
+      };
+    }
+  }
+
   async buscarUsuarioPorCuit(
     cuit: string | null | undefined,
   ): Promise<ReturnSearchResponse> {
