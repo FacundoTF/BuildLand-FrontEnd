@@ -191,8 +191,8 @@ export class UsuarioServicio {
         const usuario = new Usuario(
           response.body!.cuit,
           response.body!.tipoUsuario,
-          response.body!.idReferencia,
-          response.body!.grupo,
+          response.body!.estado,
+          response.body!.conjunto,
           response.body!.email,
           response.body!.password,
         );
@@ -256,6 +256,9 @@ export class UsuarioServicio {
         success: false,
         message: errorMessage,
         statusCode: error.status || 500,
+      };
+    }
+  }
       };
     }
   }
