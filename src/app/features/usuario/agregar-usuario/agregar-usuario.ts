@@ -148,6 +148,7 @@ export class AgregarUsuario {
         cuit: formValue.cuit!,
         email: formValue.email!,
         password: formValue.password!,
+        estado: true,
         tipoUsuario: tipo!,
         conjunto: [],
       },
