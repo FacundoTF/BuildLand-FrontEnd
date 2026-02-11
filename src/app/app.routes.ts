@@ -27,6 +27,7 @@ import { RecibirCotizacion } from './features/cotizacion/recibir-cotizacion/reci
 import { ProductosSolicitados } from './features/reportes/productos-solicitados/productos-solicitados';
 import { CotizacionesPerdidasGanadas } from './features/reportes/cotizaciones-perdidas-ganadas/cotizaciones-perdidas-ganadas';
 import { AgregarUsuario } from './features/usuario/agregar-usuario/agregar-usuario';
+import { UsuarioRemover } from './features/usuario/usuario-remover/usuario-remover';
 
 export const routes: Routes = [
   { path: '', component: Home, pathMatch: 'full' },
@@ -38,6 +39,10 @@ export const routes: Routes = [
       {
         path: 'usuario/agregar',
         component: AgregarUsuario,
+      },
+      {
+        path: 'usuario/remover',
+        component: UsuarioRemover,
       },
       // Distribuidoras
       {

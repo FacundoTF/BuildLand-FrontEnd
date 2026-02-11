@@ -1,0 +1,67 @@
+<div class="container">
+  <div id="content">
+    <h2>Eliminar Usuario</h2>
+
+    <!-- Contenedor para buscar usuario por CUIT -->
+    <div class="search-container">
+      <h3>Buscar Usuario</h3>
+      <form
+        [formGroup]="usuarioCuit"
+        (ngSubmit)="handleSubmitCuit()"
+        class="search-form"
+      >
+        <div class="form-group">
+          <label for="searchCuit">CUIT del Usuario</label>
+          <input
+            type="text"
+            id="searchCuit"
+            name="searchCuit"
+            placeholder="Ingrese el CUIT para buscar (ej: 20-12345678-9)"
+            formControlName="cuit"
+            required
+          />
+        </div>
+        <div class="search-actions">
+          <button matButton="filled" type="submit">Buscar Usuario</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Contenedor para mostrar datos y confirmar eliminación (inicialmente oculto) -->
+    @if (mostarFormUsuario()) {
+      <div class="delete-container">
+        <h3>Datos del Usuario</h3>
+        @if (usuarioEncontrado) {
+          <div class="user-info">
+            <p><strong>Nombre:</strong> {{ usuarioEncontrado.email }}</p>
+            <p>
+              <strong>Tipo de Usuario:</strong>
+              {{ usuarioEncontrado.tipoUsuario }}
+            </p>
+          </div>
+        }
+
+        <h3>AREA PELIGROSA</h3>
+        <div class="warning-message">
+          <strong>Advertencia:</strong> Esta acción no se puede deshacer. Los
+          datos del usuario se eliminarán permanentemente.
+        </div>
+        <div class="confirmation-section">
+          <div class="form-group checkbox-group" [formGroup]="deleteForm">
+            <mat-checkbox
+              class="checkbox-delete"
+              formControlName="confirmDelete"
+              >Confirmo que deseo eliminar este usuario
+              permanentemente</mat-checkbox
+            >
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" matButton="filled" (click)="handleRemove()">
+            Eliminar Usuario
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

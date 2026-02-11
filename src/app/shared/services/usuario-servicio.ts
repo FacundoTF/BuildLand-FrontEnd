@@ -174,6 +174,92 @@ export class UsuarioServicio {
     this.emailRecuperando.set(email);
   }
 
+  async buscarUsuarioPorCuit(
+    cuit: string | null | undefined,
+  ): Promise<ReturnSearchResponse> {
+    const cuitElegido = cuit?.trim();
+
+    if (cuitElegido) {
+      const observable = this.http.get<any>(
+        `${this.API_URL}/usuarios/cuit/${cuitElegido}`,
+        {
+          observe: 'response',
+        },
+      );
+      try {
+        const response = await lastValueFrom(observable);
+        const usuario = new Usuario(
+          response.body!.cuit,
+          response.body!.tipoUsuario,
+          response.body!.idReferencia,
+          response.body!.grupo,
+          response.body!.email,
+          response.body!.password,
+        );
+        return {
+          success: true,
+          message: 'Usuario encontrado con éxito.',
+          payload: usuario,
+          statusCode: response.status,
+        };
+      } catch (error: any) {
+        let errorMessage = 'Error al buscar usuario.';
+        if (error.status === 404) {
+          errorMessage = 'Usuario no encontrado con CUIT.';
+        } else if (error.status === 401) {
+          errorMessage =
+            'No autorizado para buscar el usuario. Cierre de sesión inminente.';
+        }
+        return {
+          success: false,
+          message: errorMessage,
+          payload: null,
+          statusCode: error.status || 500,
+        };
+      }
+    } else {
+      return {
+        success: false,
+        message: 'CUIT inválido o vacío.',
+        payload: null,
+        statusCode: 400,
+      };
+    }
+  }
+
+  async removerUsuario(
+    usuarioEncontrado: Usuario,
+  ): Promise<ReturnResultResponse> {
+    const observable = this.http.delete(
+      `${this.API_URL}/usuarios/${usuarioEncontrado.cuit}`,
+      {
+        observe: 'response',
+      },
+    );
+    try {
+      const response = await lastValueFrom(observable);
+      return {
+        success: true,
+        message: 'Usuario eliminado con éxito.',
+        statusCode: response.status,
+      };
+    } catch (error: any) {
+      console.error('Error removing usuario:', error);
+      let errorMessage = 'Error al eliminar usuario.';
+      if (error.status === 404) {
+        errorMessage = 'Usuario no encontrado.';
+      } else if (error.status === 401) {
+        errorMessage =
+          'No autorizado para eliminar el usuario. Cierre de sesión inminente.';
+      }
+      return {
+        success: false,
+        message: errorMessage,
+        statusCode: error.status || 500,
+      };
+    }
+  }
+
   cerrarSesion() {
     // Establecer inmediatamente el estado de autenticación en false
     this.estaAutenticado.set(false);
