@@ -1,0 +1,63 @@
+.grupo-list {
+  background-color: var(--mat-sys-surface-variant);
+  padding: 20px 30px 20px 20px;
+  margin-bottom: 16px;
+  animation: slideIn 0.5s ease-out;
+}
+
+.tabla-container {
+  margin-top: 16px;
+  overflow-x: auto;
+
+  table {
+    width: 100%;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--mat-sys-on-surface-variant);
+
+  p {
+    font: var(--mat-sys-body-large);
+  }
+}
+
+.modificar-section {
+  background-color: var(--mat-sys-surface-variant);
+  padding: 20px 30px 20px 20px;
+  margin-bottom: 16px;
+  animation: slideIn 0.5s ease-out;
+
+  h3 {
+    margin-bottom: 16px;
+  }
+}
+
+.buttons-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.cambios-section {
+  margin-bottom: 24px;
+
+  h4 {
+    margin-bottom: 12px;
+    color: var(--mat-sys-on-surface);
+  }
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+}

@@ -1,4 +1,12 @@
-import { Component, inject, input, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  inject,
+  input,
+  OnInit,
+  signal,
+  computed,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -8,6 +16,9 @@ import {
 import { Router } from '@angular/router';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButton } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
 
 import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
 import { DialogService } from '../../../shared/services/dialog.service';
@@ -18,20 +29,37 @@ import { PersonaFisica } from '../../../core/entities/personaFisica/persona-fisi
 import { Categoria } from '../../../core/entities/categoria/categoria';
 import { ReturnSearchResponse } from '../../../core/response-type/return-search-response';
 import { EntidadRegistrada } from '../../../core/entities/usuario/entidad-registrada';
+import { Grupo } from '../../../core/entities/grupo/grupo';
+import { Permiso } from '../../../core/entities/permiso/permiso';
+import { ConjuntoGrupoPermiso } from '../../../core/entities/conjuntoGrupoPermiso/conjunto-grupo-permiso';
+import {
+  SelectionDialog,
+  SelectableItem,
+} from '../../../shared/components/selection-dialog/selection-dialog';
 
 @Component({
   selector: 'app-modificando-usuario',
-  imports: [ReactiveFormsModule, MatCheckboxModule, MatButton],
+  imports: [
+    ReactiveFormsModule,
+    MatCheckboxModule,
+    MatButton,
+    MatTableModule,
+    MatIconModule,
+  ],
   templateUrl: './modificando-usuario.html',
   styleUrl: './modificando-usuario.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModificandoUsuario implements OnInit {
   usuarioData = input.required<ReturnSearchResponse>();
   categoriasData = input.required<ReturnSearchResponse>();
+  gruposData = input.required<ReturnSearchResponse>();
+  permisosData = input.required<ReturnSearchResponse>();
 
   usuarioService = inject(UsuarioServicio);
   dialogService = inject(DialogService);
   router = inject(Router);
+  private matDialog = inject(MatDialog);
 
   esDistribuidora = signal(false);
   esEmpleado = signal(false);
@@ -41,6 +69,29 @@ export class ModificandoUsuario implements OnInit {
   categoriasSeleccionadas: string[] = [];
 
   entidadActual: EntidadRegistrada | null = null;
+
+  // Available items from API
+  gruposDisponibles: Grupo[] = [];
+  permisosDisponibles: Permiso[] = [];
+
+  // Changes to apply for Empleado
+  permisosParaAgregar = signal<Permiso[]>([]);
+  permisosParaRemover = signal<Permiso[]>([]);
+  gruposParaAgregar = signal<Grupo[]>([]);
+  gruposParaRemover = signal<Grupo[]>([]);
+
+  // Computed for visibility
+  hayPermisosParaAgregar = computed(
+    () => this.permisosParaAgregar().length > 0,
+  );
+  hayPermisosParaRemover = computed(
+    () => this.permisosParaRemover().length > 0,
+  );
+  hayGruposParaAgregar = computed(() => this.gruposParaAgregar().length > 0);
+  hayGruposParaRemover = computed(() => this.gruposParaRemover().length > 0);
+
+  // Table columns for items to add/remove
+  displayedColumnsItems: string[] = ['nombre', 'descripcion', 'acciones'];
 
   usuarioForm = new FormGroup({
     nombre: new FormControl('', [Validators.required]),
@@ -57,6 +108,7 @@ export class ModificandoUsuario implements OnInit {
 
   ngOnInit() {
     this.cargarCategorias();
+    this.cargarGruposYPermisos();
     this.cargarDatosUsuario();
   }
 
@@ -65,6 +117,11 @@ export class ModificandoUsuario implements OnInit {
     if (categoriasResponse.success && categoriasResponse.payload) {
       this.categorias = categoriasResponse.payload as Categoria[];
     }
+  }
+
+  cargarGruposYPermisos() {
+    this.gruposDisponibles = (this.gruposData().payload as Grupo[]) || [];
+    this.permisosDisponibles = (this.permisosData().payload as Permiso[]) || [];
   }
 
   cargarDatosUsuario() {
@@ -145,6 +202,199 @@ export class ModificandoUsuario implements OnInit {
 
   isCategoriaSeleccionada(nombreCategoria: string): boolean {
     return this.categoriasSeleccionadas.includes(nombreCategoria);
+  }
+
+  // Helper methods to extract permisos and grupos from conjunto
+  private getPermisosDelUsuario(): Permiso[] {
+    const conjunto = this.entidadActual?.usuario?.conjunto;
+    if (!conjunto) return [];
+    // return (conjunto as Grupo).elementos.filter(
+    //   (e): e is Permiso => !('elementos' in e),
+    // );
+    let permisos: Permiso[] = [];
+    if (Array.isArray(conjunto)) {
+      conjunto.forEach((e) => {
+        if (!('elementos' in e)) {
+          permisos.push(e as Permiso);
+        }
+      });
+    }
+    return permisos;
+  }
+
+  private getGruposDelUsuario(): Grupo[] {
+    const conjunto = this.entidadActual?.usuario?.conjunto;
+    if (!conjunto) return [];
+    let grupos: Grupo[] = [];
+    if (Array.isArray(conjunto)) {
+      conjunto.forEach((e) => {
+        if ('elementos' in e) {
+          grupos.push(e as Grupo);
+        }
+      });
+    }
+    return grupos;
+    // return (conjunto as Grupo).elementos.filter(
+    //   (e): e is Grupo => 'elementos' in e,
+    // );
+  }
+
+  // Dialog methods for adding/removing permissions and groups
+  abrirDialogoAgregarPermisos(): void {
+    // Get IDs of permissions the user already has
+    const permisosDelUsuario = this.getPermisosDelUsuario().map((p) => p.id);
+    // Get IDs of permissions already selected to add
+    const permisosYaParaAgregar = this.permisosParaAgregar().map((p) => p.id);
+
+    // Filter: show only permissions NOT in the user's conjunto
+    const items: SelectableItem[] = this.permisosDisponibles
+      .filter((p) => !permisosDelUsuario.includes(p.id))
+      .map((permiso) => ({
+        id: permiso.id,
+        nombre: permiso.nombre,
+        descripcion: permiso.descripcion,
+        selected: permisosYaParaAgregar.includes(permiso.id),
+      }));
+
+    const dialogRef = this.matDialog.open(SelectionDialog, {
+      width: '450px',
+      disableClose: false,
+    });
+
+    dialogRef.componentInstance.title.set('Agregar Permisos');
+    dialogRef.componentInstance.items.set(items);
+
+    dialogRef.afterClosed().subscribe((result: SelectableItem[] | null) => {
+      if (result) {
+        const nuevosPermisos = result.map(
+          (item) => this.permisosDisponibles.find((p) => p.id === item.id)!,
+        );
+        this.permisosParaAgregar.set(nuevosPermisos);
+      }
+    });
+  }
+
+  abrirDialogoRemoverPermisos(): void {
+    // Get permissions the user has
+    const permisosDelUsuario = this.getPermisosDelUsuario();
+    // Get IDs of permissions already selected to remove
+    const permisosYaParaRemover = this.permisosParaRemover().map((p) => p.id);
+
+    // Filter: show only permissions the user HAS
+    const items: SelectableItem[] = permisosDelUsuario.map((permiso) => ({
+      id: permiso.id,
+      nombre: permiso.nombre,
+      descripcion: permiso.descripcion,
+      selected: permisosYaParaRemover.includes(permiso.id),
+    }));
+
+    const dialogRef = this.matDialog.open(SelectionDialog, {
+      width: '450px',
+      disableClose: false,
+    });
+
+    dialogRef.componentInstance.title.set('Remover Permisos');
+    dialogRef.componentInstance.items.set(items);
+
+    dialogRef.afterClosed().subscribe((result: SelectableItem[] | null) => {
+      if (result) {
+        const permisosARemover = result.map(
+          (item) => permisosDelUsuario.find((p) => p.id === item.id)!,
+        );
+        this.permisosParaRemover.set(permisosARemover);
+      }
+    });
+  }
+
+  abrirDialogoAgregarGrupos(): void {
+    // Get IDs of groups the user already has
+    const gruposDelUsuario = this.getGruposDelUsuario().map((g) => g.id);
+    // Get IDs of groups already selected to add
+    const gruposYaParaAgregar = this.gruposParaAgregar().map((g) => g.id);
+
+    // Filter: show only groups NOT in the user's conjunto
+    const items: SelectableItem[] = this.gruposDisponibles
+      .filter((g) => !gruposDelUsuario.includes(g.id))
+      .map((grupo) => ({
+        id: grupo.id,
+        nombre: grupo.nombre,
+        descripcion: grupo.descripcion,
+        selected: gruposYaParaAgregar.includes(grupo.id),
+      }));
+
+    const dialogRef = this.matDialog.open(SelectionDialog, {
+      width: '450px',
+      disableClose: false,
+    });
+
+    dialogRef.componentInstance.title.set('Agregar Grupos');
+    dialogRef.componentInstance.items.set(items);
+
+    dialogRef.afterClosed().subscribe((result: SelectableItem[] | null) => {
+      if (result) {
+        const nuevosGrupos = result.map(
+          (item) => this.gruposDisponibles.find((g) => g.id === item.id)!,
+        );
+        this.gruposParaAgregar.set(nuevosGrupos);
+      }
+    });
+  }
+
+  abrirDialogoRemoverGrupos(): void {
+    // Get groups the user has
+    const gruposDelUsuario = this.getGruposDelUsuario();
+    // Get IDs of groups already selected to remove
+    const gruposYaParaRemover = this.gruposParaRemover().map((g) => g.id);
+
+    // Filter: show only groups the user HAS
+    const items: SelectableItem[] = gruposDelUsuario.map((grupo) => ({
+      id: grupo.id,
+      nombre: grupo.nombre,
+      descripcion: grupo.descripcion,
+      selected: gruposYaParaRemover.includes(grupo.id),
+    }));
+
+    const dialogRef = this.matDialog.open(SelectionDialog, {
+      width: '450px',
+      disableClose: false,
+    });
+
+    dialogRef.componentInstance.title.set('Remover Grupos');
+    dialogRef.componentInstance.items.set(items);
+
+    dialogRef.afterClosed().subscribe((result: SelectableItem[] | null) => {
+      if (result) {
+        const gruposARemover = result.map(
+          (item) => gruposDelUsuario.find((g) => g.id === item.id)!,
+        );
+        this.gruposParaRemover.set(gruposARemover);
+      }
+    });
+  }
+
+  // Methods to remove items from pending lists
+  quitarPermisoParaAgregar(index: number): void {
+    this.permisosParaAgregar.update((permisos) =>
+      permisos.filter((_, i) => i !== index),
+    );
+  }
+
+  quitarPermisoParaRemover(index: number): void {
+    this.permisosParaRemover.update((permisos) =>
+      permisos.filter((_, i) => i !== index),
+    );
+  }
+
+  quitarGrupoParaAgregar(index: number): void {
+    this.gruposParaAgregar.update((grupos) =>
+      grupos.filter((_, i) => i !== index),
+    );
+  }
+
+  quitarGrupoParaRemover(index: number): void {
+    this.gruposParaRemover.update((grupos) =>
+      grupos.filter((_, i) => i !== index),
+    );
   }
 
   isFormValid(): boolean {
@@ -239,13 +489,76 @@ export class ModificandoUsuario implements OnInit {
     );
   }
 
+  private construirConjuntoModificado():
+    | ConjuntoGrupoPermiso
+    | ConjuntoGrupoPermiso[]
+    | null {
+    const conjuntoOriginal = this.entidadActual?.usuario?.conjunto;
+
+    // Si no hay cambios de permisos/grupos, devolver el conjunto original
+    if (
+      this.permisosParaAgregar().length === 0 &&
+      this.permisosParaRemover().length === 0 &&
+      this.gruposParaAgregar().length === 0 &&
+      this.gruposParaRemover().length === 0
+    ) {
+      return conjuntoOriginal || null;
+    }
+
+    // Calculate IDs to remove
+    const permisosIdsParaRemover = this.permisosParaRemover().map((p) => p.id);
+    const gruposIdsParaRemover = this.gruposParaRemover().map((g) => g.id);
+
+    // Get current permisos and grupos
+    const permisosActuales = this.getPermisosDelUsuario();
+    const gruposActuales = this.getGruposDelUsuario();
+
+    const permisosFinal = [
+      ...permisosActuales.filter((p) => !permisosIdsParaRemover.includes(p.id)),
+      ...this.permisosParaAgregar(),
+    ];
+
+    const gruposFinal = [
+      ...gruposActuales.filter((g) => !gruposIdsParaRemover.includes(g.id)),
+      ...this.gruposParaAgregar(),
+    ];
+
+    // Combine into elementos
+    const elementosFinal: ConjuntoGrupoPermiso[] = [
+      ...permisosFinal,
+      ...gruposFinal,
+    ];
+
+    // Create new conjunto (Grupo)
+    const conjuntoAnterior = conjuntoOriginal as Grupo | null;
+    // return new Grupo(
+    //   conjuntoAnterior?.id || 0,
+    //   conjuntoAnterior?.nombre || 'conjunto',
+    //   conjuntoAnterior?.descripcion || '',
+    //   elementosFinal,
+    // );
+    return elementosFinal;
+  }
+
   private construirEmpleado(): Empleado {
     const empleadoOriginal = this.entidadActual as Empleado;
+    const conjuntoModificado = this.construirConjuntoModificado();
+    let conjuntoFinal: ConjuntoGrupoPermiso;
+
+    // if (conjuntoModificado instanceof Grupo) {
+    //   const a = conjuntoModificado as Grupo;
+    //   conjuntoFinal = a.elementos;
+    // } else if (conjuntoModificado instanceof Permiso) {
+    //   conjuntoFinal = conjuntoModificado as Permiso;
+    // } else {
+    //   conjuntoFinal = conjuntoModificado as any;
+    // }
+
     const usuario = new Usuario(
       empleadoOriginal.cuit,
       TipoUsuario.EMPLEADO,
       empleadoOriginal.usuario?.estado,
-      empleadoOriginal.usuario?.conjunto || null,
+      conjuntoModificado,
       this.usuarioForm.value.correoElectronico!,
       empleadoOriginal.usuario?.password || '',
     );

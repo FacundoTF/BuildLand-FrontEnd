@@ -305,9 +305,22 @@ export class UsuarioServicio {
   async modificarUsuario(
     entidad: EntidadRegistrada,
   ): Promise<ReturnResultResponse> {
+    let body = null;
+    if (entidad instanceof Empleado) {
+      body = {
+        nombre: entidad.nombre,
+        ciudad: entidad.ciudad,
+        codigoPostal: entidad.codigoPostal,
+        numeroTelefono: entidad.numeroTelefono,
+        direccion: entidad.direccion,
+        usuario: entidad.usuario,
+      };
+    }
     const observable = this.http.patch<EntidadRegistrada>(
       `${this.API_URL}/usuarios`,
-      entidad,
+      {
+        ...body,
+      },
       {
         observe: 'response',
       },

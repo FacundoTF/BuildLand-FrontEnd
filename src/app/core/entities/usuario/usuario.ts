@@ -12,7 +12,7 @@ export class Usuario {
     public cuit: string | null,
     public tipoUsuario: TipoUsuario,
     public estado: boolean | null,
-    public conjunto: ConjuntoGrupoPermiso | null,
+    public conjunto: ConjuntoGrupoPermiso | ConjuntoGrupoPermiso[] | null,
     public email: string,
     public password: string,
   ) {}

@@ -140,37 +140,206 @@
           <div class="form-actions-permissions">
             <button
               type="button"
-              matButton="outlined"
+              mat-stroked-button
               class="btn-secondary"
-              disabled
+              (click)="abrirDialogoAgregarPermisos()"
             >
               Agregar permiso
             </button>
             <button
               type="button"
-              matButton="outlined"
+              mat-stroked-button
               class="btn-secondary"
-              disabled
+              (click)="abrirDialogoRemoverPermisos()"
             >
               Remover permiso
             </button>
             <button
               type="button"
-              matButton="outlined"
+              mat-stroked-button
               class="btn-secondary"
-              disabled
+              (click)="abrirDialogoAgregarGrupos()"
             >
               Agregar grupo
             </button>
             <button
               type="button"
-              matButton="outlined"
+              mat-stroked-button
               class="btn-secondary"
-              disabled
+              (click)="abrirDialogoRemoverGrupos()"
             >
               Remover grupo
             </button>
           </div>
+
+          <!-- Tablas de items pendientes -->
+          @if (hayPermisosParaAgregar()) {
+            <div class="pending-items-section">
+              <h4>Permisos a agregar</h4>
+              <table
+                mat-table
+                [dataSource]="permisosParaAgregar()"
+                class="items-table"
+              >
+                <ng-container matColumnDef="nombre">
+                  <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                  <td mat-cell *matCellDef="let item">{{ item.nombre }}</td>
+                </ng-container>
+                <ng-container matColumnDef="descripcion">
+                  <th mat-header-cell *matHeaderCellDef>Descripción</th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.descripcion }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="acciones">
+                  <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                  <td mat-cell *matCellDef="let item; let i = index">
+                    <button
+                      mat-icon-button
+                      color="warn"
+                      (click)="quitarPermisoParaAgregar(i)"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="displayedColumnsItems"
+                ></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayedColumnsItems"
+                ></tr>
+              </table>
+            </div>
+          }
+
+          @if (hayPermisosParaRemover()) {
+            <div class="pending-items-section">
+              <h4>Permisos a remover</h4>
+              <table
+                mat-table
+                [dataSource]="permisosParaRemover()"
+                class="items-table"
+              >
+                <ng-container matColumnDef="nombre">
+                  <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                  <td mat-cell *matCellDef="let item">{{ item.nombre }}</td>
+                </ng-container>
+                <ng-container matColumnDef="descripcion">
+                  <th mat-header-cell *matHeaderCellDef>Descripción</th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.descripcion }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="acciones">
+                  <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                  <td mat-cell *matCellDef="let item; let i = index">
+                    <button
+                      mat-icon-button
+                      color="warn"
+                      (click)="quitarPermisoParaRemover(i)"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="displayedColumnsItems"
+                ></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayedColumnsItems"
+                ></tr>
+              </table>
+            </div>
+          }
+
+          @if (hayGruposParaAgregar()) {
+            <div class="pending-items-section">
+              <h4>Grupos a agregar</h4>
+              <table
+                mat-table
+                [dataSource]="gruposParaAgregar()"
+                class="items-table"
+              >
+                <ng-container matColumnDef="nombre">
+                  <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                  <td mat-cell *matCellDef="let item">{{ item.nombre }}</td>
+                </ng-container>
+                <ng-container matColumnDef="descripcion">
+                  <th mat-header-cell *matHeaderCellDef>Descripción</th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.descripcion }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="acciones">
+                  <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                  <td mat-cell *matCellDef="let item; let i = index">
+                    <button
+                      mat-icon-button
+                      color="warn"
+                      (click)="quitarGrupoParaAgregar(i)"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="displayedColumnsItems"
+                ></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayedColumnsItems"
+                ></tr>
+              </table>
+            </div>
+          }
+
+          @if (hayGruposParaRemover()) {
+            <div class="pending-items-section">
+              <h4>Grupos a remover</h4>
+              <table
+                mat-table
+                [dataSource]="gruposParaRemover()"
+                class="items-table"
+              >
+                <ng-container matColumnDef="nombre">
+                  <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                  <td mat-cell *matCellDef="let item">{{ item.nombre }}</td>
+                </ng-container>
+                <ng-container matColumnDef="descripcion">
+                  <th mat-header-cell *matHeaderCellDef>Descripción</th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.descripcion }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="acciones">
+                  <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                  <td mat-cell *matCellDef="let item; let i = index">
+                    <button
+                      mat-icon-button
+                      color="warn"
+                      (click)="quitarGrupoParaRemover(i)"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="displayedColumnsItems"
+                ></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayedColumnsItems"
+                ></tr>
+              </table>
+            </div>
+          }
         }
 
         <div class="form-actions">

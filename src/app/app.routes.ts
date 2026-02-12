@@ -34,6 +34,7 @@ import { UsuarioRemover } from './features/usuario/usuario-remover/usuario-remov
 import { UsuarioModificar } from './features/usuario/usuario-modificar/usuario-modificar';
 import { ModificandoUsuario } from './features/usuario/modificando-usuario/modificando-usuario';
 import { GrupoAgregar } from './features/grupo/grupo-agregar/grupo-agregar';
+import { GrupoModificar } from './features/grupo/grupo-modificar/grupo-modificar';
 
 export const routes: Routes = [
   { path: '', component: Home, pathMatch: 'full' },
@@ -149,15 +150,21 @@ export const routes: Routes = [
           permisosData: permisosResolver,
         },
       },
-      // {
-      //   path: 'grupo/remover',
-      // },
-      // {
-      //   path: 'grupo/modificar',
-      // },
-      // {
-      //   path: 'grupo/modificando/:grupoId',
-      // },
+      {
+        path: 'grupo/remover',
+        component: GrupoRemover,
+        resolve: {
+          gruposData: gruposResolver,
+        },
+      },
+      {
+        path: 'grupo/modificar',
+        component: GrupoModificar,
+        resolve: {
+          gruposData: gruposResolver,
+          permisosData: permisosResolver,
+        },
+      },
     ],
   },
   // Rutas de autenticación

@@ -26,29 +26,30 @@ export class GrupoServicio {
   private API_URL = `${environment.server.host}${environment.server.port}/api`;
 
   async crearGrupo(request: Grupo): Promise<ReturnResultResponse> {
-    // const obj =
     return lastValueFrom(
       this.http.post<ReturnResultResponse>(`${this.API_URL}/grupos`, {
         type: 'grupo',
         id: 0,
         nombre: request.nombre,
         descripcion: request.descripcion,
-        elementos: [
-          ...request.permisos.map((p) => {
+        elementos: request.elementos.map((e) => {
+          // Check if it's a Grupo (has elementos property)
+          if ('elementos' in e) {
             return {
-              type: 'permiso',
-              nombre: p.nombre,
-              descripcion: p.descripcion,
-              id: p.id,
+              type: 'grupo',
+              id: (e as Grupo).id,
+              nombre: e.nombre,
+              descripcion: (e as Grupo).descripcion,
             };
-          }),
-          ...request.grupos.map((g) => ({
-            type: 'grupo',
-            nombre: g.nombre,
-            descripcion: g.descripcion,
-            id: g.id,
-          })),
-        ],
+          }
+          // It's a Permiso
+          return {
+            type: 'permiso',
+            id: (e as Permiso).id,
+            nombre: e.nombre,
+            descripcion: (e as Permiso).descripcion,
+          };
+        }),
       }),
     );
   }
@@ -121,5 +122,101 @@ export class GrupoServicio {
         });
       }),
     );
+  }
+
+  async removerGrupo(grupoId: number): Promise<ReturnResultResponse> {
+    const observable = this.http.delete(`${this.API_URL}/grupos/${grupoId}`, {
+      observe: 'response',
+    });
+
+    try {
+      const response = await lastValueFrom(observable);
+      if (response.status === 204 || response.status === 200) {
+        return {
+          success: true,
+          message: 'Grupo eliminado con éxito.',
+          statusCode: response.status,
+        };
+      }
+      return {
+        success: false,
+        message: 'Error al eliminar grupo.',
+        statusCode: response.status,
+      };
+    } catch (error: any) {
+      let errorMessage = 'Error al eliminar grupo.';
+      if (error.status === 404) {
+        errorMessage = 'Grupo no encontrado.';
+      } else if (error.status === 401) {
+        errorMessage =
+          'No autorizado para eliminar el grupo. Cierre de sesión inminente.';
+      }
+      return {
+        success: false,
+        message: errorMessage,
+        statusCode: error.status || 500,
+      };
+    }
+  }
+
+  async modificarGrupo(grupo: Grupo): Promise<ReturnResultResponse> {
+    try {
+      const response = await lastValueFrom(
+        this.http.patch<ReturnResultResponse>(
+          `${this.API_URL}/grupos`,
+          {
+            type: 'grupo',
+            id: grupo.id,
+            nombre: grupo.nombre,
+            descripcion: grupo.descripcion,
+            elementos: grupo.elementos.map((e) => {
+              // Check if it's a Grupo (has elementos property)
+              if ('elementos' in e) {
+                return {
+                  type: 'grupo',
+                  id: (e as Grupo).id,
+                  nombre: e.nombre,
+                  descripcion: (e as Grupo).descripcion,
+                };
+              }
+              // It's a Permiso
+              return {
+                type: 'permiso',
+                id: (e as Permiso).id,
+                nombre: e.nombre,
+                descripcion: (e as Permiso).descripcion,
+              };
+            }),
+          },
+          { observe: 'response' },
+        ),
+      );
+
+      if (response.status === 200 || response.status === 204) {
+        return {
+          success: true,
+          message: 'Grupo modificado con éxito.',
+          statusCode: response.status,
+        };
+      }
+      return {
+        success: false,
+        message: 'Error al modificar grupo.',
+        statusCode: response.status,
+      };
+    } catch (error: any) {
+      let errorMessage = 'Error al modificar grupo.';
+      if (error.status === 404) {
+        errorMessage = 'Grupo no encontrado.';
+      } else if (error.status === 401) {
+        errorMessage =
+          'No autorizado para modificar el grupo. Cierre de sesión inminente.';
+      }
+      return {
+        success: false,
+        message: errorMessage,
+        statusCode: error.status || 500,
+      };
+    }
   }
 }
