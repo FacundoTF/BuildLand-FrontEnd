@@ -9,6 +9,8 @@ import { Usuario } from '../../core/entities/usuario/usuario';
 import { UsuarioRequest } from '../../core/entities/usuario/usuario-request';
 import { EntidadRegistrada } from '../../core/entities/usuario/entidad-registrada';
 import { Empleado } from '../../core/entities/empleado/empleado';
+import { Distribuidora } from '../../core/entities/distribuidora/distribuidora';
+import { PersonaFisica } from '../../core/entities/personaFisica/persona-fisica';
 
 @Injectable({
   providedIn: 'root',
@@ -314,6 +316,27 @@ export class UsuarioServicio {
         codigoPostal: entidad.codigoPostal,
         numeroTelefono: entidad.numeroTelefono,
         direccion: entidad.direccion,
+        usuario: entidad.usuario,
+      };
+    }
+    if (entidad instanceof Distribuidora) {
+      body = {
+        nombre: entidad.nombre,
+        ciudad: entidad.ciudad,
+        codigoPostal: entidad.codigoPostal,
+        numeroTelefono: entidad.numeroTelefono,
+        direccion: entidad.direccion,
+        usuario: entidad.usuario,
+        descripcion: entidad.descripcion,
+        categorias: entidad.categorias,
+      };
+    }
+    if (entidad instanceof PersonaFisica) {
+      body = {
+        nombre: entidad.nombre,
+        ciudad: entidad.ciudad,
+        codigoPostal: entidad.codigoPostal,
+        numeroTelefono: entidad.numeroTelefono,
         usuario: entidad.usuario,
       };
     }
