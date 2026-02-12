@@ -8,6 +8,7 @@ import { ReturnResultResponse } from '../../core/response-type/return-response';
 import { Usuario } from '../../core/entities/usuario/usuario';
 import { UsuarioRequest } from '../../core/entities/usuario/usuario-request';
 import { EntidadRegistrada } from '../../core/entities/usuario/entidad-registrada';
+import { Empleado } from '../../core/entities/empleado/empleado';
 
 @Injectable({
   providedIn: 'root',
@@ -340,6 +341,45 @@ export class UsuarioServicio {
       } else if (error.status === 401) {
         errorMessage =
           'No autorizado para modificar el usuario. Cierre de sesión inminente.';
+      }
+      return {
+        success: false,
+        message: errorMessage,
+        statusCode: error.status || 500,
+      };
+    }
+  }
+
+  async resetearClaveUsuario(
+    email: string,
+    nuevaContrasena: string,
+  ): Promise<ReturnResultResponse> {
+    const datos = [email, nuevaContrasena];
+    const observable = this.http.patch<EntidadRegistrada>(
+      `${this.API_URL}/usuarios/resetear`,
+      {
+        email: email,
+        code: nuevaContrasena,
+      },
+      {
+        observe: 'response',
+      },
+    );
+    try {
+      const response = await lastValueFrom(observable);
+      return {
+        success: true,
+        message: 'Contraseña reseteada con éxito.',
+        statusCode: response.status,
+      };
+    } catch (error: any) {
+      console.error('Error al resetear contraseña:', error);
+      let errorMessage = 'Error al resetear la contraseña.';
+      if (error.status === 404) {
+        errorMessage = 'Usuario no encontrado.';
+      } else if (error.status === 401) {
+        errorMessage =
+          'No autorizado para resetear la contraseña. Cierre de sesión inminente.';
       }
       return {
         success: false,
