@@ -194,6 +194,14 @@ export class SideBar implements OnInit {
         .subscribe();
     });
   }
+  ResetearClave() {
+    this.setActiveButton('Z-Us');
+    this.router.navigate(['/base-page/usuario/resetear-clave']).catch(() => {
+      this.dialogService
+        .showMessage('Error', 'Hubo un error al entrar en esta página')
+        .subscribe();
+    });
+  }
   CerrarSesion() {
     this.usuarioServicio.cerrarSesion();
   }

@@ -1,0 +1,25 @@
+.grupo-list {
+  background-color: var(--mat-sys-surface-variant);
+  padding: 20px 30px 20px 20px;
+  margin-bottom: 16px;
+  animation: slideIn 0.5s ease-out;
+}
+
+.tabla-container {
+  margin-top: 16px;
+  overflow-x: auto;
+
+  table {
+    width: 100%;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--mat-sys-on-surface-variant);
+
+  p {
+    font: var(--mat-sys-body-large);
+  }
+}

@@ -68,6 +68,14 @@ export const routes: Routes = [
           permisosData: permisosResolver,
         },
       },
+      {
+        path: 'usuario/resetear-clave',
+        component: ResetearClave,
+      },
+      {
+        path: 'usuario/reseteando-clave/:email',
+        component: ReseteandoClave,
+      },
       // Distribuidoras
       {
         path: 'distribuidora/agregar',
