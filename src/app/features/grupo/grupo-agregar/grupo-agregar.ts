@@ -15,10 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
-import {
-  GrupoServicio,
-  GrupoRequest,
-} from '../../../shared/services/grupo/grupo-servicio';
+import { GrupoServicio } from '../../../shared/services/grupo/grupo-servicio';
 import { DialogService } from '../../../shared/services/dialog.service';
 import { ReturnSearchResponse } from '../../../core/response-type/return-search-response';
 import { Grupo } from '../../../core/entities/grupo/grupo';
@@ -175,13 +172,12 @@ export class GrupoAgregar implements OnInit {
       return;
     }
 
-    const request: Grupo = {
-      id: 0, // El ID se asignará en el backend
-      nombre: this.form.value.nombre!,
-      descripcion: this.form.value.descripcion!,
-      permisos: this.permisosSeleccionados().map((p) => p),
-      grupos: this.gruposSeleccionados().map((g) => g),
-    };
+    const request = new Grupo(
+      0, // El ID se asignará en el backend
+      this.form.value.nombre!,
+      this.form.value.descripcion!,
+      [...this.permisosSeleccionados(), ...this.gruposSeleccionados()],
+    );
 
     try {
       const response = await this.grupoServicio.crearGrupo(request);

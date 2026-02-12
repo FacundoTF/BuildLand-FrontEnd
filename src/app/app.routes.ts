@@ -34,7 +34,10 @@ import { UsuarioRemover } from './features/usuario/usuario-remover/usuario-remov
 import { UsuarioModificar } from './features/usuario/usuario-modificar/usuario-modificar';
 import { ModificandoUsuario } from './features/usuario/modificando-usuario/modificando-usuario';
 import { GrupoAgregar } from './features/grupo/grupo-agregar/grupo-agregar';
+import { GrupoRemover } from './features/grupo/grupo-remover/grupo-remover';
 import { GrupoModificar } from './features/grupo/grupo-modificar/grupo-modificar';
+import { ResetearClave } from './features/usuario/resetear-clave/resetear-clave';
+import { ReseteandoClave } from './features/usuario/reseteando-clave/reseteando-clave';
 
 export const routes: Routes = [
   { path: '', component: Home, pathMatch: 'full' },
@@ -61,6 +64,8 @@ export const routes: Routes = [
         resolve: {
           usuarioData: usuarioPorEmailResolver,
           categoriasData: categoriasResolver,
+          gruposData: gruposResolver,
+          permisosData: permisosResolver,
         },
       },
       // Distribuidoras
