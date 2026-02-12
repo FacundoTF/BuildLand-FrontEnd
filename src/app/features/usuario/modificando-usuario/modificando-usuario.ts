@@ -19,6 +19,7 @@ import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
+import { MatRadioModule } from '@angular/material/radio';
 
 import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
 import { DialogService } from '../../../shared/services/dialog.service';
@@ -45,6 +46,7 @@ import {
     MatButton,
     MatTableModule,
     MatIconModule,
+    MatRadioModule,
   ],
   templateUrl: './modificando-usuario.html',
   styleUrl: './modificando-usuario.scss',
@@ -104,6 +106,7 @@ export class ModificandoUsuario implements OnInit {
     ciudad: new FormControl('', [Validators.required]),
     direccion: new FormControl(''),
     descripcion: new FormControl(''),
+    estado: new FormControl<boolean>(true, [Validators.required]),
   });
 
   ngOnInit() {
@@ -152,6 +155,7 @@ export class ModificandoUsuario implements OnInit {
       ciudad: distribuidora.ciudad,
       direccion: distribuidora.direccion,
       descripcion: distribuidora.descripcion,
+      estado: distribuidora.usuario?.estado ?? true,
     });
 
     // Agregar validadores para campos de distribuidora
@@ -174,6 +178,7 @@ export class ModificandoUsuario implements OnInit {
       codigoPostal: empleado.codigoPostal,
       ciudad: empleado.ciudad,
       direccion: empleado.direccion,
+      estado: empleado.usuario?.estado ?? true,
     });
 
     // Agregar validadores para campos de empleado
@@ -188,6 +193,7 @@ export class ModificandoUsuario implements OnInit {
       numeroTelefono: personaFisica.numeroTelefono,
       codigoPostal: personaFisica.codigoPostal,
       ciudad: personaFisica.ciudad,
+      estado: personaFisica.usuario?.estado ?? true,
     });
   }
 
@@ -470,7 +476,7 @@ export class ModificandoUsuario implements OnInit {
     const usuario = new Usuario(
       distribuidoraOriginal.cuit,
       TipoUsuario.DISTRIBUIDORA,
-      distribuidoraOriginal.usuario?.estado,
+      this.usuarioForm.value.estado ?? true,
       distribuidoraOriginal.usuario?.conjunto || null,
       this.usuarioForm.value.correoElectronico!,
       distribuidoraOriginal.usuario?.password || '',
@@ -557,7 +563,7 @@ export class ModificandoUsuario implements OnInit {
     const usuario = new Usuario(
       empleadoOriginal.cuit,
       TipoUsuario.EMPLEADO,
-      empleadoOriginal.usuario?.estado,
+      this.usuarioForm.value.estado ?? true,
       conjuntoModificado,
       this.usuarioForm.value.correoElectronico!,
       empleadoOriginal.usuario?.password || '',
@@ -579,7 +585,7 @@ export class ModificandoUsuario implements OnInit {
     const usuario = new Usuario(
       personaFisicaOriginal.cuit,
       TipoUsuario.PERSONA_FISICA,
-      personaFisicaOriginal.usuario?.estado,
+      this.usuarioForm.value.estado ?? true,
       personaFisicaOriginal.usuario?.conjunto || null,
       this.usuarioForm.value.correoElectronico!,
       personaFisicaOriginal.usuario?.password || '',
