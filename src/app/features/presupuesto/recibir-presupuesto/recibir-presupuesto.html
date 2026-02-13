@@ -9,7 +9,7 @@
       @for (p of presupuestos(); track p.id) {
         <mat-card>
           <mat-card-header>
-            <mat-card-title>Presupuesto:</mat-card-title>
+            <mat-card-title>Presupuesto: {{ p.id }}</mat-card-title>
           </mat-card-header>
           <mat-card-content>
             @if (p.fecha) {
