@@ -38,6 +38,7 @@ import { GrupoRemover } from './features/grupo/grupo-remover/grupo-remover';
 import { GrupoModificar } from './features/grupo/grupo-modificar/grupo-modificar';
 import { ResetearClave } from './features/usuario/resetear-clave/resetear-clave';
 import { ReseteandoClave } from './features/usuario/reseteando-clave/reseteando-clave';
+import { NotFoundPage } from './core/not-found-page/not-found-page';
 
 export const routes: Routes = [
   { path: '', component: InicioSesion, pathMatch: 'full' },
