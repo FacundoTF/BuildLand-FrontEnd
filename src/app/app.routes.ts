@@ -8,7 +8,6 @@ import { PersonaFisicaRemover } from './features/persona-fisica/persona-fisica-r
 import { RealizarPresupuesto } from './features/presupuesto/realizar-presupuesto/realizar-presupuesto';
 import { InicioSesion } from './core/inicio-sesion/inicio-sesion';
 import { BasePage } from './core/base-page/base-page';
-import { Home } from './core/home/home';
 import { RestorePassword } from './core/restore-password/restore-password';
 import { ConfirmNewPassword } from './core/restore-password/confirm-new-password/confirm-new-password';
 import { SubmitSecret } from './core/restore-password/submit-secret/submit-secret';
@@ -39,6 +38,7 @@ import { GrupoModificar } from './features/grupo/grupo-modificar/grupo-modificar
 import { ResetearClave } from './features/usuario/resetear-clave/resetear-clave';
 import { ReseteandoClave } from './features/usuario/reseteando-clave/reseteando-clave';
 import { NotFoundPage } from './core/not-found-page/not-found-page';
+import { HomePage } from './core/home-page/home-page';
 
 export const routes: Routes = [
   { path: '', component: InicioSesion, pathMatch: 'full' },
@@ -46,6 +46,16 @@ export const routes: Routes = [
     path: 'base-page',
     component: BasePage,
     children: [
+      // Home
+      {
+        path: '',
+        redirectTo: 'home',
+        pathMatch: 'full',
+      },
+      {
+        path: 'home',
+        component: HomePage,
+      },
       // Usuarios
       {
         path: 'usuario/agregar',
@@ -178,6 +188,10 @@ export const routes: Routes = [
           gruposData: gruposResolver,
           permisosData: permisosResolver,
         },
+      },
+      {
+        path: '**',
+        component: NotFoundPage,
       },
     ],
   },
