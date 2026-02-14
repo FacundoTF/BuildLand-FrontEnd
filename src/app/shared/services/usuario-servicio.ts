@@ -75,7 +75,7 @@ export class UsuarioServicio {
 
   obtenerNombreUsuario(correo: string) {
     const response = this.http
-      .get<EntidadRegistrada>(`${this.API_URL}/usuarios/email/${correo}`, {
+      .get<EntidadRegistrada>(`${this.API_URL}/usuarios/email`, {
         observe: 'response',
       })
       .pipe(
@@ -106,7 +106,7 @@ export class UsuarioServicio {
           console.log('Usuario encontrado');
           console.log(res);
           this.estaAutenticado.set(true);
-          this.obtenerNombreUsuario(correo);
+          // this.obtenerNombreUsuario(correo);
           return res;
         }),
         catchError((error: Error) => {

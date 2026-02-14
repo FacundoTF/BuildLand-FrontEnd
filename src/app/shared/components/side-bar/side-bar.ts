@@ -66,6 +66,7 @@ export class SideBar implements OnInit {
         }
       });
     }
+    this.usuarioServicio.obtenerNombreUsuario('');
   }
 
   obtenerNombreUsuario() {
