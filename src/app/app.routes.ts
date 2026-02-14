@@ -40,7 +40,7 @@ import { ResetearClave } from './features/usuario/resetear-clave/resetear-clave'
 import { ReseteandoClave } from './features/usuario/reseteando-clave/reseteando-clave';
 
 export const routes: Routes = [
-  { path: '', component: Home, pathMatch: 'full' },
+  { path: '', component: InicioSesion, pathMatch: 'full' },
   {
     path: 'base-page',
     component: BasePage,
