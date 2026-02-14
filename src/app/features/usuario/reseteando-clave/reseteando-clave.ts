@@ -115,7 +115,7 @@ export class ReseteandoClave implements OnInit {
             'La contraseña ha sido reseteada correctamente.',
           )
           .subscribe(() => {
-            this.router.navigate(['/base-page']);
+            this.router.navigate(['/base-page/home']);
           });
       } else {
         if (result.statusCode === 401) {

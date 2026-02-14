@@ -329,7 +329,7 @@ export class GrupoModificar implements OnInit {
         this.dialogService
           .showMessage('Éxito', 'El grupo ha sido modificado correctamente.')
           .subscribe(() => {
-            this.router.navigate(['/base-page']);
+            this.router.navigate(['/base-page/home']);
           });
       } else if (response.statusCode === 401) {
         this.dialogService

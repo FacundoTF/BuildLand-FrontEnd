@@ -185,7 +185,7 @@ export class GrupoAgregar implements OnInit {
         this.dialogService
           .showMessage('Éxito', 'El grupo ha sido creado correctamente.')
           .subscribe(() => {
-            this.router.navigate(['/base-page']);
+            this.router.navigate(['/base-page/home']);
           });
       } else {
         this.dialogService
