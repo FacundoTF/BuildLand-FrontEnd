@@ -11,7 +11,7 @@ import {
   FormControl,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Usuario } from '../../../core/entities/usuario/usuario';
+import { TipoUsuario, Usuario } from '../../../core/entities/usuario/usuario';
 import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
 import { DialogService } from '../../../shared/services/dialog.service';
 import { MatButton } from '@angular/material/button';
@@ -28,7 +28,7 @@ import { PersonaFisica } from '../../../core/entities/personaFisica/persona-fisi
 })
 export class ResetearClave {
   mostrarDatosUsuario = signal(false);
-  nombreUsuario = signal('');
+  cuitUsuario = signal('');
   tipoUsuario = signal('');
 
   usuarioService = inject(UsuarioServicio);
@@ -52,22 +52,22 @@ export class ResetearClave {
       try {
         const result = await this.usuarioService.buscarUsuarioPorEmail(email);
         if (result.success && result.payload) {
-          const entidad = result.payload;
+          const entidad = result.payload as Usuario;
 
-          if (this.isDistribuidora(entidad)) {
-            this.usuarioEncontrado = entidad.usuario;
-            this.emailEncontrado = entidad.usuario?.email || email;
-            this.nombreUsuario.set(entidad.nombre);
+          if (entidad.tipoUsuario === TipoUsuario.DISTRIBUIDORA) {
+            this.usuarioEncontrado = entidad;
+            this.emailEncontrado = entidad.email || email;
+            this.cuitUsuario.set(entidad.cuit || '');
             this.tipoUsuario.set('Distribuidora');
-          } else if (this.isEmpleado(entidad)) {
-            this.usuarioEncontrado = entidad.usuario;
-            this.emailEncontrado = entidad.usuario?.email || email;
-            this.nombreUsuario.set(entidad.nombre);
+          } else if (entidad.tipoUsuario === TipoUsuario.EMPLEADO) {
+            this.usuarioEncontrado = entidad;
+            this.emailEncontrado = entidad.email || email;
+            this.cuitUsuario.set(entidad.cuit || '');
             this.tipoUsuario.set('Empleado');
-          } else if (this.isPersonaFisica(entidad)) {
-            this.usuarioEncontrado = entidad.usuario;
-            this.emailEncontrado = entidad.usuario?.email || email;
-            this.nombreUsuario.set(entidad.nombre);
+          } else if (entidad.tipoUsuario === TipoUsuario.PERSONA_FISICA) {
+            this.usuarioEncontrado = entidad;
+            this.emailEncontrado = entidad.email || email;
+            this.cuitUsuario.set(entidad.cuit || '');
             this.tipoUsuario.set('Persona Física');
           }
 
@@ -110,7 +110,7 @@ export class ResetearClave {
   resetState() {
     this.usuarioEncontrado = null;
     this.emailEncontrado = null;
-    this.nombreUsuario.set('');
+    this.cuitUsuario.set('');
     this.tipoUsuario.set('');
     this.mostrarDatosUsuario.set(false);
   }
@@ -122,24 +122,5 @@ export class ResetearClave {
         this.emailEncontrado,
       ]);
     }
-  }
-
-  private isDistribuidora(entidad: unknown): entidad is Distribuidora {
-    return (entidad as Distribuidora).descripcion !== undefined;
-  }
-
-  private isEmpleado(entidad: unknown): entidad is Empleado {
-    return (
-      (entidad as Empleado).direccion !== undefined &&
-      !this.isDistribuidora(entidad)
-    );
-  }
-
-  private isPersonaFisica(entidad: unknown): entidad is PersonaFisica {
-    return (
-      (entidad as PersonaFisica).nombre !== undefined &&
-      !this.isDistribuidora(entidad) &&
-      !this.isEmpleado(entidad)
-    );
   }
 }
