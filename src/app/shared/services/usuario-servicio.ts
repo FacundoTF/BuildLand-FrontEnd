@@ -180,7 +180,7 @@ export class UsuarioServicio {
     const emailElegido = email?.trim();
 
     if (emailElegido) {
-      const observable = this.http.get<EntidadRegistrada>(
+      const observable = this.http.get<Usuario>(
         `${this.API_URL}/usuarios/email/${encodeURIComponent(emailElegido)}`,
         {
           observe: 'response',
