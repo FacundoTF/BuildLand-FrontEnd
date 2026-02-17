@@ -17,6 +17,7 @@ import {
 import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
+import { DialogService } from '../../../shared/services/dialog.service';
 
 @Component({
   selector: 'app-confirm-new-password',
@@ -30,12 +31,12 @@ export class ConfirmNewPassword {
   private readonly destroyRef = inject(DestroyRef);
   private readonly usuarioServicio = inject(UsuarioServicio);
   private readonly router = inject(Router);
+  private dialog = inject(DialogService);
 
   email = input.required<string>();
 
   passwordForm: FormGroup;
   isSubmitting = signal(false);
-  errorMessage = signal<string | null>(null);
 
   constructor() {
     this.passwordForm = this.fb.group(
@@ -88,7 +89,6 @@ export class ConfirmNewPassword {
     }
 
     this.isSubmitting.set(true);
-    this.errorMessage.set(null);
 
     const { password } = this.passwordForm.value;
 
@@ -98,15 +98,22 @@ export class ConfirmNewPassword {
       .subscribe({
         next: () => {
           this.isSubmitting.set(false);
-          alert('Contraseña cambiada exitosamente.');
-          this.router.navigate(['/']);
+          this.dialog
+            .showMessage('Exito', 'Contraseña cambiada exitosamente.')
+            .subscribe(() => {
+              this.usuarioServicio.enviarCodigoRestauracion.set(false);
+              this.usuarioServicio.confirmarNuevaContrasena.set(false);
+              this.router.navigate(['/']);
+            });
         },
         error: (error: Error) => {
           this.isSubmitting.set(false);
-          this.errorMessage.set(
-            'Error al cambiar la contraseña. Por favor, intente nuevamente.',
-          );
-          console.error('Error:', error);
+          this.dialog
+            .showMessage(
+              'Error',
+              'Error al cambiar la contraseña. Por favor, intente nuevamente.',
+            )
+            .subscribe();
         },
       });
   }
