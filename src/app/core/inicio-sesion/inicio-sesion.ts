@@ -4,6 +4,7 @@ import {
   signal,
   inject,
   DestroyRef,
+  OnInit,
 } from '@angular/core';
 import {
   FormGroup,
@@ -33,10 +34,15 @@ import { Router } from '@angular/router';
   styleUrl: './inicio-sesion.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InicioSesion {
+export class InicioSesion implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly router = inject(Router);
   private readonly usuarioServicio = inject(UsuarioServicio);
+
+  ngOnInit() {
+    this.usuarioServicio.enviarCodigoRestauracion.set(false);
+    this.usuarioServicio.confirmarNuevaContrasena.set(false);
+  }
 
   loginForm = new FormGroup({
     email: new FormControl('', {
