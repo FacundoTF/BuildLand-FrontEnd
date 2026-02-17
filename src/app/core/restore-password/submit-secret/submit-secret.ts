@@ -15,6 +15,7 @@ import {
 import { Router } from '@angular/router';
 import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DialogService } from '../../../shared/services/dialog.service';
 
 @Component({
   selector: 'app-submit-secret',
@@ -28,6 +29,7 @@ export class SubmitSecret {
   private readonly destroyRef = inject(DestroyRef);
   private readonly usuarioServicio = inject(UsuarioServicio);
   private readonly router = inject(Router);
+  private dialog = inject(DialogService);
 
   email = input.required<string>();
 
@@ -61,18 +63,19 @@ export class SubmitSecret {
       .subscribe({
         next: () => {
           this.isSubmitting.set(false);
-          alert(
-            'Código verificado exitosamente. Será redirigido a la página de inicio.',
+          this.dialog.showMessage(
+            'Información verificada',
+            'Código verificado exitosamente. Se le habilita el cambio de contraseña.',
           );
           this.usuarioServicio.enviarCodigoRestauracion.set(false);
           this.usuarioServicio.confirmarNuevaContrasena.set(true);
         },
         error: (error: Error) => {
           this.isSubmitting.set(false);
-          this.errorMessage.set(
-            'Código inválido o expirado. Por favor, intente nuevamente.',
+          this.dialog.showMessage(
+            'Error de verificación',
+            'El código ingresado es inválido o ha expirado. Por favor, intente nuevamente.',
           );
-          console.error('Error:', error);
         },
       });
   }
