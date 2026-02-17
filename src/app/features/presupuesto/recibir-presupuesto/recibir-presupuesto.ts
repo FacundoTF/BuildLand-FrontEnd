@@ -22,7 +22,7 @@ import { PresupuestoServicio } from '../../../shared/services/presupuesto/presup
 import { ReturnPaginationResponse } from '../../../core/response-type/return-pagination-response';
 import { PaginationService } from '../../../shared/services/pagination-service';
 import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
-import { Usuario } from '../../../core/entities/usuario/usuario';
+import { Usuario, TipoUsuario } from '../../../core/entities/usuario/usuario';
 
 @Component({
   selector: 'app-recibir-presupuesto',
@@ -56,7 +56,7 @@ export class RecibirPresupuesto implements OnInit {
     rol.subscribe((value) => {
       const usuario = value.payload as Usuario;
 
-      if (usuario.tipoUsuario === 'DISTRIBUIDORA') {
+      if (usuario.tipoUsuario === TipoUsuario.DISTRIBUIDORA) {
         this.esDistribuidora.set(true);
       } else {
         this.esDistribuidora.set(false);

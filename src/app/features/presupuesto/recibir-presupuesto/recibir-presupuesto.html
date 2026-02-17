@@ -1,9 +1,9 @@
 <div class="container">
   <div id="content">
-    @if (esDistribuidora() === true) {
+    @if (esDistribuidora()) {
       <h2>Presupuestos pendientes</h2>
     } @else {
-      <h2>Presupuestos recibidos</h2>
+      <h2>Mis presupuestos</h2>
     }
     <div id="card-container">
       @for (p of presupuestos(); track p.id) {
