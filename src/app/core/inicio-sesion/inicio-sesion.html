@@ -1,5 +1,7 @@
 <div id="login-container">
   <form [formGroup]="loginForm" (submit)="onSubmit()" class="login-form">
+    <h1>BuildLand</h1>
+
     <h2>Iniciar Sesión</h2>
 
     <mat-form-field appearance="outline" class="form-field">
@@ -10,12 +12,12 @@
         formControlName="email"
         placeholder="correo@ejemplo.com"
       />
-      @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+      @if (loginForm.get("email")?.invalid && loginForm.get("email")?.touched) {
         <mat-error>
-          @if (loginForm.get('email')?.errors?.['required']) {
+          @if (loginForm.get("email")?.errors?.["required"]) {
             El correo electrónico es requerido
           }
-          @if (loginForm.get('email')?.errors?.['email']) {
+          @if (loginForm.get("email")?.errors?.["email"]) {
             Ingrese un correo electrónico válido
           }
         </mat-error>
@@ -30,12 +32,14 @@
         formControlName="password"
         placeholder="Ingrese su contraseña"
       />
-      @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+      @if (
+        loginForm.get("password")?.invalid && loginForm.get("password")?.touched
+      ) {
         <mat-error>
-          @if (loginForm.get('password')?.errors?.['required']) {
+          @if (loginForm.get("password")?.errors?.["required"]) {
             La contraseña es requerida
           }
-          @if (loginForm.get('password')?.errors?.['minlength']) {
+          @if (loginForm.get("password")?.errors?.["minlength"]) {
             La contraseña debe tener al menos 6 caracteres
           }
         </mat-error>
@@ -66,7 +70,7 @@
 
       <button
         id="restore-password-button"
-        matButton = "outlined"
+        matButton="outlined"
         color="primary"
         type="button"
         (click)="onForgotPassword()"
