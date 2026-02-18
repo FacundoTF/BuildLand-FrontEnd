@@ -22,7 +22,6 @@ export class PersonaFisicaService {
       this.API_URL,
       {
         usuario: persona.usuario,
-        cuit: persona.cuit,
         nombre: persona.nombre,
         numeroTelefono: persona.numeroTelefono,
         codigoPostal: persona.codigoPostal,
@@ -118,7 +117,7 @@ export class PersonaFisicaService {
       ciudad: persona.ciudad,
     };
 
-    const observable = this.http.patch(`${this.API_URL}/`, body, {
+    const observable = this.http.patch(`${this.API_URL}`, body, {
       observe: 'response',
     });
     try {
