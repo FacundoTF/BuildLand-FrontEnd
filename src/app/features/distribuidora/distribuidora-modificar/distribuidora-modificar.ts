@@ -11,6 +11,7 @@ import { Distribuidora } from '../../../core/entities/distribuidora/distribuidor
 import { Categoria } from '../../../core/entities/categoria/categoria';
 import { TipoUsuario, Usuario } from '../../../core/entities/usuario/usuario';
 import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
+import { DialogService } from '../../../shared/services/dialog.service';
 import { ReturnSearchResponse } from '../../../core/response-type/return-search-response';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButton } from '@angular/material/button';
@@ -24,6 +25,7 @@ import { MatButton } from '@angular/material/button';
 export class DistribuidoraModificar implements OnInit {
   service = inject(DistribuidoraServicio);
   usuarioService = inject(UsuarioServicio);
+  dialogService = inject(DialogService);
   categoriasData = input.required<ReturnSearchResponse>();
   distribuidoraEncontrada: Distribuidora | null = null;
   categorias: Categoria[] = [];
@@ -104,7 +106,9 @@ export class DistribuidoraModificar implements OnInit {
               this.distribuidoraEncontrada.categorias.map((cat) => cat.nombre);
           }
         } else {
-          alert(result.message);
+          await this.dialogService
+            .showMessage('Error', result.message)
+            .toPromise();
           if (result.statusCode === 401) {
             this.usuarioService.cerrarSesion();
           }
@@ -112,11 +116,15 @@ export class DistribuidoraModificar implements OnInit {
           this.distribuidoraForm.reset();
         }
       } catch (error) {
-        alert('Error al buscar la distribuidora');
+        await this.dialogService
+          .showMessage('Error', 'Error al buscar la distribuidora')
+          .toPromise();
         this.distribuidoraEncontrada = null;
       }
     } else {
-      alert('CUIT inválido o vacío');
+      await this.dialogService
+        .showMessage('Error', 'CUIT inválido o vacío')
+        .toPromise();
       this.distribuidoraEncontrada = null;
       this.distribuidoraForm.reset();
     }
@@ -149,25 +157,35 @@ export class DistribuidoraModificar implements OnInit {
       try {
         const result = await this.service.modificarDistribuidora(distribuidora);
         if (result.success) {
-          alert(result.message);
+          await this.dialogService
+            .showMessage('Éxito', result.message)
+            .toPromise();
           this.distribuidoraForm.reset();
           this.distribuidoraCuit.reset();
           this.distribuidoraEncontrada = null;
           this.categoriasSeleccionadas = [];
         } else {
-          alert(result.message);
+          await this.dialogService
+            .showMessage('Error', result.message)
+            .toPromise();
           if (result.statusCode === 401) {
             this.usuarioService.cerrarSesion();
           }
         }
       } catch (error) {
-        alert('Error en la solicitud de modificación');
+        await this.dialogService
+          .showMessage('Error', 'Error en la solicitud de modificación')
+          .toPromise();
       }
     } else {
       if (this.categoriasSeleccionadas.length === 0) {
-        alert('Debe seleccionar al menos una categoría');
+        await this.dialogService
+          .showMessage('Validación', 'Debe seleccionar al menos una categoría')
+          .toPromise();
       } else {
-        alert('Formulario inválido');
+        await this.dialogService
+          .showMessage('Validación', 'Formulario inválido')
+          .toPromise();
       }
       this.distribuidoraForm.reset();
       this.distribuidoraCuit.reset();

@@ -12,6 +12,7 @@ import { DistribuidoraServicio } from '../../../shared/services/distribuidora/di
 import { Categoria } from '../../../core/entities/categoria/categoria';
 import { TipoUsuario, Usuario } from '../../../core/entities/usuario/usuario';
 import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
+import { DialogService } from '../../../shared/services/dialog.service';
 import { ReturnSearchResponse } from '../../../core/response-type/return-search-response';
 import { MatButton } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -25,6 +26,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 export class DistribuidoraAgregar implements OnInit {
   service = inject(DistribuidoraServicio);
   usuarioService = inject(UsuarioServicio);
+  dialogService = inject(DialogService);
   categoriasData = input.required<ReturnSearchResponse>();
   categorias: Categoria[] = [];
   categoriasSeleccionadas: string[] = [];
@@ -143,17 +145,23 @@ export class DistribuidoraAgregar implements OnInit {
 
       const result = await this.service.agregarDistribuidora(distribuidora);
       if (result.success) {
-        alert(result.message);
+        await this.dialogService
+          .showMessage('Éxito', result.message)
+          .toPromise();
         this.distribuidoraForm.reset();
         this.categoriasSeleccionadas = [];
       } else {
-        alert(result.message);
+        await this.dialogService
+          .showMessage('Error', result.message)
+          .toPromise();
         if (result.statusCode === 401) {
           this.usuarioService.cerrarSesion();
         }
       }
     } else if (this.categoriasSeleccionadas.length === 0) {
-      alert('Debe seleccionar al menos una categoría');
+      await this.dialogService
+        .showMessage('Validación', 'Debe seleccionar al menos una categoría')
+        .toPromise();
     }
   }
 }
