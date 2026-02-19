@@ -1,0 +1,39 @@
+<div class="container">
+  <div id="content">
+    <h2>Cotizaciones recibidas</h2>
+    <div id="card-container">
+      @for (resultado of cotizaciones(); track resultado.id) {
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Cotización: {{ resultado.id }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            @if (resultado.fecha) {
+              <p>Fecha: {{ resultado.fecha | date: "short" }}</p>
+            }
+            @if (resultado.nombreDistribuidora) {
+              <p>Distribuidora: {{ resultado.nombreDistribuidora }}</p>
+            }
+            <p>Precio Total: {{ resultado.importeTotal | currency }}</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button
+              matButton="filled"
+              (click)="aceptarCotizacion(resultado.id)"
+            >
+              Aceptar cotización
+            </button>
+            <button
+              matButton="filled"
+              (click)="rechazarCotizacion(resultado.id)"
+            >
+              Rechazar cotización
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      } @empty {
+        <p>No hay cotizaciones disponibles. Vuelva en otro momento</p>
+      }
+    </div>
+  </div>
+</div>

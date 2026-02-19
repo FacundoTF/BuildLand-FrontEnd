@@ -8,16 +8,21 @@ import {
 import { PersonaFisicaService } from '../../../shared/services/persona-fisica/persona-fisica-servicio';
 import { PersonaFisica } from '../../../core/entities/personaFisica/persona-fisica';
 import { Usuario, TipoUsuario } from '../../../core/entities/usuario/usuario';
+import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-persona-fisica-modificar',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, MatButton],
   templateUrl: './persona-fisica-modificar.html',
   styleUrl: './persona-fisica-modificar.scss',
 })
 export class PersonaFisicaModificar {
   service = inject(PersonaFisicaService);
+  usuarioService = inject(UsuarioServicio);
   personaFisicaEncontrada: PersonaFisica | null = null;
+
+  constructor() {}
 
   personaFisicaCuit = new FormGroup({
     cuit: new FormControl('', [
@@ -32,8 +37,6 @@ export class PersonaFisicaModificar {
     codigoPostal: new FormControl('', [Validators.pattern('^[0-9]{4}$')]),
     numeroTelefono: new FormControl('', [Validators.pattern('^[0-9]{10,15}$')]),
     ciudad: new FormControl(''),
-    correoElectronico: new FormControl('', [Validators.email]),
-    contraseña: new FormControl('', [Validators.minLength(6)]),
   });
 
   async handleSubmitCuit() {
@@ -44,11 +47,11 @@ export class PersonaFisicaModificar {
         return;
       }
       try {
-        const personaFisica: PersonaFisica | null =
-          await this.service.buscarPersonaFisica(
-            this.personaFisicaCuit.value.cuit!,
-          );
-        if (personaFisica) {
+        const result = await this.service.buscarPersonaFisica(
+          this.personaFisicaCuit.value.cuit!,
+        );
+        if (result.success && result.payload) {
+          const personaFisica = result.payload as PersonaFisica;
           console.log('Persona física encontrada:', personaFisica);
           console.log(typeof personaFisica);
 
@@ -63,13 +66,12 @@ export class PersonaFisicaModificar {
             codigoPostal: personaFisica.codigoPostal,
             numeroTelefono: personaFisica.numeroTelefono,
             ciudad: personaFisica.ciudad,
-            correoElectronico: '',
-            contraseña: '',
           });
         } else {
-          console.error(
-            'No se encontró la persona física con el CUIT proporcionado',
-          );
+          console.error(result.message);
+          if (result.statusCode === 401) {
+            this.usuarioService.cerrarSesion();
+          }
           this.personaFisicaEncontrada = null;
           this.personaFisicaForm.reset();
         }
@@ -99,12 +101,12 @@ export class PersonaFisicaModificar {
       }
 
       const usuarioModificar = new Usuario(
-        0, // id can be 0 as it's not used in the backend for modification
-        TipoUsuario.PERSONA_FISICA,
         cuit,
-        null as any, // grupo is not needed for modification
-        personaFisicaData.correoElectronico!,
-        personaFisicaData.contraseña!,
+        TipoUsuario.PERSONA_FISICA,
+        null,
+        null,
+        '',
+        '',
       );
 
       const personaModificar = new PersonaFisica(
@@ -117,17 +119,20 @@ export class PersonaFisicaModificar {
       );
 
       try {
-        const success: any = await this.service.modificarPersonaFisica(
+        const result = await this.service.modificarPersonaFisica(
           usuarioModificar,
           personaModificar,
         );
-        if (success) {
-          console.log('Persona física modificada exitosamente');
+        if (result.success) {
+          console.log(result.message);
           this.personaFisicaForm.reset();
           this.personaFisicaCuit.reset();
           this.personaFisicaEncontrada = null;
         } else {
-          console.error('Error al modificar la persona física');
+          console.error(result.message);
+          if (result.statusCode === 401) {
+            this.usuarioService.cerrarSesion();
+          }
         }
       } catch (error) {
         console.error('Error en la solicitud de modificación:', error);

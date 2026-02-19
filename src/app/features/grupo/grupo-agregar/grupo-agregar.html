@@ -1,0 +1,159 @@
+<div class="container">
+  <div id="content">
+    <h2>Agregar Grupo</h2>
+
+    <div class="grupo-form">
+      <form [formGroup]="form" (ngSubmit)="confirmar()">
+        <div class="form-section">
+          <h3>Datos del Grupo</h3>
+
+          <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input
+              type="text"
+              id="nombre"
+              formControlName="nombre"
+              placeholder="Ingrese el nombre del grupo"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="descripcion">Descripción</label>
+            <textarea
+              id="descripcion"
+              formControlName="descripcion"
+              placeholder="Ingrese una descripción"
+              required
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Permisos y Grupos</h3>
+
+          <div class="form-actions buttons-row">
+            <button
+              type="button"
+              matButton="outlined"
+              class="btn-secondary"
+              (click)="abrirDialogoPermisos()"
+            >
+              Agregar permisos
+            </button>
+            <button
+              type="button"
+              matButton="outlined"
+              class="btn-secondary"
+              (click)="abrirDialogoGrupos()"
+            >
+              Agregar grupos
+            </button>
+          </div>
+        </div>
+
+        @if (hayPermisosSeleccionados()) {
+          <div class="form-section">
+            <h3>Permisos añadidos</h3>
+            <div class="tabla-container">
+              <table
+                mat-table
+                [dataSource]="permisosSeleccionados()"
+                class="mat-elevation-z8"
+              >
+                <ng-container matColumnDef="nombre">
+                  <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                  <td mat-cell *matCellDef="let item">{{ item.nombre }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="descripcion">
+                  <th mat-header-cell *matHeaderCellDef>Descripción</th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.descripcion }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="acciones">
+                  <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                  <td mat-cell *matCellDef="let item; let i = index">
+                    <button
+                      mat-icon-button
+                      color="warn"
+                      (click)="removerPermiso(i)"
+                      type="button"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="displayedColumnsPermisos"
+                ></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayedColumnsPermisos"
+                ></tr>
+              </table>
+            </div>
+          </div>
+        }
+
+        @if (hayGruposSeleccionados()) {
+          <div class="form-section">
+            <h3>Grupos añadidos</h3>
+            <div class="tabla-container">
+              <table
+                mat-table
+                [dataSource]="gruposSeleccionados()"
+                class="mat-elevation-z8"
+              >
+                <ng-container matColumnDef="nombre">
+                  <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                  <td mat-cell *matCellDef="let item">{{ item.nombre }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="descripcion">
+                  <th mat-header-cell *matHeaderCellDef>Descripción</th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.descripcion }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="acciones">
+                  <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                  <td mat-cell *matCellDef="let item; let i = index">
+                    <button
+                      mat-icon-button
+                      color="warn"
+                      (click)="removerGrupo(i)"
+                      type="button"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="displayedColumnsGrupos"
+                ></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayedColumnsGrupos"
+                ></tr>
+              </table>
+            </div>
+          </div>
+        }
+
+        <div class="form-actions">
+          <button type="submit" matButton="filled" [disabled]="form.invalid">
+            Confirmar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

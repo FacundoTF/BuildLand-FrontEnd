@@ -1,33 +1,171 @@
+<div id="usuario-info">
+  <mat-icon>account_circle</mat-icon>
+  <div id="usuario-nombre">
+    {{ this.obtenerNombreUsuario() }}
+  </div>
+</div>
 <div id="Permissions">
-  <div id="G-DI" class="Gestion">
-    <button (click)="ToogleGestion('G-DI')" class="OpcionNoPlegable">
+  <div id="G-Di" class="Gestion">
+    <button
+      matButton="filled"
+      (click)="ToogleGestion('G-Di')"
+      class="OpcionGestion sidebar-btn"
+      [class.active]="activeButton() === 'G-Di'"
+    >
       Gestionar Distribuidoras
     </button>
-    <button id="A-DI" (click)="AgregarDistribuidora()" class="Opcion">
+    <button
+      matButton="filled"
+      id="A-Di"
+      (click)="AgregarDistribuidora()"
+      class="Opcion sidebar-btn"
+      [class.active]="activeButton() === 'A-Di'"
+    >
       Agregar distribuidora
     </button>
-    <button id="R-DI" (click)="RemoverDistribuidora()" class="Opcion">
+    <button
+      matButton="filled"
+      id="R-Di"
+      (click)="RemoverDistribuidora()"
+      class="Opcion sidebar-btn"
+      [class.active]="activeButton() === 'R-Di'"
+    >
       Remover distribuidora
     </button>
-    <button id="M-DI" (click)="ModificarDistribuidora()" class="Opcion">
+    <button
+      matButton="filled"
+      id="M-Di"
+      (click)="ModificarDistribuidora()"
+      class="Opcion sidebar-btn"
+      [class.active]="activeButton() === 'M-Di'"
+    >
       Modificar distribuidora
     </button>
   </div>
-  <div id="G-PF" class="Gestion">
-    <button (click)="ToogleGestion('G-PF')" class="OpcionNoPlegable">
+  <div id="G-Pf" class="Gestion">
+    <button
+      mat-flat-button
+      (click)="ToogleGestion('G-Pf')"
+      class="OpcionGestion sidebar-btn"
+      [class.active]="activeButton() === 'G-Pf'"
+    >
       Gestionar personas fisicas
     </button>
-    <button id="A-PF" (click)="AgregarPersonaFisica()" class="Opcion">
+    <button
+      matButton="filled"
+      id="A-Pf"
+      (click)="AgregarPersonaFisica()"
+      class="Opcion sidebar-btn"
+      [class.active]="activeButton() === 'A-Pf'"
+    >
       Agregar persona física
     </button>
-    <button id="R-PF" (click)="RemoverPersonaFisica()" class="Opcion">
+    <button
+      matButton="filled"
+      id="R-Pf"
+      (click)="RemoverPersonaFisica()"
+      class="Opcion sidebar-btn"
+      [class.active]="activeButton() === 'R-Pf'"
+    >
       Remover persona fisica
     </button>
-    <button id="M-PF" (click)="ModificarPersonaFisica()" class="Opcion">
+    <button
+      matButton="filled"
+      id="M-Pf"
+      (click)="ModificarPersonaFisica()"
+      class="Opcion sidebar-btn"
+      [class.active]="activeButton() === 'M-Pf'"
+    >
       Modificar persona fisica
     </button>
   </div>
   <div id="G-Pr" class="Gestion">
-    <button id="R-Pr" (click)="RealizarPresupuesto()" class="OpcionNoPlegable">Realizar presupuesto</button>
+    <button
+      matButton="filled"
+      id="Z-Pr"
+      (click)="RealizarPresupuesto()"
+      class="OpcionNoPlegable sidebar-btn"
+      [class.active]="activeButton() === 'Z-Pr'"
+    >
+      Realizar presupuesto
+    </button>
+    <button
+      matButton="filled"
+      id="Y-Pr"
+      class="OpcionNoPlegable sidebar-btn"
+      [class.active]="activeButton() === 'Y-Pr'"
+      (click)="RecibirPresupuesto()"
+    >
+      Gestionar presupuestos actuales
+    </button>
+  </div>
+  <div id="G-X" class="Gestion">
+    <button
+      matButton="filled"
+      id="P-X"
+      (click)="ReporteProductosMasSolicitados()"
+      class="OpcionNoPlegable sidebar-btn"
+      [class.active]="activeButton() === 'P-X'"
+    >
+      Reporte productos más solicitados
+    </button>
+    <button
+      matButton="filled"
+      id="C-X"
+      (click)="ReporteCotizacionesPerdidasYGanadas()"
+      class="OpcionNoPlegable sidebar-btn"
+      [class.active]="activeButton() === 'C-X'"
+    >
+      Reporte cotizaciones ganadas y perdidas
+    </button>
+  </div>
+  <div id="G-Us" class="Gestion">
+    <button
+      matButton="filled"
+      id="A-Us"
+      (click)="AgregarUsuario()"
+      class="OpcionNoPlegable sidebar-btn"
+      [class.active]="activeButton() === 'A-Us'"
+    >
+      Agregar usuario
+    </button>
+    <button
+      matButton="filled"
+      id="R-Us"
+      (click)="RemoverUsuario()"
+      class="OpcionNoPlegable sidebar-btn"
+      [class.active]="activeButton() === 'R-Us'"
+    >
+      Remover usuario
+    </button>
+    <button
+      matButton="filled"
+      id="M-Us"
+      (click)="ModificarUsuario()"
+      class="OpcionNoPlegable sidebar-btn"
+      [class.active]="activeButton() === 'M-Us'"
+    >
+      Modificar usuario
+    </button>
+    <button
+      matButton="filled"
+      id="Z-Us"
+      (click)="ResetearClave()"
+      class="OpcionNoPlegable sidebar-btn"
+      [class.active]="activeButton() === 'Z-Us'"
+    >
+      Resetear clave
+    </button>
+  </div>
+
+  <div class="Gestion">
+    <button
+      matButton="filled"
+      id="CerrarSesion"
+      class="sidebar-btn"
+      (click)="CerrarSesion()"
+    >
+      Cerrar sesión
+    </button>
   </div>
 </div>

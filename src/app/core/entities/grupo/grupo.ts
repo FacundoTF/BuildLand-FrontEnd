@@ -6,7 +6,6 @@ export class Grupo implements ConjuntoGrupoPermiso {
     public id: number,
     public nombre: string,
     public descripcion: string,
-    public permisos: Permiso[],
-    public grupos: Grupo[]
+    public elementos: ConjuntoGrupoPermiso[],
   ) {}
 }

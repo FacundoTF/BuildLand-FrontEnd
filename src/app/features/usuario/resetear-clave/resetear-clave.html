@@ -1,0 +1,52 @@
+<div class="container">
+  <div id="content">
+    <h2>Resetear Clave de Usuario</h2>
+
+    <!-- Contenedor para buscar usuario por correo electrónico -->
+    <div class="search-container">
+      <h3>Buscar Usuario</h3>
+      <form
+        [formGroup]="usuarioEmailForm"
+        (ngSubmit)="handleSubmitEmail()"
+        class="search-form"
+      >
+        <div class="form-group">
+          <label for="searchEmail">Correo electrónico</label>
+          <input
+            type="email"
+            id="searchEmail"
+            name="searchEmail"
+            placeholder="Ingrese el correo electrónico para buscar"
+            formControlName="email"
+            required
+          />
+        </div>
+        <div class="search-actions">
+          <button matButton="filled" type="submit">Buscar</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Contenedor para mostrar datos del usuario encontrado -->
+    @if (mostrarDatosUsuario()) {
+      <div class="edit-container">
+        <h3>Datos del Usuario</h3>
+        @if (usuarioEncontrado) {
+          <div class="user-info">
+            <p><strong>CUIT:</strong> {{ cuitUsuario() }}</p>
+            <p><strong>Tipo de Usuario:</strong> {{ tipoUsuario() }}</p>
+          </div>
+        }
+        <div class="form-actions">
+          <button
+            type="button"
+            matButton="filled"
+            (click)="handleResetearClave()"
+          >
+            Resetear clave
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

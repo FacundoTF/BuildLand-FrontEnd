@@ -1,26 +1,78 @@
-#Permissions{
-    display: flex;
-    flex-direction: column;
+@use "sass:map";
+//@use '../../../../styles/buildland-colors' as colors;
+@use "../../../../paleta-buildland" as colors;
+
+// Desktop - altura completa
+@media (min-width: 1024px) {
+  :host {
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    width: 25vw;
+    background: var(--mat-sys-primary);
+  }
 }
 
-.Gestion{
+#Permissions {
   display: flex;
-    flex-direction: column;
-    align-items: center;
+  flex-direction: column;
 }
 
-.Gestion > .OpcionNoPlegable{
+#usuario-info {
+  display: flex;
+  padding: 1rem;
+  border: 5px solid var(--mat-sys-tertiary);
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+  .material-icons {
+    font-size: 3rem;
+    width: 3rem;
+    height: 3rem;
+    margin-right: 1rem;
+  }
+  div {
+    text-align: center;
+    line-height: 3rem;
+  }
+}
+
+// Estilos base para los botones del sidebar
+.sidebar-btn {
+  &.active {
+    background-color: var(--mat-sys-secondary);
+  }
+}
+
+#CerrarSesion {
+  display: block;
+  justify-content: center;
+  padding: 6px;
+  width: 100%;
+}
+
+.Gestion {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Gestion > .OpcionGestion {
   display: none;
   justify-content: center;
-  margin: 6px;
   padding: 6px;
-  width: 95%;
+  width: 100%;
 }
 
-.Gestion > .Opcion{
+.Gestion > .OpcionNoPlegable {
   display: none;
-    justify-content: center;
-    margin: 6px;
-    padding: 6px;
-    width: 95%;
+  justify-content: center;
+  padding: 6px;
+  width: 100%;
+}
+
+.Gestion > .Opcion {
+  display: none;
+  justify-content: center;
+  padding: 6px;
+  width: 100%;
 }

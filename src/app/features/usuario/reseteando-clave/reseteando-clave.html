@@ -1,0 +1,58 @@
+<div class="container">
+  <div id="content">
+    <h2>Reseteando Clave</h2>
+
+    <div class="edit-container">
+      <h3>Nueva Contraseña</h3>
+      <p class="email-info">
+        <strong>Correo electrónico:</strong> {{ email() }}
+      </p>
+
+      <form
+        [formGroup]="claveForm"
+        (ngSubmit)="handleConfirmarCambios()"
+        class="clave-form"
+      >
+        <div class="form-group">
+          <label for="contrasena">Contraseña</label>
+          <input
+            type="password"
+            id="contrasena"
+            name="contrasena"
+            placeholder="Ingrese la nueva contraseña"
+            formControlName="contrasena"
+            maxlength="255"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="confirmarContrasena">Confirmar contraseña</label>
+          <input
+            type="password"
+            id="confirmarContrasena"
+            name="confirmarContrasena"
+            placeholder="Confirme la nueva contraseña"
+            formControlName="confirmarContrasena"
+            maxlength="255"
+            required
+          />
+        </div>
+
+        @if (claveForm.errors?.["passwordsMismatch"]) {
+          <p class="error-message">Las contraseñas no coinciden.</p>
+        }
+
+        <div class="form-actions">
+          <button matButton="filled" type="submit" [disabled]="cargando()">
+            @if (cargando()) {
+              Procesando...
+            } @else {
+              Confirmar cambios
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

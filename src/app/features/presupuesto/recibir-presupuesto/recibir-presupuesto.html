@@ -1,0 +1,74 @@
+<div class="container">
+  <div id="content">
+    @if (esDistribuidora()) {
+      <h2>Presupuestos pendientes</h2>
+    } @else {
+      <h2>Mis presupuestos</h2>
+    }
+    <div id="card-container">
+      @for (p of presupuestos(); track p.id) {
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Presupuesto: {{ p.id }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            @if (p.fecha) {
+              <p>Fecha de creación: {{ p.fecha | date: "short" }}</p>
+            }
+            @if (p.fechaLimite) {
+              <p>Fecha límite: {{ p.fechaLimite | date: "short" }}</p>
+            }
+          </mat-card-content>
+          <mat-card-actions>
+            <button matButton="filled" (click)="verDetalles(p.id)">
+              Ver Detalles
+            </button>
+            @if (esDistribuidora() === true) {
+              <button matButton="filled" (click)="rechazarPresupuesto(p.id)">
+                Rechazar presupuesto
+              </button>
+            } @else {
+              <button
+                matButton="filled"
+                (click)="verCotizaciones(p.id.toString())"
+              >
+                Ver cotizaciones asociadas
+              </button>
+            }
+          </mat-card-actions>
+        </mat-card>
+      } @empty {
+        <p>No hay presupuestos disponibles. Vuelva en otro momento</p>
+      }
+    </div>
+    @if (this.presupuestos().length !== 0) {
+      <div id="pagination-controls">
+        @if (this.paginationService.lastPage()) {
+          <button
+            matButton="filled"
+            (click)="
+              this.decrementarPagina(paginationService.currentPage() - 1)
+            "
+          >
+            <-
+          </button>
+        } @else {
+          <button matButton="filled" style="visibility: hidden"><-</button>
+        }
+        <small>Página: {{ paginationService.currentPage() + 1 }}</small>
+        @if (this.paginationService.firstPage()) {
+          <button
+            matButton="filled"
+            (click)="
+              this.incrementarPagina(paginationService.currentPage() + 1)
+            "
+          >
+            ->
+          </button>
+        } @else {
+          <button matButton="filled" style="visibility: hidden">-></button>
+        }
+      </div>
+    }
+  </div>
+</div>

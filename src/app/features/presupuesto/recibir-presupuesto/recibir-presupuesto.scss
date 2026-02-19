@@ -1,0 +1,16 @@
+#content {
+  justify-content: flex-start;
+}
+#pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 3rem;
+}
+mat-card-actions {
+  button {
+    margin: 1rem 0 1rem 1rem;
+  }
+}

@@ -9,15 +9,20 @@ import { PersonaFisicaService } from '../../../shared/services/persona-fisica/pe
 import { PersonaFisica } from '../../../core/entities/personaFisica/persona-fisica';
 import { Usuario, TipoUsuario } from '../../../core/entities/usuario/usuario';
 import { Grupo } from '../../../core/entities/grupo/grupo';
+import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
+import { DialogService } from '../../../shared/services/dialog.service';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-persona-fisica-agregar',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, MatButton],
   templateUrl: './persona-fisica-agregar.html',
   styleUrl: './persona-fisica-agregar.scss',
 })
 export class PersonaFisicaAgregar {
   service = inject(PersonaFisicaService);
+  usuarioService = inject(UsuarioServicio);
+  dialogService = inject(DialogService);
 
   personaFisicaForm = new FormGroup({
     cuit: new FormControl('', {
@@ -63,10 +68,10 @@ export class PersonaFisicaAgregar {
       } = this.personaFisicaForm.getRawValue();
 
       const usuario = new Usuario(
-        null,
-        TipoUsuario.PERSONA_FISICA,
         cuit,
-        null as any,
+        TipoUsuario.PERSONA_FISICA,
+        true,
+        null,
         correoElectronico,
         contraseña,
       );
@@ -78,17 +83,19 @@ export class PersonaFisicaAgregar {
         codigoPostal,
         ciudad,
       );
+      const result = await this.service.agregarPersonaFisica(persona);
 
-      try {
-        const result = await this.service.agregarPersonaFisica(persona);
-        if (result) {
-          alert('Persona física agregada exitosamente');
-          this.personaFisicaForm.reset();
-        } else {
-          alert('Error al agregar la persona física');
+      if (result.success) {
+        this.dialogService
+          .showMessage('Éxito', result.message)
+          .subscribe(() => {
+            this.personaFisicaForm.reset();
+          });
+      } else {
+        this.dialogService.showMessage('Error', result.message).subscribe();
+        if (result.statusCode === 401) {
+          this.usuarioService.cerrarSesion();
         }
-      } catch (error) {
-        alert('Error en la solicitud:');
       }
     }
   }

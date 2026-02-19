@@ -6,6 +6,6 @@ import { SideBar } from '../../shared/components/side-bar/side-bar';
   selector: 'app-base-page',
   imports: [RouterOutlet, SideBar],
   templateUrl: './base-page.html',
-  styleUrl: './base-page.css',
+  styleUrl: './base-page.scss',
 })
 export class BasePage {}

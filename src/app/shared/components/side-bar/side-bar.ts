@@ -1,16 +1,33 @@
-import { Component, OnInit, inject } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { UsuarioServicio } from '../../services/usuario-servicio';
+import { MatButtonModule } from '@angular/material/button';
+import { DialogService } from '../../services/dialog.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-side-bar',
-  imports: [],
+  imports: [MatButtonModule, MatIconModule],
   templateUrl: './side-bar.html',
   styleUrl: './side-bar.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SideBar implements OnInit {
   private router = inject(Router);
   private usuarioServicio = inject(UsuarioServicio);
+  private dialogService = inject(DialogService);
+
+  activeButton = signal<string | null>(null);
+
+  setActiveButton(buttonId: string) {
+    this.activeButton.set(buttonId);
+  }
 
   ngOnInit(): void {
     const permisos = sessionStorage.getItem('permisos');
@@ -22,33 +39,43 @@ export class SideBar implements OnInit {
         const permiso = element.toString();
         let entidadPermiso = permiso.substring(2, 4);
         const entidadContenedorGestion = document.querySelector(
-          `#Permissions #G-${entidadPermiso}`,
+          `#Permissions > #G-${entidadPermiso}`,
         ) as HTMLElement;
         if (entidadContenedorGestion) {
-          const computedDisplay = window.getComputedStyle(
-            entidadContenedorGestion,
-          ).display;
-          if (computedDisplay === 'block' || computedDisplay === 'none') {
-            entidadContenedorGestion.style.display = 'flex';
-          }
-          const entidadBtnGestion = document.querySelector(
-            `#Permissions #G-${entidadPermiso} > .OpcionNoPlegable`,
+          const btnGestion = entidadContenedorGestion.querySelector(
+            `#Permissions > #G-${entidadPermiso} > .OpcionGestion`,
           ) as HTMLElement;
-          if (entidadBtnGestion) {
-            entidadBtnGestion.style.display = 'flex';
+          if (btnGestion) {
+            btnGestion.style.display = 'flex';
           }
-        }
-        const seccion = document.querySelector(
-          `#${permiso}.Opcion`,
-        ) as HTMLElement;
-        if (seccion) {
-          seccion.style.display = 'none';
-          seccion.classList.add('activado');
+
+          const entidadBtnNoDesplegable = document.querySelector(
+            `#Permissions #G-${entidadPermiso} > #${permiso}.OpcionNoPlegable`,
+          ) as HTMLElement;
+          if (entidadBtnNoDesplegable) {
+            entidadBtnNoDesplegable.style.display = 'flex';
+            entidadBtnNoDesplegable.classList.add('activado');
+          }
+          const elementoBtnDesplegable = document.querySelector(
+            `#Permissions #G-${entidadPermiso} > #${permiso}.Opcion`,
+          ) as HTMLElement;
+          if (elementoBtnDesplegable) {
+            elementoBtnDesplegable.style.display = 'none';
+            elementoBtnDesplegable.classList.add('activado');
+          }
         }
       });
     }
+    this.usuarioServicio.obtenerNombreUsuario('');
   }
+
+  obtenerNombreUsuario() {
+    return this.usuarioServicio.nombreUsuario();
+  }
+
   ToogleGestion(id: string) {
+    this.setActiveButton(id);
+    console.log(id);
     const element = document.getElementById(id);
     if (element) {
       const buttons = element.querySelectorAll('.Opcion.activado');
@@ -61,28 +88,122 @@ export class SideBar implements OnInit {
   }
 
   AgregarDistribuidora() {
-    this.router.navigate(['/base-page/distribuidora/agregar']);
+    this.setActiveButton('A-Di');
+    this.router.navigate(['/base-page/distribuidora/agregar']).catch(() => {
+      this.dialogService
+        .showMessage('Error', 'Hubo un error al entrar en esta página')
+        .subscribe();
+    });
   }
   RemoverDistribuidora() {
-    this.router.navigate(['/base-page/distribuidora/remover']);
+    this.setActiveButton('R-Di');
+    this.router.navigate(['/base-page/distribuidora/remover']).catch(() => {
+      this.dialogService
+        .showMessage('Error', 'Hubo un error al entrar en esta página')
+        .subscribe();
+    });
   }
   ModificarDistribuidora() {
-    this.router.navigate(['/base-page/distribuidora/modificar']);
+    this.setActiveButton('M-Di');
+    this.router.navigate(['/base-page/distribuidora/modificar']).catch(() => {
+      this.dialogService
+        .showMessage('Error', 'Hubo un error al entrar en esta página')
+        .subscribe();
+    });
   }
   AgregarPersonaFisica() {
-    this.router.navigate(['/base-page/persona-fisica/agregar']);
+    this.setActiveButton('A-Pf');
+    this.router.navigate(['/base-page/persona-fisica/agregar']).catch(() => {
+      this.dialogService
+        .showMessage('Error', 'Hubo un error al entrar en esta página')
+        .subscribe();
+    });
   }
   RemoverPersonaFisica() {
-    this.router.navigate(['/base-page/persona-fisica/remover']);
+    this.setActiveButton('R-Pf');
+    this.router.navigate(['/base-page/persona-fisica/remover']).catch(() => {
+      this.dialogService
+        .showMessage('Error', 'Hubo un error al entrar en esta página')
+        .subscribe();
+    });
   }
   ModificarPersonaFisica() {
-    this.router.navigate(['/base-page/persona-fisica/modificar']);
+    this.setActiveButton('M-Pf');
+    this.router.navigate(['/base-page/persona-fisica/modificar']).catch(() => {
+      this.dialogService
+        .showMessage('Error', 'Hubo un error al entrar en esta página')
+        .subscribe();
+    });
   }
   RealizarPresupuesto() {
-    this.router.navigate(['/base-page/presupuesto/realizar']);
+    this.setActiveButton('Z-Pr');
+    this.router.navigate(['/base-page/presupuesto/realizar']).catch(() => {
+      this.dialogService
+        .showMessage('Error', 'Hubo un error al entrar en esta página')
+        .subscribe();
+    });
+  }
+  RecibirPresupuesto() {
+    this.setActiveButton('Y-Pr');
+    this.router.navigate(['/base-page/presupuesto/recibir']).catch(() => {
+      this.dialogService
+        .showMessage('Error', 'Hubo un error al entrar en esta página')
+        .subscribe();
+    });
+  }
+  ReporteProductosMasSolicitados() {
+    this.setActiveButton('P-X');
+    this.router
+      .navigate(['base-page/reporte/productos-mas-solicitados'])
+      .catch(() => {
+        this.dialogService
+          .showMessage('Error', 'Hubo un error al entrar en esta página')
+          .subscribe();
+      });
+  }
+  ReporteCotizacionesPerdidasYGanadas() {
+    this.setActiveButton('C-X');
+    this.router
+      .navigate(['base-page/reporte/cotizaciones-perdidas-ganadas'])
+      .catch(() => {
+        this.dialogService
+          .showMessage('Error', 'Hubo un error al entrar en esta página')
+          .subscribe();
+      });
+  }
+  AgregarUsuario() {
+    this.setActiveButton('A-Us');
+    this.router.navigate(['/base-page/usuario/agregar']).catch(() => {
+      this.dialogService
+        .showMessage('Error', 'Hubo un error al entrar en esta página')
+        .subscribe();
+    });
+  }
+  RemoverUsuario() {
+    this.setActiveButton('R-Us');
+    this.router.navigate(['/base-page/usuario/remover']).catch(() => {
+      this.dialogService
+        .showMessage('Error', 'Hubo un error al entrar en esta página')
+        .subscribe();
+    });
+  }
+  ModificarUsuario() {
+    this.setActiveButton('M-Us');
+    this.router.navigate(['/base-page/usuario/modificar']).catch(() => {
+      this.dialogService
+        .showMessage('Error', 'Hubo un error al entrar en esta página')
+        .subscribe();
+    });
+  }
+  ResetearClave() {
+    this.setActiveButton('Z-Us');
+    this.router.navigate(['/base-page/usuario/resetear-clave']).catch(() => {
+      this.dialogService
+        .showMessage('Error', 'Hubo un error al entrar en esta página')
+        .subscribe();
+    });
   }
   CerrarSesion() {
     this.usuarioServicio.cerrarSesion();
-    this.router.navigate(['/iniciar-sesion']);
   }
 }

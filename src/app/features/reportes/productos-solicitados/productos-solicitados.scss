@@ -1,0 +1,44 @@
+.header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.fase-container {
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+
+  h3 {
+    margin-top: 0;
+  }
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  margin: 10px 0;
+
+  mat-radio-button {
+    margin-bottom: 5px;
+  }
+}
+
+.sub-selection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.actions {
+  margin-top: 20px;
+}
+
+canvas {
+  max-width: 500px;
+  max-height: 500px;
+  justify-self: center;
+}

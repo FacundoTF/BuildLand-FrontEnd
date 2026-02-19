@@ -1,26 +1,32 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, input, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import { DistribuidoraServicio } from '../../../shared/services/distribuidora/distribuidora-servicio';
 import { Distribuidora } from '../../../core/entities/distribuidora/distribuidora';
-import { CategoriaService } from '../../../shared/services/categoria/categoria-service';
 import { Categoria } from '../../../core/entities/categoria/categoria';
 import { TipoUsuario, Usuario } from '../../../core/entities/usuario/usuario';
+import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
+import { DialogService } from '../../../shared/services/dialog.service';
+import { ReturnSearchResponse } from '../../../core/response-type/return-search-response';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-distribuidora-modificar',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, MatCheckboxModule, MatButton],
   templateUrl: './distribuidora-modificar.html',
   styleUrl: './distribuidora-modificar.scss',
 })
 export class DistribuidoraModificar implements OnInit {
   service = inject(DistribuidoraServicio);
-  categoriaService = inject(CategoriaService);
+  usuarioService = inject(UsuarioServicio);
+  dialogService = inject(DialogService);
+  categoriasData = input.required<ReturnSearchResponse>();
   distribuidoraEncontrada: Distribuidora | null = null;
   categorias: Categoria[] = [];
   categoriasSeleccionadas: string[] = [];
@@ -46,31 +52,10 @@ export class DistribuidoraModificar implements OnInit {
     ]),
     descripcion: new FormControl('', [Validators.required]),
     ciudad: new FormControl('', [Validators.required]),
-    correoElectronico: new FormControl('', [
-      Validators.required,
-      Validators.email,
-    ]),
-    contraseña: new FormControl('', [
-      Validators.required,
-      Validators.minLength(6),
-    ]),
   });
 
-  async ngOnInit() {
-    await this.cargarCategorias();
-  }
-
-  async cargarCategorias() {
-    try {
-      let result = await this.categoriaService.traerCategorias().toPromise();
-      if (result) {
-        this.categorias = result;
-      } else {
-        throw 'Las categorias resultaron ser undefined';
-      }
-    } catch (error) {
-      alert('Error al cargar categorías');
-    }
+  ngOnInit() {
+    this.categorias = this.categoriasData().payload as Categoria[];
   }
 
   toggleCategoria(nombreCategoria: string) {
@@ -89,11 +74,11 @@ export class DistribuidoraModificar implements OnInit {
   async handleSubmitCuit() {
     if (this.distribuidoraCuit.valid) {
       try {
-        const distribuidora = await this.service.buscarDistribuidoraCuit(
+        const result = await this.service.buscarDistribuidoraCuit(
           this.distribuidoraCuit.value.cuit,
         );
-        if (distribuidora) {
-          this.distribuidoraEncontrada = distribuidora;
+        if (result.success && result.payload) {
+          this.distribuidoraEncontrada = result.payload as Distribuidora;
 
           const container = document.querySelector(
             '.edit-container',
@@ -103,37 +88,43 @@ export class DistribuidoraModificar implements OnInit {
           // Poblar el formulario con los datos encontrados
           this.distribuidoraForm.patchValue({
             cuit: this.distribuidoraCuit.value.cuit,
-            nombre: distribuidora.nombre,
-            direccion: distribuidora.direccion,
-            codigoPostal: distribuidora.codigoPostal,
-            numeroTelefono: distribuidora.numeroTelefono,
-            descripcion: distribuidora.descripcion,
-            ciudad: distribuidora.ciudad,
-            correoElectronico: '', // Campo nuevo - se dejará vacío para que el usuario lo complete
-            contraseña: '', // Campo nuevo - se dejará vacío para que el usuario lo complete
+            nombre: this.distribuidoraEncontrada.nombre,
+            direccion: this.distribuidoraEncontrada.direccion,
+            codigoPostal: this.distribuidoraEncontrada.codigoPostal,
+            numeroTelefono: this.distribuidoraEncontrada.numeroTelefono,
+            descripcion: this.distribuidoraEncontrada.descripcion,
+            ciudad: this.distribuidoraEncontrada.ciudad,
           });
 
           // Cargar las categorías seleccionadas
           this.categoriasSeleccionadas = [];
           if (
-            distribuidora.categorias &&
-            Array.isArray(distribuidora.categorias)
+            this.distribuidoraEncontrada.categorias &&
+            Array.isArray(this.distribuidoraEncontrada.categorias)
           ) {
-            this.categoriasSeleccionadas = distribuidora.categorias.map(
-              (cat) => cat.nombre,
-            );
+            this.categoriasSeleccionadas =
+              this.distribuidoraEncontrada.categorias.map((cat) => cat.nombre);
           }
         } else {
-          alert('No se encontró la distribuidora con el CUIT proporcionado');
+          await this.dialogService
+            .showMessage('Error', result.message)
+            .toPromise();
+          if (result.statusCode === 401) {
+            this.usuarioService.cerrarSesion();
+          }
           this.distribuidoraEncontrada = null;
           this.distribuidoraForm.reset();
         }
       } catch (error) {
-        alert('Error al buscar la distribuidora');
+        await this.dialogService
+          .showMessage('Error', 'Error al buscar la distribuidora')
+          .toPromise();
         this.distribuidoraEncontrada = null;
       }
     } else {
-      alert('CUIT inválido o vacío');
+      await this.dialogService
+        .showMessage('Error', 'CUIT inválido o vacío')
+        .toPromise();
       this.distribuidoraEncontrada = null;
       this.distribuidoraForm.reset();
     }
@@ -146,12 +137,12 @@ export class DistribuidoraModificar implements OnInit {
     ) {
       const distribuidora = new Distribuidora(
         new Usuario(
-          null,
+          this.distribuidoraCuit.value.cuit!,
           TipoUsuario.DISTRIBUIDORA,
-          '',
           null,
-          this.distribuidoraForm.value.correoElectronico!,
-          this.distribuidoraForm.value.contraseña!,
+          null,
+          '',
+          '',
         ),
         this.distribuidoraCuit.value.cuit!,
         this.distribuidoraForm.value.nombre!,
@@ -164,30 +155,54 @@ export class DistribuidoraModificar implements OnInit {
       );
 
       try {
-        const success =
-          await this.service.modificarDistribuidora(distribuidora);
-        if (success) {
-          alert('Distribuidora modificada exitosamente');
+        const result = await this.service.modificarDistribuidora(distribuidora);
+        if (result.success) {
+          await this.dialogService
+            .showMessage('Éxito', result.message)
+            .toPromise();
           this.distribuidoraForm.reset();
           this.distribuidoraCuit.reset();
           this.distribuidoraEncontrada = null;
           this.categoriasSeleccionadas = [];
         } else {
-          alert('Error al modificar la distribuidora');
+          await this.dialogService
+            .showMessage('Error', result.message)
+            .toPromise();
+          if (result.statusCode === 401) {
+            this.usuarioService.cerrarSesion();
+          }
         }
       } catch (error) {
-        alert('Error en la solicitud de modificación');
+        await this.dialogService
+          .showMessage('Error', 'Error en la solicitud de modificación')
+          .toPromise();
       }
     } else {
       if (this.categoriasSeleccionadas.length === 0) {
-        alert('Debe seleccionar al menos una categoría');
+        await this.dialogService
+          .showMessage('Validación', 'Debe seleccionar al menos una categoría')
+          .toPromise();
       } else {
-        alert('Formulario inválido');
+        await this.dialogService
+          .showMessage('Validación', 'Formulario inválido')
+          .toPromise();
       }
       this.distribuidoraForm.reset();
       this.distribuidoraCuit.reset();
       this.distribuidoraEncontrada = null;
       this.categoriasSeleccionadas = [];
     }
+  }
+
+  resetModifyForm() {
+    this.distribuidoraForm.patchValue({
+      cuit: this.distribuidoraCuit.value.cuit,
+      nombre: this.distribuidoraEncontrada!.nombre,
+      direccion: this.distribuidoraEncontrada!.direccion,
+      codigoPostal: this.distribuidoraEncontrada!.codigoPostal,
+      numeroTelefono: this.distribuidoraEncontrada!.numeroTelefono,
+      descripcion: this.distribuidoraEncontrada!.descripcion,
+      ciudad: this.distribuidoraEncontrada!.ciudad,
+    });
   }
 }

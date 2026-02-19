@@ -1,0 +1,25 @@
+.grupo-form {
+  background-color: var(--mat-sys-surface-variant);
+  padding: 20px 30px 20px 20px;
+  margin-bottom: 16px;
+  animation: slideIn 0.5s ease-out;
+}
+
+.form-section {
+  margin-bottom: 24px;
+}
+
+.buttons-row {
+  flex-direction: row;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.tabla-container {
+  margin-top: 16px;
+  overflow-x: auto;
+
+  table {
+    width: 100%;
+  }
+}

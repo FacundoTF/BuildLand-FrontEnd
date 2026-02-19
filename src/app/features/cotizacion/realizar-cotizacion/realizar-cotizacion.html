@@ -1,0 +1,86 @@
+<div class="container">
+  <div id="content">
+    <h2>Realizar Cotización</h2>
+
+    <button matButton="filled" (click)="volverADetalles()">
+      Volver a detalles del presupuesto
+    </button>
+
+    <div class="tabla-container">
+      <table mat-table [dataSource]="filas()">
+        <!-- Columna Producto -->
+        <ng-container matColumnDef="producto">
+          <th mat-header-cell *matHeaderCellDef>Producto</th>
+          <td mat-cell *matCellDef="let fila">
+            {{ fila.detalle.producto.nombre }}
+          </td>
+        </ng-container>
+
+        <!-- Columna Cantidad -->
+        <ng-container matColumnDef="cantidad">
+          <th mat-header-cell *matHeaderCellDef>Cantidad</th>
+          <td mat-cell *matCellDef="let fila">{{ fila.cantidad }}</td>
+        </ng-container>
+
+        <!-- Columna Marca -->
+        <ng-container matColumnDef="marca">
+          <th mat-header-cell *matHeaderCellDef>Marca</th>
+          <td mat-cell *matCellDef="let fila">
+            {{ fila.detalle.marca.nombre }}
+          </td>
+        </ng-container>
+
+        <!-- Columna Importe -->
+        <ng-container matColumnDef="importe">
+          <th mat-header-cell *matHeaderCellDef>Importe</th>
+          <td mat-cell *matCellDef="let fila">
+            <input
+              matInput
+              type="number"
+              min="0"
+              placeholder="0.00"
+              [value]="fila.importe"
+              (input)="actualizarImporte(fila.idDetallePresupuesto, $event)"
+              [disabled]="fila.bloqueado"
+              [class.input-bloqueado]="fila.bloqueado"
+            />
+          </td>
+        </ng-container>
+
+        <!-- Columna Guardar -->
+        <ng-container matColumnDef="guardar">
+          <th mat-header-cell *matHeaderCellDef>Guardar</th>
+          <td mat-cell *matCellDef="let fila; let i = index">
+            <button
+              matButton="filled"
+              (click)="toggleBloqueoFila(fila)"
+              [class.btn-deshacer]="fila.bloqueado"
+            >
+              {{ fila.bloqueado ? "Deshacer" : "Confirmar" }}
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: columnas"
+          [class.fila-bloqueada]="row.bloqueado"
+        ></tr>
+      </table>
+    </div>
+
+    @if (filas().length === 0) {
+      <p class="no-results">No hay productos para cotizar</p>
+    }
+
+    <button
+      matButton="filled"
+      class="btn-enviar"
+      (click)="enviarCotizacion()"
+      [disabled]="!todasFilasBloqueadas()"
+    >
+      Enviar Cotización
+    </button>
+  </div>
+</div>

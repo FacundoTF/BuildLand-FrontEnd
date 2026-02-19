@@ -1,0 +1,177 @@
+<div class="container">
+  <div id="content">
+    <h2>Agregar Usuario</h2>
+    <form [formGroup]="form" (ngSubmit)="confirmar()">
+      <div class="form-group">
+        <label for="cuit">CUIT</label>
+        <input
+          type="text"
+          id="cuit"
+          formControlName="cuit"
+          placeholder="Ingrese el CUIT"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <input
+          type="text"
+          id="nombre"
+          formControlName="nombre"
+          placeholder="Ingrese el nombre"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Correo electrónico</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          placeholder="Ingrese el correo electrónico"
+          required
+        />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="numeroTelefono">Número de teléfono</label>
+          <input
+            type="text"
+            id="numeroTelefono"
+            formControlName="numeroTelefono"
+            placeholder="Ingrese el número de teléfono"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="codigoPostal">Código Postal</label>
+          <input
+            type="text"
+            id="codigoPostal"
+            formControlName="codigoPostal"
+            placeholder="Ingrese el código postal"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="ciudad">Ciudad</label>
+        <input
+          type="text"
+          id="ciudad"
+          formControlName="ciudad"
+          placeholder="Ingrese la ciudad"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Contraseña</label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          placeholder="Ingrese la contraseña"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Tipo de Usuario</label>
+        <mat-radio-group formControlName="tipoUsuario" class="radio-group">
+          <mat-radio-button [value]="TipoUsuario.EMPLEADO">
+            Empleado
+          </mat-radio-button>
+          <mat-radio-button [value]="TipoUsuario.DISTRIBUIDORA">
+            Distribuidora
+          </mat-radio-button>
+          <mat-radio-button [value]="TipoUsuario.PERSONA_FISICA">
+            Persona Física
+          </mat-radio-button>
+        </mat-radio-group>
+        @if (
+          form.get("tipoUsuario")?.invalid && form.get("tipoUsuario")?.touched
+        ) {
+          <div
+            style="
+              color: var(--mat-sys-error);
+              font-size: 0.8em;
+              margin-top: 4px;
+            "
+          >
+            Debe seleccionar un tipo de usuario.
+          </div>
+        }
+      </div>
+
+      @if (
+        form.get("tipoUsuario")?.value === TipoUsuario.DISTRIBUIDORA ||
+        form.get("tipoUsuario")?.value === TipoUsuario.EMPLEADO
+      ) {
+        <div class="form-group">
+          <label for="direccion">Dirección</label>
+          <input
+            type="text"
+            id="direccion"
+            formControlName="direccion"
+            placeholder="Ingrese la dirección"
+          />
+        </div>
+      }
+
+      @if (form.get("tipoUsuario")?.value === TipoUsuario.DISTRIBUIDORA) {
+        <div class="form-group">
+          <label for="descripcion">Descripción</label>
+          <textarea
+            id="descripcion"
+            formControlName="descripcion"
+            placeholder="Ingrese una descripción"
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Categorías</label>
+          <div
+            formArrayName="categoriasSeleccionadas"
+            style="display: flex; flex-direction: column; gap: 5px"
+          >
+            @for (
+              categoria of categoriasData();
+              track categoria.nombre;
+              let i = $index
+            ) {
+              <mat-checkbox [formControlName]="i">
+                {{ categoria.nombre }}
+              </mat-checkbox>
+            }
+          </div>
+          @if (
+            categoriasSeleccionadas.errors?.["minSelectedCheckboxes"] &&
+            form.touched
+          ) {
+            <div
+              style="
+                color: var(--mat-sys-error);
+                font-size: 0.8em;
+                margin-top: 4px;
+              "
+            >
+              Debe seleccionar al menos una categoria.
+            </div>
+          }
+        </div>
+      }
+
+      <div class="form-actions">
+        <button [disabled]="!form.valid" type="submit" matButton="filled">
+          Confirmar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

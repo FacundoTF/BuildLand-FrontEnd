@@ -7,10 +7,14 @@ import {
 } from '@angular/forms';
 import { Distribuidora } from '../../../core/entities/distribuidora/distribuidora';
 import { DistribuidoraServicio } from '../../../shared/services/distribuidora/distribuidora-servicio';
+import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
+import { DialogService } from '../../../shared/services/dialog.service';
+import { MatButton } from '@angular/material/button';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-distribuidora-remover',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, MatButton, MatCheckbox],
   templateUrl: './distribuidora-remover.html',
   styleUrl: './distribuidora-remover.scss',
 })
@@ -22,6 +26,8 @@ export class DistribuidoraRemover {
   }
 
   service = inject(DistribuidoraServicio);
+  usuarioService = inject(UsuarioServicio);
+  dialogService = inject(DialogService);
   distribuidoraEncontrada: Distribuidora | null = null;
 
   distribuidoraCuit = new FormGroup({
@@ -31,43 +37,66 @@ export class DistribuidoraRemover {
     ]),
   });
 
+  deleteForm = new FormGroup({
+    confirmDelete: new FormControl(false, [Validators.requiredTrue]),
+  });
+
   async handleSubmitCuit() {
     if (this.distribuidoraCuit.valid) {
-      try {
-        const distribuidora = await this.service.buscarDistribuidoraCuit(
-          this.distribuidoraCuit.value.cuit,
-        );
-        if (distribuidora) {
-          this.distribuidoraEncontrada = distribuidora;
-        } else {
-          alert('No se encontró la distribuidora con el CUIT proporcionado');
-          this.distribuidoraEncontrada = null;
+      const distribuidora = await this.service.buscarDistribuidoraCuit(
+        this.distribuidoraCuit.value.cuit,
+      );
+      if (distribuidora.success) {
+        this.distribuidoraEncontrada = distribuidora.payload as Distribuidora;
+      } else {
+        this.dialogService
+          .showMessage('Error', distribuidora.message)
+          .subscribe();
+        if (distribuidora.statusCode === 401) {
+          this.usuarioService.cerrarSesion();
         }
-      } catch (error) {
-        alert('Error al buscar la distribuidora:');
         this.distribuidoraEncontrada = null;
       }
     } else {
-      alert('CUIT inválido o vacío');
+      this.dialogService
+        .showMessage('Error', 'CUIT inválido o vacío')
+        .subscribe();
       this.distribuidoraEncontrada = null;
     }
   }
 
   async handleRemove() {
+    if (!this.deleteForm.valid) {
+      this.dialogService
+        .showMessage(
+          'Error',
+          'Debe confirmar que desea eliminar la distribuidora marcando la casilla de confirmación.',
+        )
+        .subscribe();
+      return;
+    }
     if (this.distribuidoraEncontrada) {
       try {
-        const success = await this.service.removerDistribuidora(
+        const result = await this.service.removerDistribuidora(
           this.distribuidoraEncontrada,
         );
-        if (success) {
-          alert('Distribuidora eliminada exitosamente');
-          this.distribuidoraCuit.reset();
-          this.distribuidoraEncontrada = null;
+        if (result.success) {
+          this.dialogService
+            .showMessage('Éxito', result.message)
+            .subscribe(() => {
+              this.distribuidoraCuit.reset();
+              this.distribuidoraEncontrada = null;
+            });
         } else {
-          alert('Error al eliminar la distribuidora');
+          this.dialogService.showMessage('Error', result.message).subscribe();
+          if (result.statusCode === 401) {
+            this.usuarioService.cerrarSesion();
+          }
         }
       } catch (error) {
-        alert('Error en la solicitud de eliminación');
+        this.dialogService
+          .showMessage('Error', 'Error en la solicitud de eliminación')
+          .subscribe();
       }
     }
   }

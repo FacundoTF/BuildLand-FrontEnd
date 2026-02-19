@@ -1,0 +1,364 @@
+<div class="container">
+  <div id="content">
+    <h2>Modificando Usuario</h2>
+
+    <div class="edit-container">
+      <h3>Datos del Usuario</h3>
+      <form
+        [formGroup]="usuarioForm"
+        (ngSubmit)="handleConfirmarCambios()"
+        class="usuario-form"
+      >
+        <div class="form-group">
+          <label for="nombre">Nombre</label>
+          <input
+            type="text"
+            id="nombre"
+            name="nombre"
+            placeholder="Ingrese el nombre"
+            formControlName="nombre"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="correoElectronico">Correo electrónico</label>
+          <input
+            type="email"
+            id="correoElectronico"
+            name="correoElectronico"
+            placeholder="Ingrese el correo electrónico"
+            formControlName="correoElectronico"
+            required
+          />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="numeroTelefono">Número telefónico</label>
+            <input
+              type="tel"
+              id="numeroTelefono"
+              name="numeroTelefono"
+              placeholder="Ingrese el número telefónico"
+              formControlName="numeroTelefono"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="codigoPostal">Código postal</label>
+            <input
+              type="text"
+              id="codigoPostal"
+              name="codigoPostal"
+              placeholder="Ingrese el código postal"
+              formControlName="codigoPostal"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="ciudad">Ciudad</label>
+            <input
+              type="text"
+              id="ciudad"
+              name="ciudad"
+              placeholder="Ingrese la ciudad"
+              formControlName="ciudad"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Estado</label>
+          <mat-radio-group formControlName="estado" class="estado-radio-group">
+            <mat-radio-button [value]="true">Habilitado</mat-radio-button>
+            <mat-radio-button [value]="false">Deshabilitado</mat-radio-button>
+          </mat-radio-group>
+        </div>
+
+        <!-- Campos específicos para Distribuidora -->
+        @if (esDistribuidora()) {
+          <div class="form-group">
+            <label for="direccion">Dirección</label>
+            <input
+              type="text"
+              id="direccion"
+              name="direccion"
+              placeholder="Ingrese la dirección"
+              formControlName="direccion"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="descripcion">Descripción</label>
+            <textarea
+              id="descripcion"
+              name="descripcion"
+              placeholder="Ingrese una descripción"
+              formControlName="descripcion"
+              rows="4"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Categorías</label>
+            <div class="categorias-container">
+              @for (categoria of categorias; track categoria.nombre) {
+                <div
+                  class="categoria-item"
+                  (click)="toggleCategoria(categoria.nombre)"
+                  [class.selected]="isCategoriaSeleccionada(categoria.nombre)"
+                >
+                  <label [for]="'categoria-' + categoria.nombre">
+                    <mat-checkbox
+                      [checked]="isCategoriaSeleccionada(categoria.nombre)"
+                      [id]="'categoria-' + categoria.nombre"
+                    />
+                    {{ categoria.nombre }}
+                  </label>
+                </div>
+              }
+            </div>
+            @if (categoriasSeleccionadas.length === 0) {
+              <small class="error-message">
+                Debe seleccionar al menos una categoría
+              </small>
+            }
+          </div>
+        }
+
+        <!-- Campos específicos para Empleado -->
+        @if (esEmpleado()) {
+          <div class="form-group">
+            <label for="direccionEmpleado">Dirección</label>
+            <input
+              type="text"
+              id="direccionEmpleado"
+              name="direccionEmpleado"
+              placeholder="Ingrese la dirección"
+              formControlName="direccion"
+              required
+            />
+          </div>
+
+          <div class="form-actions-permissions">
+            <button
+              type="button"
+              mat-stroked-button
+              class="btn-secondary"
+              (click)="abrirDialogoAgregarPermisos()"
+            >
+              Agregar permiso
+            </button>
+            <button
+              type="button"
+              mat-stroked-button
+              class="btn-secondary"
+              (click)="abrirDialogoRemoverPermisos()"
+            >
+              Remover permiso
+            </button>
+            <button
+              type="button"
+              mat-stroked-button
+              class="btn-secondary"
+              (click)="abrirDialogoAgregarGrupos()"
+            >
+              Agregar grupo
+            </button>
+            <button
+              type="button"
+              mat-stroked-button
+              class="btn-secondary"
+              (click)="abrirDialogoRemoverGrupos()"
+            >
+              Remover grupo
+            </button>
+          </div>
+
+          <!-- Tablas de items pendientes -->
+          @if (hayPermisosParaAgregar()) {
+            <div class="pending-items-section">
+              <h4>Permisos a agregar</h4>
+              <table
+                mat-table
+                [dataSource]="permisosParaAgregar()"
+                class="items-table"
+              >
+                <ng-container matColumnDef="nombre">
+                  <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                  <td mat-cell *matCellDef="let item">{{ item.nombre }}</td>
+                </ng-container>
+                <ng-container matColumnDef="descripcion">
+                  <th mat-header-cell *matHeaderCellDef>Descripción</th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.descripcion }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="acciones">
+                  <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                  <td mat-cell *matCellDef="let item; let i = index">
+                    <button
+                      mat-icon-button
+                      color="warn"
+                      (click)="quitarPermisoParaAgregar(i)"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="displayedColumnsItems"
+                ></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayedColumnsItems"
+                ></tr>
+              </table>
+            </div>
+          }
+
+          @if (hayPermisosParaRemover()) {
+            <div class="pending-items-section">
+              <h4>Permisos a remover</h4>
+              <table
+                mat-table
+                [dataSource]="permisosParaRemover()"
+                class="items-table"
+              >
+                <ng-container matColumnDef="nombre">
+                  <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                  <td mat-cell *matCellDef="let item">{{ item.nombre }}</td>
+                </ng-container>
+                <ng-container matColumnDef="descripcion">
+                  <th mat-header-cell *matHeaderCellDef>Descripción</th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.descripcion }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="acciones">
+                  <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                  <td mat-cell *matCellDef="let item; let i = index">
+                    <button
+                      mat-icon-button
+                      color="warn"
+                      (click)="quitarPermisoParaRemover(i)"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="displayedColumnsItems"
+                ></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayedColumnsItems"
+                ></tr>
+              </table>
+            </div>
+          }
+
+          @if (hayGruposParaAgregar()) {
+            <div class="pending-items-section">
+              <h4>Grupos a agregar</h4>
+              <table
+                mat-table
+                [dataSource]="gruposParaAgregar()"
+                class="items-table"
+              >
+                <ng-container matColumnDef="nombre">
+                  <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                  <td mat-cell *matCellDef="let item">{{ item.nombre }}</td>
+                </ng-container>
+                <ng-container matColumnDef="descripcion">
+                  <th mat-header-cell *matHeaderCellDef>Descripción</th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.descripcion }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="acciones">
+                  <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                  <td mat-cell *matCellDef="let item; let i = index">
+                    <button
+                      mat-icon-button
+                      color="warn"
+                      (click)="quitarGrupoParaAgregar(i)"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="displayedColumnsItems"
+                ></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayedColumnsItems"
+                ></tr>
+              </table>
+            </div>
+          }
+
+          @if (hayGruposParaRemover()) {
+            <div class="pending-items-section">
+              <h4>Grupos a remover</h4>
+              <table
+                mat-table
+                [dataSource]="gruposParaRemover()"
+                class="items-table"
+              >
+                <ng-container matColumnDef="nombre">
+                  <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                  <td mat-cell *matCellDef="let item">{{ item.nombre }}</td>
+                </ng-container>
+                <ng-container matColumnDef="descripcion">
+                  <th mat-header-cell *matHeaderCellDef>Descripción</th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.descripcion }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="acciones">
+                  <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                  <td mat-cell *matCellDef="let item; let i = index">
+                    <button
+                      mat-icon-button
+                      color="warn"
+                      (click)="quitarGrupoParaRemover(i)"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="displayedColumnsItems"
+                ></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayedColumnsItems"
+                ></tr>
+              </table>
+            </div>
+          }
+        }
+
+        <div class="form-actions">
+          <button type="reset" matButton="outlined" class="btn-secondary">
+            Restaurar
+          </button>
+          <button [disabled]="!isFormValid()" type="submit" matButton="filled">
+            Confirmar cambios
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

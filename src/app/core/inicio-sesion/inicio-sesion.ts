@@ -4,42 +4,61 @@ import {
   signal,
   inject,
   DestroyRef,
+  OnInit,
 } from '@angular/core';
 import {
-  FormBuilder,
   FormGroup,
+  FormControl,
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 import { UsuarioServicio } from '../../shared/services/usuario-servicio';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-inicio-sesion',
-  imports: [ReactiveFormsModule],
+  imports: [
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+  ],
   templateUrl: './inicio-sesion.html',
   styleUrl: './inicio-sesion.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InicioSesion {
-  private readonly fb = new FormBuilder();
+export class InicioSesion implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
-  private router = inject(Router);
-  servicioUsuario = inject(UsuarioServicio);
+  private readonly router = inject(Router);
+  private readonly usuarioServicio = inject(UsuarioServicio);
 
-  loginForm: FormGroup;
+  ngOnInit() {
+    this.usuarioServicio.enviarCodigoRestauracion.set(false);
+    this.usuarioServicio.confirmarNuevaContrasena.set(false);
+  }
+
+  loginForm = new FormGroup({
+    email: new FormControl('', {
+      validators: [Validators.required, Validators.email],
+      nonNullable: true,
+    }),
+    password: new FormControl('', {
+      validators: [Validators.required, Validators.minLength(6)],
+      nonNullable: true,
+    }),
+  });
+
   isSubmitting = signal(false);
   errorMessage = signal<string | null>(null);
 
-  constructor() {
-    this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-    });
-  }
-
-  onSubmit() {
+  onSubmit(): void {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
@@ -50,13 +69,11 @@ export class InicioSesion {
 
     const { email, password } = this.loginForm.value;
 
-    console.log('Login attempt:', { email, password });
-
-    this.servicioUsuario
-      .iniciarSesion(email, password)
+    this.usuarioServicio
+      .iniciarSesion(email!, password!)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (data: Object) => {
+        next: (data: object) => {
           this.isSubmitting.set(false);
           const dataLogin = Object.values(data);
           const usuario = dataLogin[0];
@@ -67,7 +84,7 @@ export class InicioSesion {
           sessionStorage.setItem('grupos', JSON.stringify(grupos));
           this.router.navigateByUrl('/base-page');
         },
-        error: (error: Error) => {
+        error: () => {
           this.isSubmitting.set(false);
           this.errorMessage.set(
             'Inicio de sesión fallido. Revise sus credenciales.',

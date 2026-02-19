@@ -1,0 +1,38 @@
+.rejection-dialog-container {
+  min-width: 400px;
+  max-width: 600px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 150px;
+  }
+
+  .messages-container {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .no-messages {
+    color: var(--mat-sys-secondary);
+    text-align: center;
+    margin: 20px 0;
+  }
+
+  mat-dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 16px;
+  }
+}
+
+mat-radio-group {
+  display: flex;
+  flex-direction: column;
+}

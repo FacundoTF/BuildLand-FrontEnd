@@ -1,24 +1,39 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { FormControl, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { Component, inject, input, OnInit } from '@angular/core';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+
 import { Distribuidora } from '../../../core/entities/distribuidora/distribuidora';
 import { DistribuidoraServicio } from '../../../shared/services/distribuidora/distribuidora-servicio';
-import { CategoriaService } from '../../../shared/services/categoria/categoria-service';
 import { Categoria } from '../../../core/entities/categoria/categoria';
 import { TipoUsuario, Usuario } from '../../../core/entities/usuario/usuario';
+import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
+import { DialogService } from '../../../shared/services/dialog.service';
+import { ReturnSearchResponse } from '../../../core/response-type/return-search-response';
+import { MatButton } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-distribuidora-agregar',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, MatButton, MatCheckboxModule],
   templateUrl: './distribuidora-agregar.html',
   styleUrl: './distribuidora-agregar.scss',
 })
 export class DistribuidoraAgregar implements OnInit {
   service = inject(DistribuidoraServicio);
-  categoriaService = inject(CategoriaService);
+  usuarioService = inject(UsuarioServicio);
+  dialogService = inject(DialogService);
+  categoriasData = input.required<ReturnSearchResponse>();
   categorias: Categoria[] = [];
   categoriasSeleccionadas: string[] = [];
+
+  ngOnInit() {
+    this.categorias = this.categoriasData().payload as Categoria[];
+  }
 
   distribuidoraForm = new FormGroup({
     cuit: new FormControl('', [
@@ -47,21 +62,48 @@ export class DistribuidoraAgregar implements OnInit {
     ]),
   });
 
-  async ngOnInit() {
-    await this.cargarCategorias();
+  getCuit() {
+    const valor = this.distribuidoraForm.get('cuit');
+    if (valor === null) {
+      throw new Error('Cuit es nulo');
+    }
+    return valor as AbstractControl<string>;
   }
 
-  async cargarCategorias() {
-    try {
-      let result = await this.categoriaService.traerCategorias().toPromise();
-      if (result) {
-        this.categorias = result;
-      } else {
-        throw 'Las categorias resultaron ser undefined';
-      }
-    } catch (error) {
-      alert('Error al cargar categorías');
+  getNombre() {
+    return this.distribuidoraForm.get('nombre');
+  }
+
+  getDireccion() {
+    return this.distribuidoraForm.get('direccion');
+  }
+
+  getCodigoPostal(): AbstractControl<string> {
+    const valor = this.distribuidoraForm.get('codigoPostal');
+    if (valor === null) {
+      throw new Error('Codigo Postal es nulo');
     }
+    return valor as AbstractControl<string>;
+  }
+
+  getNumeroTelefono() {
+    return this.distribuidoraForm.get('numeroTelefono');
+  }
+
+  getDescripcion() {
+    return this.distribuidoraForm.get('descripcion');
+  }
+
+  getCiudad() {
+    return this.distribuidoraForm.get('ciudad');
+  }
+
+  getCorreoElectronico() {
+    return this.distribuidoraForm.get('correoElectronico');
+  }
+
+  getPassword() {
+    return this.distribuidoraForm.get('contraseña');
   }
 
   toggleCategoria(nombreCategoria: string) {
@@ -84,14 +126,14 @@ export class DistribuidoraAgregar implements OnInit {
     ) {
       const distribuidora = new Distribuidora(
         new Usuario(
-          null,
+          this.distribuidoraForm.value.cuit!,
           TipoUsuario.DISTRIBUIDORA,
-          '',
+          true,
           null,
           this.distribuidoraForm.value.correoElectronico!,
           this.distribuidoraForm.value.contraseña!,
         ),
-        this.distribuidoraForm.value.cuit!,
+        null,
         this.distribuidoraForm.value.nombre!,
         this.distribuidoraForm.value.direccion!,
         this.distribuidoraForm.value.numeroTelefono!,
@@ -101,20 +143,25 @@ export class DistribuidoraAgregar implements OnInit {
         this.categoriasSeleccionadas.map((nombre) => new Categoria(nombre)),
       );
 
-      try {
-        const result = await this.service.agregarDistribuidora(distribuidora);
-        if (result) {
-          alert('Distribuidora agregada exitosamente');
-          this.distribuidoraForm.reset();
-          this.categoriasSeleccionadas = [];
-        } else {
-          alert('Error al agregar la distribuidora');
+      const result = await this.service.agregarDistribuidora(distribuidora);
+      if (result.success) {
+        await this.dialogService
+          .showMessage('Éxito', result.message)
+          .toPromise();
+        this.distribuidoraForm.reset();
+        this.categoriasSeleccionadas = [];
+      } else {
+        await this.dialogService
+          .showMessage('Error', result.message)
+          .toPromise();
+        if (result.statusCode === 401) {
+          this.usuarioService.cerrarSesion();
         }
-      } catch (error) {
-        alert('Error en la solicitud al agregar distribuidora');
       }
     } else if (this.categoriasSeleccionadas.length === 0) {
-      alert('Debe seleccionar al menos una categoría');
+      await this.dialogService
+        .showMessage('Validación', 'Debe seleccionar al menos una categoría')
+        .toPromise();
     }
   }
 }
