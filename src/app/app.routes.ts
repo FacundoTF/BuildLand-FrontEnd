@@ -2,10 +2,6 @@ import { DistribuidoraAgregar } from './features/distribuidora/distribuidora-agr
 import { Routes } from '@angular/router';
 import { DistribuidoraRemover } from './features/distribuidora/distribuidora-remover/distribuidora-remover';
 import { DistribuidoraModificar } from './features/distribuidora/distribuidora-modificar/distribuidora-modificar';
-import { PersonaFisicaAgregar } from './features/persona-fisica/persona-fisica-agregar/persona-fisica-agregar';
-import { PersonaFisicaModificar } from './features/persona-fisica/persona-fisica-modificar/persona-fisica-modificar';
-import { PersonaFisicaRemover } from './features/persona-fisica/persona-fisica-remover/persona-fisica-remover';
-import { RealizarPresupuesto } from './features/presupuesto/realizar-presupuesto/realizar-presupuesto';
 import { InicioSesion } from './core/inicio-sesion/inicio-sesion';
 import { BasePage } from './core/base-page/base-page';
 import { RestorePassword } from './core/restore-password/restore-password';
@@ -25,9 +21,7 @@ import {
 import { RecibirPresupuesto } from './features/presupuesto/recibir-presupuesto/recibir-presupuesto';
 import { VerDetallesPresupuesto } from './features/presupuesto/recibir-presupuesto/ver-detalles-presupuesto/ver-detalles-presupuesto';
 import { RealizarCotizacion } from './features/cotizacion/realizar-cotizacion/realizar-cotizacion';
-import { RecibirCotizacion } from './features/cotizacion/recibir-cotizacion/recibir-cotizacion';
 import { ProductosSolicitados } from './features/reportes/productos-solicitados/productos-solicitados';
-import { CotizacionesPerdidasGanadas } from './features/reportes/cotizaciones-perdidas-ganadas/cotizaciones-perdidas-ganadas';
 import { AgregarUsuario } from './features/usuario/agregar-usuario/agregar-usuario';
 import { UsuarioRemover } from './features/usuario/usuario-remover/usuario-remover';
 import { UsuarioModificar } from './features/usuario/usuario-modificar/usuario-modificar';
@@ -106,27 +100,7 @@ export const routes: Routes = [
           categoriasData: categoriasResolver,
         },
       },
-      // Personas Físicas
-      {
-        path: 'persona-fisica/agregar',
-        component: PersonaFisicaAgregar,
-      },
-      {
-        path: 'persona-fisica/remover',
-        component: PersonaFisicaRemover,
-      },
-      {
-        path: 'persona-fisica/modificar',
-        component: PersonaFisicaModificar,
-      },
       // Presupuestos
-      {
-        path: 'presupuesto/realizar',
-        component: RealizarPresupuesto,
-        resolve: {
-          categoriasData: categoriasResolver,
-        },
-      },
       {
         path: 'presupuesto/recibir',
         component: RecibirPresupuesto,
@@ -149,22 +123,11 @@ export const routes: Routes = [
         },
       },
       {
-        path: 'cotizacion/recibir/:IdPresupuesto',
-        component: RecibirCotizacion,
-        resolve: {
-          cotizacionesData: cotizacionesResolver,
-        },
-      },
-      {
         path: 'reporte/productos-mas-solicitados',
         component: ProductosSolicitados,
         resolve: {
           categoriasData: categoriasDistribuidoraResolver,
         },
-      },
-      {
-        path: 'reporte/cotizaciones-perdidas-ganadas',
-        component: CotizacionesPerdidasGanadas,
       },
       {
         path: 'grupo/agregar',
