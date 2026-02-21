@@ -33,7 +33,9 @@
         <h3>Datos del Usuario</h3>
         @if (usuarioEncontrado) {
           <div class="user-info">
-            <p><strong>Nombre:</strong> {{ usuarioEncontrado.email }}</p>
+            <p>
+              <strong>Correo electrónico:</strong> {{ usuarioEncontrado.email }}
+            </p>
             <p>
               <strong>Tipo de Usuario:</strong>
               {{ usuarioEncontrado.tipoUsuario }}

@@ -79,6 +79,43 @@
       Modificar persona fisica
     </button>
   </div>
+  <div id="G-Gr" class="Gestion">
+    <button
+      mat-flat-button
+      (click)="ToogleGestion('G-Gr')"
+      class="OpcionGestion sidebar-btn"
+      [class.active]="activeButton() === 'G-Gr'"
+    >
+      Gestionar grupos
+    </button>
+    <button
+      matButton="filled"
+      id="A-Gr"
+      (click)="AgregarGrupo()"
+      class="Opcion sidebar-btn"
+      [class.active]="activeButton() === 'A-Gr'"
+    >
+      Agregar grupos
+    </button>
+    <button
+      matButton="filled"
+      id="R-Gr"
+      (click)="RemoverGrupo()"
+      class="Opcion sidebar-btn"
+      [class.active]="activeButton() === 'R-Gr'"
+    >
+      Remover grupos
+    </button>
+    <button
+      matButton="filled"
+      id="M-Gr"
+      (click)="ModificarGrupo()"
+      class="Opcion sidebar-btn"
+      [class.active]="activeButton() === 'M-Gr'"
+    >
+      Modificar grupos
+    </button>
+  </div>
   <div id="G-Pr" class="Gestion">
     <button
       matButton="filled"

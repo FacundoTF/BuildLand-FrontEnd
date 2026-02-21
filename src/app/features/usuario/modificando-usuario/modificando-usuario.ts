@@ -133,15 +133,15 @@ export class ModificandoUsuario implements OnInit {
       const entidad = usuarioResponse.payload as EntidadRegistrada;
       this.entidadActual = entidad;
 
-      if (this.isDistribuidora(entidad)) {
+      if (entidad.usuario.tipoUsuario === TipoUsuario.DISTRIBUIDORA) {
         this.esDistribuidora.set(true);
-        this.cargarDatosDistribuidora(entidad);
-      } else if (this.isEmpleado(entidad)) {
+        this.cargarDatosDistribuidora(entidad as Distribuidora);
+      } else if (entidad.usuario.tipoUsuario === TipoUsuario.EMPLEADO) {
         this.esEmpleado.set(true);
-        this.cargarDatosEmpleado(entidad);
-      } else if (this.isPersonaFisica(entidad)) {
+        this.cargarDatosEmpleado(entidad as Empleado);
+      } else if (entidad.usuario.tipoUsuario === TipoUsuario.PERSONA_FISICA) {
         this.esPersonaFisica.set(true);
-        this.cargarDatosPersonaFisica(entidad);
+        this.cargarDatosPersonaFisica(entidad as PersonaFisica);
       }
     }
   }
@@ -234,7 +234,7 @@ export class ModificandoUsuario implements OnInit {
     let grupos: Grupo[] = [];
     if (Array.isArray(conjunto)) {
       conjunto.forEach((e) => {
-        if ('elementos' in e) {
+        if ('elementos' in e && e.nombre !== 'EMPLEADO') {
           grupos.push(e as Grupo);
         }
       });

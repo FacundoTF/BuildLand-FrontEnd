@@ -58,7 +58,10 @@ export const usuarioPorEmailResolver: ResolveFn<ReturnSearchResponse> = (
   route: ActivatedRouteSnapshot,
 ) => {
   const usuarioServicio = inject(UsuarioServicio);
-  const email = route.paramMap.get('email');
+  let email = route.paramMap.get('email');
+  if (!email) {
+    email = '';
+  }
   return usuarioServicio.buscarUsuarioPorEmail(email);
 };
 
