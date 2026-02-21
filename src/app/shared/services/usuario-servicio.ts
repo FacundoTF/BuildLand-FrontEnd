@@ -73,22 +73,13 @@ export class UsuarioServicio {
     );
   }
 
-  obtenerNombreUsuario(correo: string) {
-    const response = this.http
-      .get<EntidadRegistrada>(`${this.API_URL}/usuarios/email`, {
+  obtenerNombreUsuario() {
+    const response = this.http.get<EntidadRegistrada>(
+      `${this.API_URL}/usuarios/email`,
+      {
         observe: 'response',
-      })
-      .pipe(
-        map((res) => {
-          console.log('Nombre de usuario obtenido');
-          console.log(res);
-          return res;
-        }),
-        catchError((error: Error) => {
-          console.error('Error al obtener nombre de usuario:', error);
-          return throwError(() => error);
-        }),
-      );
+      },
+    );
     response.subscribe((res) => {
       const nombre = res.body?.nombre || '';
       this.nombreUsuario.set(nombre);
