@@ -66,7 +66,7 @@ export class SideBar implements OnInit {
         }
       });
     }
-    this.usuarioServicio.obtenerNombreUsuario('');
+    this.usuarioServicio.obtenerNombreUsuario();
   }
 
   obtenerNombreUsuario() {
@@ -198,6 +198,30 @@ export class SideBar implements OnInit {
   ResetearClave() {
     this.setActiveButton('Z-Us');
     this.router.navigate(['/base-page/usuario/resetear-clave']).catch(() => {
+      this.dialogService
+        .showMessage('Error', 'Hubo un error al entrar en esta página')
+        .subscribe();
+    });
+  }
+  AgregarGrupo() {
+    this.setActiveButton('A-Gr');
+    this.router.navigate(['/base-page/grupo/agregar']).catch(() => {
+      this.dialogService
+        .showMessage('Error', 'Hubo un error al entrar en esta página')
+        .subscribe();
+    });
+  }
+  RemoverGrupo() {
+    this.setActiveButton('R-Gr');
+    this.router.navigate(['/base-page/grupo/remover']).catch(() => {
+      this.dialogService
+        .showMessage('Error', 'Hubo un error al entrar en esta página')
+        .subscribe();
+    });
+  }
+  ModificarGrupo() {
+    this.setActiveButton('M-Gr');
+    this.router.navigate(['/base-page/grupo/modificar']).catch(() => {
       this.dialogService
         .showMessage('Error', 'Hubo un error al entrar en esta página')
         .subscribe();

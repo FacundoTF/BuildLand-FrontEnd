@@ -6,13 +6,14 @@ import {
   FormControl,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Usuario } from '../../../core/entities/usuario/usuario';
+import { TipoUsuario, Usuario } from '../../../core/entities/usuario/usuario';
 import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
 import { DialogService } from '../../../shared/services/dialog.service';
 import { MatButton } from '@angular/material/button';
 import { Distribuidora } from '../../../core/entities/distribuidora/distribuidora';
 import { Empleado } from '../../../core/entities/empleado/empleado';
 import { PersonaFisica } from '../../../core/entities/personaFisica/persona-fisica';
+import { EntidadRegistrada } from '../../../core/entities/usuario/entidad-registrada';
 
 @Component({
   selector: 'app-usuario-modificar',
@@ -22,7 +23,7 @@ import { PersonaFisica } from '../../../core/entities/personaFisica/persona-fisi
 })
 export class UsuarioModificar {
   mostrarDatosUsuario = signal(false);
-  nombreUsuario = signal('');
+  cuitUsuario = signal('');
 
   usuarioService = inject(UsuarioServicio);
   dialogService = inject(DialogService);
@@ -45,21 +46,23 @@ export class UsuarioModificar {
       try {
         const result = await this.usuarioService.buscarUsuarioPorEmail(email);
         if (result.success && result.payload) {
-          const entidad = result.payload;
+          const entidad = result.payload as EntidadRegistrada;
 
           // Determinar el tipo de usuario y extraer datos
-          if (this.isDistribuidora(entidad)) {
+          if (entidad.usuario.tipoUsuario === TipoUsuario.DISTRIBUIDORA) {
             this.usuarioEncontrado = entidad.usuario;
             this.cuitEncontrado = entidad.cuit;
-            this.nombreUsuario.set(entidad.nombre);
-          } else if (this.isEmpleado(entidad)) {
+            this.cuitUsuario.set(<string>entidad.cuit);
+          } else if (entidad.usuario.tipoUsuario === TipoUsuario.EMPLEADO) {
             this.usuarioEncontrado = entidad.usuario;
             this.cuitEncontrado = entidad.cuit;
-            this.nombreUsuario.set(entidad.nombre);
-          } else if (this.isPersonaFisica(entidad)) {
+            this.cuitUsuario.set(<string>entidad.cuit);
+          } else if (
+            entidad.usuario.tipoUsuario === TipoUsuario.PERSONA_FISICA
+          ) {
             this.usuarioEncontrado = entidad.usuario;
             this.cuitEncontrado = entidad.cuit;
-            this.nombreUsuario.set(entidad.nombre);
+            this.cuitUsuario.set(<string>entidad.cuit);
           }
 
           this.mostrarDatosUsuario.set(true);
@@ -101,7 +104,7 @@ export class UsuarioModificar {
   resetState() {
     this.usuarioEncontrado = null;
     this.cuitEncontrado = null;
-    this.nombreUsuario.set('');
+    this.cuitUsuario.set('');
     this.mostrarDatosUsuario.set(false);
   }
 
@@ -112,24 +115,5 @@ export class UsuarioModificar {
         this.usuarioEncontrado.email,
       ]);
     }
-  }
-
-  private isDistribuidora(entidad: unknown): entidad is Distribuidora {
-    return (entidad as Distribuidora).descripcion !== undefined;
-  }
-
-  private isEmpleado(entidad: unknown): entidad is Empleado {
-    return (
-      (entidad as Empleado).direccion !== undefined &&
-      !this.isDistribuidora(entidad)
-    );
-  }
-
-  private isPersonaFisica(entidad: unknown): entidad is PersonaFisica {
-    return (
-      (entidad as PersonaFisica).nombre !== undefined &&
-      !this.isDistribuidora(entidad) &&
-      !this.isEmpleado(entidad)
-    );
   }
 }

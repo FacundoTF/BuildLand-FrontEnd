@@ -64,10 +64,12 @@ export class UsuarioRemover {
             this.dialogService
               .showMessage('Error', 'Usuario no encontrado con ese CUIT.')
               .subscribe();
+            this.mostarFormUsuario.set(false);
           } else {
             this.dialogService
               .showMessage('Error', 'Error al buscar el usuario.')
               .subscribe();
+            this.mostarFormUsuario.set(false);
           }
           this.usuarioEncontrado = null;
         }
