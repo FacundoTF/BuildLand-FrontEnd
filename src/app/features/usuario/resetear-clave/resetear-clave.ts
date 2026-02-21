@@ -15,9 +15,7 @@ import { TipoUsuario, Usuario } from '../../../core/entities/usuario/usuario';
 import { UsuarioServicio } from '../../../shared/services/usuario-servicio';
 import { DialogService } from '../../../shared/services/dialog.service';
 import { MatButton } from '@angular/material/button';
-import { Distribuidora } from '../../../core/entities/distribuidora/distribuidora';
-import { Empleado } from '../../../core/entities/empleado/empleado';
-import { PersonaFisica } from '../../../core/entities/personaFisica/persona-fisica';
+import { EntidadRegistrada } from '../../../core/entities/usuario/entidad-registrada';
 
 @Component({
   selector: 'app-resetear-clave',
@@ -52,21 +50,23 @@ export class ResetearClave {
       try {
         const result = await this.usuarioService.buscarUsuarioPorEmail(email);
         if (result.success && result.payload) {
-          const entidad = result.payload as Usuario;
+          const entidad = result.payload as EntidadRegistrada;
 
-          if (entidad.tipoUsuario === TipoUsuario.DISTRIBUIDORA) {
-            this.usuarioEncontrado = entidad;
-            this.emailEncontrado = entidad.email || email;
+          if (entidad.usuario.tipoUsuario === TipoUsuario.DISTRIBUIDORA) {
+            this.usuarioEncontrado = entidad.usuario;
+            this.emailEncontrado = entidad.usuario.email || email;
             this.cuitUsuario.set(entidad.cuit || '');
             this.tipoUsuario.set('Distribuidora');
-          } else if (entidad.tipoUsuario === TipoUsuario.EMPLEADO) {
-            this.usuarioEncontrado = entidad;
-            this.emailEncontrado = entidad.email || email;
+          } else if (entidad.usuario.tipoUsuario === TipoUsuario.EMPLEADO) {
+            this.usuarioEncontrado = entidad.usuario;
+            this.emailEncontrado = entidad.usuario.email || email;
             this.cuitUsuario.set(entidad.cuit || '');
             this.tipoUsuario.set('Empleado');
-          } else if (entidad.tipoUsuario === TipoUsuario.PERSONA_FISICA) {
-            this.usuarioEncontrado = entidad;
-            this.emailEncontrado = entidad.email || email;
+          } else if (
+            entidad.usuario.tipoUsuario === TipoUsuario.PERSONA_FISICA
+          ) {
+            this.usuarioEncontrado = entidad.usuario;
+            this.emailEncontrado = entidad.usuario.email || email;
             this.cuitUsuario.set(entidad.cuit || '');
             this.tipoUsuario.set('Persona Física');
           }
