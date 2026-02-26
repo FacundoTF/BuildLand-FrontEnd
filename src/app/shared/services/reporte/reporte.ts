@@ -5,6 +5,7 @@ import { environment } from '../../../../environments/environment.development';
 import { catchError, map, Observable, of } from 'rxjs';
 import { ReporteProductosSolicitados } from '../../../core/entities/reporte/productosSolicitados/reporte-productos-solicitados';
 import { ReturnSearchResponse } from '../../../core/response-type/return-search-response';
+import { ReturnPaginationResponse } from '../../../core/response-type/return-pagination-response';
 import { Marca } from '../../../core/entities/marca/marca';
 import { Producto } from '../../../core/entities/producto/producto';
 import { ReporteMensajesCotizacionRechazoGral } from '../../../core/entities/reporte/mensajesCotizacionRechazo/reporte-mensajes-cotizacion-rechazo-gral';
@@ -256,5 +257,44 @@ export class ReporteService {
         });
       }),
     );
+  }
+
+  getTrazabilidadLoginLogout(
+    cuit: string,
+    pagina: number,
+  ): Observable<ReturnPaginationResponse> {
+    return this.http
+      .get<ReturnPaginationResponse>(
+        `${this.API_URL}/trazabilidad-login-logout/${cuit}`,
+        {
+          params: { pagina: pagina },
+          observe: 'response',
+        },
+      )
+      .pipe(
+        map((response) => {
+          const hasPrevious = response.body!.hasPrevious;
+          const body = response.body!.payload ?? [];
+          const hasNext = response.body!.hasNext;
+          return {
+            success: true,
+            message: 'Trazabilidad obtenida con éxito.',
+            statusCode: response.status,
+            payload: body,
+            hasPrevious,
+            hasNext,
+          };
+        }),
+        catchError((error) => {
+          return of({
+            success: false,
+            message: 'Error al obtener la trazabilidad de login/logout.',
+            statusCode: error.status || 500,
+            payload: null,
+            hasPrevious: false,
+            hasNext: false,
+          });
+        }),
+      );
   }
 }

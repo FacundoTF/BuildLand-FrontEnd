@@ -16,6 +16,7 @@ import { ReporteMensajesCotizacionRechazo } from '../entities/reporte/mensajesCo
 import { ConjuntoGrupoPermiso } from '../entities/conjuntoGrupoPermiso/conjunto-grupo-permiso';
 import { Permiso } from '../entities/permiso/permiso';
 import { Grupo } from '../entities/grupo/grupo';
+import { ReporteTrazabilidadLogin } from '../entities/reporte/trazabilidad/reporte-trazabilidad-login';
 
 type NullOrUndefined = null | undefined;
 
@@ -46,5 +47,6 @@ export interface ReturnSearchResponse extends ReturnResultResponse {
     | ReporteMensajesCotizacionRechazo[]
     | Permiso[]
     | Grupo[]
+    | ReporteTrazabilidadLogin[]
     | NullOrUndefined;
 }

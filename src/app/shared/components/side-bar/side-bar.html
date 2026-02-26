@@ -155,6 +155,15 @@
     >
       Reporte cotizaciones ganadas y perdidas
     </button>
+    <button
+      matButton="filled"
+      id="T-X"
+      (click)="ReporteTrazabilidad()"
+      class="OpcionNoPlegable sidebar-btn"
+      [class.active]="activeButton() === 'T-X'"
+    >
+      Reporte inicios y cierres de sesión
+    </button>
   </div>
   <div id="G-Us" class="Gestion">
     <button

@@ -171,6 +171,16 @@ export class SideBar implements OnInit {
           .subscribe();
       });
   }
+  ReporteTrazabilidad() {
+    this.setActiveButton('T-X');
+    this.router
+      .navigate(['base-page/reporte/inicio-cierre-sesion'])
+      .catch(() => {
+        this.dialogService
+          .showMessage('Error', 'Hubo un error al entrar en esta página')
+          .subscribe();
+      });
+  }
   AgregarUsuario() {
     this.setActiveButton('A-Us');
     this.router.navigate(['/base-page/usuario/agregar']).catch(() => {

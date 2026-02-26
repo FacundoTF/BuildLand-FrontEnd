@@ -28,6 +28,7 @@ import { RealizarCotizacion } from './features/cotizacion/realizar-cotizacion/re
 import { RecibirCotizacion } from './features/cotizacion/recibir-cotizacion/recibir-cotizacion';
 import { ProductosSolicitados } from './features/reportes/productos-solicitados/productos-solicitados';
 import { CotizacionesPerdidasGanadas } from './features/reportes/cotizaciones-perdidas-ganadas/cotizaciones-perdidas-ganadas';
+import { InicioCierreSesion } from './features/reportes/trazabilidad/inicio-cierre-sesion/inicio-cierre-sesion';
 import { AgregarUsuario } from './features/usuario/agregar-usuario/agregar-usuario';
 import { UsuarioRemover } from './features/usuario/usuario-remover/usuario-remover';
 import { UsuarioModificar } from './features/usuario/usuario-modificar/usuario-modificar';
@@ -165,6 +166,10 @@ export const routes: Routes = [
       {
         path: 'reporte/cotizaciones-perdidas-ganadas',
         component: CotizacionesPerdidasGanadas,
+      },
+      {
+        path: 'reporte/inicio-cierre-sesion',
+        component: InicioCierreSesion,
       },
       {
         path: 'grupo/agregar',
