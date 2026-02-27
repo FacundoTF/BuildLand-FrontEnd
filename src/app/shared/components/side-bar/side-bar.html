@@ -155,13 +155,39 @@
     >
       Reporte cotizaciones ganadas y perdidas
     </button>
+    <button
+      matButton="filled"
+      id="T-X"
+      (click)="ReporteTrazabilidad()"
+      class="OpcionNoPlegable sidebar-btn"
+      [class.active]="activeButton() === 'T-X'"
+    >
+      Reporte inicios y cierres de sesión
+    </button>
+    <button
+      matButton="filled"
+      id="A-X"
+      (click)="ReporteTrazabilidadPersonasFisicas()"
+      class="OpcionNoPlegable sidebar-btn"
+      [class.active]="activeButton() === 'A-X'"
+    >
+      Reporte trazabilidad personas físicas
+    </button>
   </div>
   <div id="G-Us" class="Gestion">
+    <button
+      mat-flat-button
+      (click)="ToogleGestion('G-Us')"
+      class="OpcionGestion sidebar-btn"
+      [class.active]="activeButton() === 'G-Us'"
+    >
+      Gestionar usuarios
+    </button>
     <button
       matButton="filled"
       id="A-Us"
       (click)="AgregarUsuario()"
-      class="OpcionNoPlegable sidebar-btn"
+      class="Opcion sidebar-btn"
       [class.active]="activeButton() === 'A-Us'"
     >
       Agregar usuario
@@ -170,7 +196,7 @@
       matButton="filled"
       id="R-Us"
       (click)="RemoverUsuario()"
-      class="OpcionNoPlegable sidebar-btn"
+      class="Opcion sidebar-btn"
       [class.active]="activeButton() === 'R-Us'"
     >
       Remover usuario
@@ -179,7 +205,7 @@
       matButton="filled"
       id="M-Us"
       (click)="ModificarUsuario()"
-      class="OpcionNoPlegable sidebar-btn"
+      class="Opcion sidebar-btn"
       [class.active]="activeButton() === 'M-Us'"
     >
       Modificar usuario
@@ -188,7 +214,7 @@
       matButton="filled"
       id="Z-Us"
       (click)="ResetearClave()"
-      class="OpcionNoPlegable sidebar-btn"
+      class="Opcion sidebar-btn"
       [class.active]="activeButton() === 'Z-Us'"
     >
       Resetear clave

@@ -1,0 +1,103 @@
+<div class="container">
+  <div id="content">
+    <h2>Reporte de Inicios y Cierres de Sesión</h2>
+
+    <div class="header">
+      <button
+        matButton="filled"
+        [disabled]="!busquedaConfirmada()"
+        (click)="resetear()"
+      >
+        Resetear Formulario
+      </button>
+    </div>
+
+    <!-- Fase 1: Búsqueda por CUIT -->
+    <div class="fase-container">
+      <h3>1) Ingresar CUIT del usuario</h3>
+      <mat-form-field appearance="fill">
+        <mat-label>CUIT</mat-label>
+        <input
+          matInput
+          type="text"
+          placeholder="Ej: 20-12345678-9"
+          [ngModel]="cuit()"
+          (ngModelChange)="cuit.set($event)"
+          [disabled]="busquedaConfirmada()"
+        />
+      </mat-form-field>
+
+      @if (!busquedaConfirmada()) {
+        <div class="actions">
+          <button mat-flat-button color="primary" (click)="buscar()">
+            Buscar
+          </button>
+        </div>
+      }
+    </div>
+
+    <!-- Fase 2: Resultados -->
+    @if (busquedaConfirmada()) {
+      <div class="fase-container">
+        <h3>2) Resultados para CUIT: {{ cuit() }}</h3>
+
+        <div id="card-container">
+          @for (registro of resultados(); track registro.id) {
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>
+                  {{
+                    registro.accion === "LOGIN"
+                      ? "🟢 Inicio de sesión"
+                      : "🔴 Cierre de sesión"
+                  }}
+                </mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <p><strong>Usuario:</strong> {{ registro.nombreUsuario }}</p>
+                <p>
+                  <strong>Tipo de usuario:</strong> {{ registro.tipoUsuario }}
+                </p>
+                <p>
+                  <strong>Fecha y hora:</strong>
+                  {{ registro.fecha | date: "dd/MM/yyyy HH:mm:ss" }}
+                </p>
+              </mat-card-content>
+            </mat-card>
+          } @empty {
+            <p>No hay registros disponibles.</p>
+          }
+        </div>
+
+        @if (
+          !(
+            paginationService.firstPage() === true &&
+            paginationService.lastPage() === true
+          )
+        ) {
+          <div id="pagination-controls">
+            @if (paginationService.firstPage() === false) {
+              <button matButton="filled" (click)="decrementarPagina()">
+                &lt;-
+              </button>
+            } @else {
+              <button matButton="filled" style="visibility: hidden">
+                &lt;-
+              </button>
+            }
+            <small>Página: {{ paginationService.currentPage() + 1 }}</small>
+            @if (paginationService.lastPage() === false) {
+              <button matButton="filled" (click)="incrementarPagina()">
+                -&gt;
+              </button>
+            } @else {
+              <button matButton="filled" style="visibility: hidden">
+                -&gt;
+              </button>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>
