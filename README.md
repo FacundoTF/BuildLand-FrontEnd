@@ -1,59 +1,90 @@
-# AngularFrontEnd
+# BuildLand - FrontEnd
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.1.
+Aplicación web de gestión empresarial para **BuildLand**, desarrollada con Angular 21 y Angular Material. Permite administrar distribuidoras, personas físicas, usuarios, grupos de permisos, presupuestos, cotizaciones y reportes.
 
-## Development server
+## Tecnologías
 
-To start a local development server, run:
+| Tecnología       | Versión  |
+| ---------------- | -------- |
+| Angular          | 21       |
+| Angular Material | 21       |
+| TypeScript       | 5.9      |
+| RxJS             | 7.8      |
+| Chart.js         | 4.5      |
+| SCSS             | Sass 1.x |
+
+## Requisitos previos
+
+- [Node.js](https://nodejs.org/) v20 o superior
+- [Angular CLI](https://angular.dev/tools/cli) v21+
+
+## Instalación
+
+```bash
+npm install
+```
+
+## Servidor de desarrollo
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Navegar a `http://localhost:4200/`. La aplicación se recarga automáticamente ante cambios en el código fuente.
 
-## Code scaffolding
+El frontend se conecta a un servidor backend en `http://localhost:8080` en el entorno de desarrollo.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+## Build de producción
 
 ```bash
 ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Los artefactos se generan en el directorio `dist/`.
 
-## Running unit tests
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## Ejecución de tests
 
 ```bash
 ng test
 ```
 
-## Running end-to-end tests
+Ejecuta los tests unitarios con [Karma](https://karma-runner.github.io) y [Jasmine](https://jasmine.github.io/).
 
-For end-to-end (e2e) testing, run:
+## Estructura del proyecto
 
-```bash
-ng e2e
+```
+src/
+├── app/
+│   ├── core/                  # Componentes principales y transversales
+│   │   ├── base-page/         # Layout base con navegación
+│   │   ├── home-page/         # Página de inicio
+│   │   ├── inicio-sesion/     # Inicio de sesión
+│   │   ├── restore-password/  # Recuperación de contraseña
+│   │   ├── not-found-page/    # Página 404
+│   │   ├── entities/          # Modelos e interfaces del dominio
+│   │   ├── interceptors/      # Interceptor de autenticación
+│   │   └── response-type/     # Tipos de respuesta del backend
+│   ├── features/              # Módulos funcionales
+│   │   ├── cotizacion/        # Realizar y recibir cotizaciones
+│   │   ├── distribuidora/     # ABM de distribuidoras
+│   │   ├── grupo/             # ABM de grupos de permisos
+│   │   ├── persona-fisica/    # ABM de personas físicas
+│   │   ├── presupuesto/       # Realizar y recibir presupuestos
+│   │   ├── reportes/          # Reportes y trazabilidad
+│   │   └── usuario/           # ABM de usuarios
+│   └── shared/                # Componentes y servicios reutilizables
+├── environments/              # Configuración por entorno
+├── styles/                    # Estilos globales
+└── custom-theme.scss          # Tema personalizado de Angular Material
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Convenciones de código
 
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- **Componentes standalone** (por defecto en Angular 21)
+- **Signals** para manejo de estado local
+- **Reactive Forms** en formularios
+- **Control flow nativo** (`@if`, `@for`, `@switch`) en templates
+- **OnPush** como estrategia de detección de cambios
+- **`inject()`** en lugar de inyección por constructor
+- **Prettier** como formateador de código
