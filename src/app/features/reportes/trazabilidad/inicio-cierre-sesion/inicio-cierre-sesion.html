@@ -55,7 +55,6 @@
               </mat-card-header>
               <mat-card-content>
                 <p><strong>Usuario:</strong> {{ registro.nombreUsuario }}</p>
-                <p><strong>CUIT:</strong> {{ registro.cuit }}</p>
                 <p>
                   <strong>Tipo de usuario:</strong> {{ registro.tipoUsuario }}
                 </p>
@@ -63,7 +62,6 @@
                   <strong>Fecha y hora:</strong>
                   {{ registro.fecha | date: "dd/MM/yyyy HH:mm:ss" }}
                 </p>
-                <p><strong>Acción:</strong> {{ registro.accion }}</p>
               </mat-card-content>
             </mat-card>
           } @empty {
@@ -71,9 +69,14 @@
           }
         </div>
 
-        @if (resultados().length !== 0) {
+        @if (
+          !(
+            paginationService.firstPage() === true &&
+            paginationService.lastPage() === true
+          )
+        ) {
           <div id="pagination-controls">
-            @if (paginationService.lastPage()) {
+            @if (paginationService.firstPage() === false) {
               <button matButton="filled" (click)="decrementarPagina()">
                 &lt;-
               </button>
@@ -83,7 +86,7 @@
               </button>
             }
             <small>Página: {{ paginationService.currentPage() + 1 }}</small>
-            @if (paginationService.firstPage()) {
+            @if (paginationService.lastPage() === false) {
               <button matButton="filled" (click)="incrementarPagina()">
                 -&gt;
               </button>

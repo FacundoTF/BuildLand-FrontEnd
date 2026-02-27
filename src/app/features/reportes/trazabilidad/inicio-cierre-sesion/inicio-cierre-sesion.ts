@@ -120,8 +120,8 @@ export class InicioCierreSesion {
     hasNext: boolean,
   ): void {
     if (hasPrevious && hasNext) {
-      this.paginationService.firstPage.set(true);
-      this.paginationService.lastPage.set(true);
+      this.paginationService.firstPage.set(false);
+      this.paginationService.lastPage.set(false);
     } else if (hasPrevious) {
       this.paginationService.firstPage.set(false);
       this.paginationService.lastPage.set(true);
