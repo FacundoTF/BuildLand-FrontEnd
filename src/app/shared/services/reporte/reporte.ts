@@ -259,6 +259,45 @@ export class ReporteService {
     );
   }
 
+  getTrazabilidadPersonaFisica(
+    cuit: string,
+    pagina: number,
+  ): Observable<ReturnPaginationResponse> {
+    return this.http
+      .get<ReturnPaginationResponse>(
+        `${this.API_URL}/trazabilidad-persona-fisica/${cuit}`,
+        {
+          params: { pagina: pagina },
+          observe: 'response',
+        },
+      )
+      .pipe(
+        map((response) => {
+          const hasPrevious = response.body!.hasPrevious;
+          const body = response.body!.payload ?? [];
+          const hasNext = response.body!.hasNext;
+          return {
+            success: true,
+            message: 'Trazabilidad de persona física obtenida con éxito.',
+            statusCode: response.status,
+            payload: body,
+            hasPrevious,
+            hasNext,
+          };
+        }),
+        catchError((error) => {
+          return of({
+            success: false,
+            message: 'Error al obtener la trazabilidad de persona física.',
+            statusCode: error.status || 500,
+            payload: null,
+            hasPrevious: false,
+            hasNext: false,
+          });
+        }),
+      );
+  }
+
   getTrazabilidadLoginLogout(
     cuit: string,
     pagina: number,

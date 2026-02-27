@@ -164,6 +164,15 @@
     >
       Reporte inicios y cierres de sesión
     </button>
+    <button
+      matButton="filled"
+      id="A-X"
+      (click)="ReporteTrazabilidadPersonasFisicas()"
+      class="OpcionNoPlegable sidebar-btn"
+      [class.active]="activeButton() === 'A-X'"
+    >
+      Reporte trazabilidad personas físicas
+    </button>
   </div>
   <div id="G-Us" class="Gestion">
     <button

@@ -29,6 +29,7 @@ import { RecibirCotizacion } from './features/cotizacion/recibir-cotizacion/reci
 import { ProductosSolicitados } from './features/reportes/productos-solicitados/productos-solicitados';
 import { CotizacionesPerdidasGanadas } from './features/reportes/cotizaciones-perdidas-ganadas/cotizaciones-perdidas-ganadas';
 import { InicioCierreSesion } from './features/reportes/trazabilidad/inicio-cierre-sesion/inicio-cierre-sesion';
+import { PersonasFisicas } from './features/reportes/trazabilidad/personas-fisicas/personas-fisicas';
 import { AgregarUsuario } from './features/usuario/agregar-usuario/agregar-usuario';
 import { UsuarioRemover } from './features/usuario/usuario-remover/usuario-remover';
 import { UsuarioModificar } from './features/usuario/usuario-modificar/usuario-modificar';
@@ -170,6 +171,10 @@ export const routes: Routes = [
       {
         path: 'reporte/inicio-cierre-sesion',
         component: InicioCierreSesion,
+      },
+      {
+        path: 'reporte/personas-fisicas',
+        component: PersonasFisicas,
       },
       {
         path: 'grupo/agregar',
